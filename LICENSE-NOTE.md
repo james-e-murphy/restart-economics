@@ -2,8 +2,10 @@
 
 Two questions, both open until checked:
 
-1. **Code and text.** Intended: MIT for `src/` and `tests/`, CC BY 4.0 for PLAN.md, AUDIT.md, and the
-   manuscript. Confirm against the venue's policy before posting.
+1. **Code and text.** MIT for `src/` and `tests/`, in `LICENSE`. CC BY 4.0 for PLAN.md, AUDIT.md,
+   audit_record.md and the manuscript; that is also the license the OSF registration of 20 September
+   2026 was submitted under, and it covers the copies of those files attached there. Confirm against
+   the venue's policy before posting.
 
 2. **Derived tables.** `data/derived/` holds execution and prefix tables computed from the Bai et al.
    release. Confirm that release's license permits redistributing derived tables before publishing

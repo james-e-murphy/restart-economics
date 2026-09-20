@@ -26,8 +26,8 @@ argument, and every prespecified comparison.
 
 ## Layout
 
-    PLAN.md              the pre-analysis plan, registered before acquisition; tagged plan-frozen
-                         when the audit closes
+    PLAN.md              the pre-analysis plan, frozen at the plan-frozen tag when the audit
+                         closed, and registered on OSF
     AUDIT.md             the data audit protocol, then the record as it is completed
     audit_record.md      what the audit found, item by item
     configurations.csv   one row per archive, built by python -m restart.audit
@@ -38,6 +38,7 @@ argument, and every prespecified comparison.
     data/derived/        execution and prefix tables, rebuilt locally and not committed
     exhibits/            one notebook that regenerates every figure and table
     paper/               manuscript and build
+    LICENSE              MIT, for src/ and tests/; the written work is CC BY 4.0
 
 ## Working rules
 
@@ -73,7 +74,16 @@ runs on 500 SWE-bench Verified tasks per configuration, in nine archives, of whi
 The paper treats these as *configurations* rather than models, because a run is a model under a harness version
 at a date through an endpoint under a price schedule. AUDIT.md establishes what each one was.
 
+## Preregistration
+
+The frozen plan is registered on OSF Registries, under embargo until the paper is posted:
+[osf.io/pdmw9](https://osf.io/pdmw9/), registered 20 September 2026, Secondary Data Preregistration
+template. It carries PLAN.md, AUDIT.md, `audit_record.md` and this repository at the `plan-frozen`
+tag, commit `d270cb8`, whose archive has SHA-256
+`8032446f282aa57e1cffa889312a55dd79b65120389dde62eff684f3839a42d8`. The registration's own answers
+record what was known about the data before the freeze, and what was not.
+
 ## Status
 
 The audit is complete and PLAN.md Section 10 records what it found, including the state rule's class
-and φ. The plan is frozen at the `plan-frozen` tag. No policy result exists.
+and φ. The plan is frozen at the `plan-frozen` tag and registered. No policy result exists.
