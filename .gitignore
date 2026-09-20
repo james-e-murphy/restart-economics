@@ -1,0 +1,28 @@
+# Raw archives are never committed: large, third-party, separately licensed.
+archives/*.tar.gz
+archives/*.zip
+archives/*.manifest.txt
+archives/.partial/
+
+# Derived tables stay local: the upstream release records no license (LICENSE-NOTE.md)
+data/derived/*/
+
+# Extraction intermediates
+reduced/
+normalized/
+scratch/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# OS
+.DS_Store
+
+# Local run logs
+data/derived/*.log

@@ -1,0 +1,79 @@
+# Restart Economics for AI Agents
+
+Cutoffs, retries, and the cost of a resolved task. Working paper and companion code.
+
+This repository is the paper's reproducibility record. It holds the frozen analysis plan, the data
+audit record, the code that rebuilds the derived tables, the policy evaluator, and the notebook
+that regenerates every exhibit. It does not hold the raw trajectory archives, which are a
+third-party release, or the tables derived from them; it records the archives' checksums.
+
+## What the paper does
+
+Repeated agent executions on the same task vary enormously in cost, by up to thirty times in
+reported token counts. An operator therefore runs a policy, not a single attempt: cap the attempt,
+retry, escalate. The paper measures what a resolved task costs under such policies, using four
+logged runs on 500 SWE-bench Verified tasks for each of seven configurations, and asks in order
+whether retrying pays, whether a cap improves the retries, whether varying the cap by attempt
+improves it further, whether observing execution state beats a fixed schedule, and whether switching
+models improves it again.
+
+**Policy value**, the single quantity every policy is scored on, is expected cost per incoming task:
+agent spend, plus verification cost on attempts that produce something to check, plus a task-specific
+outside option paid when the allowed attempts are exhausted. Because the outside option resolves the
+task for certain, every task resolves, so this is also cost per resolved task and a policy cannot look
+cheap by abandoning hard tasks. PLAN.md states the estimand, the policy classes, the identification
+argument, and every prespecified comparison.
+
+## Layout
+
+    PLAN.md              the pre-analysis plan, registered before acquisition; tagged plan-frozen
+                         when the audit closes
+    AUDIT.md             the data audit protocol, then the record as it is completed
+    audit_record.md      what the audit found, item by item
+    configurations.csv   one row per archive, built by python -m restart.audit
+    configurations_notes.json  the facts no table holds: endpoints, applied temperature, exclusions
+    archives/SHA256SUMS  checksums of the raw archives; archives themselves are not committed
+    src/restart/         extraction, cost reconstruction, policies, evaluator, bootstrap
+    tests/               hand-walked edge cases and the synthetic dry run
+    data/derived/        execution and prefix tables, rebuilt locally and not committed
+    exhibits/            one notebook that regenerates every figure and table
+    paper/               manuscript and build
+
+## Working rules
+
+1. **The plan precedes the results.** PLAN.md and AUDIT.md were written before any archive was
+   opened. The plan is frozen at the `plan-frozen` tag when the audit closes, before any policy
+   result is computed. Nothing in `exhibits/` is committed before that tag, and the commit history
+   is the record that the plan came before the results.
+2. **Raw archives are never committed.** They are large, third-party, and under their own license.
+   The repository holds `archives/SHA256SUMS`. The derived tables are rebuilt from the archives by
+   `restart.acquire`, and every table records the checksum of the archive it came from. The release
+   records no license, so the tables are not committed either (LICENSE-NOTE.md).
+3. **The evaluator is verified before it is trusted.** The synthetic dry run and the hand-walked edge
+   cases in `tests/` run in CI. Against real data, the extraction is reconciled with what Bai et al.
+   state in numbers and with an earlier extraction of the GPT-5 archive, and every price schedule is
+   checked call by call against the harness's logged cost, with any difference located.
+4. **Deviations are recorded, not absorbed.** After the `plan-frozen` tag, any departure from PLAN.md
+   is a deviation with its own entry in AUDIT.md, not an amendment to the plan.
+
+## Reproducing
+
+    pip install -e ".[dev]"                   # Python 3.9 or later
+    pytest                                    # edge cases and the synthetic dry run
+    python -m restart.acquire --out data/derived/   # lists, streams, verifies and extracts every archive
+    python -m restart.pricing --validate data/derived/   # prices every call, compares with logged cost
+    python -m restart.evaluate --all
+    jupyter execute exhibits/exhibits.ipynb
+
+## Data
+
+Trajectories are from the release accompanying Bai et al., *How Do AI Agents Spend Your Money?*
+(arXiv 2604.22750), `loong0814/openhands_trajectories` on Hugging Face: four OpenHands
+runs on 500 SWE-bench Verified tasks per configuration, in nine archives, of which the audit admits seven.
+The paper treats these as *configurations* rather than models, because a run is a model under a harness version
+at a date through an endpoint under a price schedule. AUDIT.md establishes what each one was.
+
+## Status
+
+The audit is complete and PLAN.md Section 10 records what it found, including the state rule's class
+and φ. The plan is frozen at the `plan-frozen` tag. No policy result exists.

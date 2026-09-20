@@ -1,0 +1,176 @@
+[
+  {
+    "type": "file",
+    "oid": "bed0738c7eeb449bca98b5d2f33c89a1ee56349a",
+    "size": 2504,
+    "path": ".gitattributes"
+  },
+  {
+    "type": "file",
+    "oid": "bee18fd213574cdad66cb31f4de3502a10da768a",
+    "size": 3397174017,
+    "lfs": {
+      "oid": "416715b30a4b216b5ba2e5bf5435a1d62371bd8a109b000b130b9136ab2fe37f",
+      "size": 3397174017,
+      "pointerSize": 135
+    },
+    "xetHash": "181068c60e05fa5758a941e07ce94b32b5068079f7104a601c08d5a7fda207c3",
+    "path": "claude-sonnet-3.7_4runs.tar.gz"
+  },
+  {
+    "type": "file",
+    "oid": "087ec829dd88ba0f9645c3fe8b3e07706cc014e3",
+    "size": 65239285,
+    "lfs": {
+      "oid": "062a92fb7029126246bbc0a448f5076053397012acae53120475d619eff7be13",
+      "size": 65239285,
+      "pointerSize": 133
+    },
+    "xetHash": "743832873d89aa07034b0a981f7b59e703a554e5e6f01d1128e659293521a6c2",
+    "path": "claude-sonnet-3.7_4runs_mini.tar.gz"
+  },
+  {
+    "type": "file",
+    "oid": "901f921245a978d371f4aee086a46838e8236c75",
+    "size": 6436180417,
+    "lfs": {
+      "oid": "20434ed6f2407dde289d4ad1d1c16d1222289c24e0fd5f3c1c168abe0a01e624",
+      "size": 6436180417,
+      "pointerSize": 135
+    },
+    "xetHash": "5eaf1e92d4e71d2eefec89d7d960b9a69a4ba6290f6bac40c2f6f6144ba7c8a6",
+    "path": "claude-sonnet-4.5_4runs.tar.gz"
+  },
+  {
+    "type": "file",
+    "oid": "48f061cf49512afde80c306bfb1bb9d7bb0b00ce",
+    "size": 98327560,
+    "lfs": {
+      "oid": "43bfec846fe599c26b2ba876f2a762762c074a71b5cdb0291cdd275e80d17021",
+      "size": 98327560,
+      "pointerSize": 133
+    },
+    "xetHash": "fefcd6538b520aeff6b72adc0c22b49d3eadadaa58a6c5e36a83297490349fa6",
+    "path": "claude-sonnet-4.5_4runs_mini.tar.gz"
+  },
+  {
+    "type": "file",
+    "oid": "96854e98e86104292bd9ce91936377a1f80570f8",
+    "size": 2456729931,
+    "lfs": {
+      "oid": "f1d64f47e2063c0d6054ba6b1843edc35553659597425ee7b6378eca0d7dc367",
+      "size": 2456729931,
+      "pointerSize": 135
+    },
+    "xetHash": "d498002e29b4c42d56a13679e24dfe922ba2a8ac73f41da4ce94983ea4a58518",
+    "path": "claude-sonnet-4.5_new_v2_4runs.tar.gz"
+  },
+  {
+    "type": "file",
+    "oid": "57b8a87a613a989c00ef6d55671ff3e985c162f0",
+    "size": 4478146927,
+    "lfs": {
+      "oid": "f5323150b45766f93b5213f37c63fa69e5d3771b3a772278756637e3d7ef13a8",
+      "size": 4478146927,
+      "pointerSize": 135
+    },
+    "xetHash": "a0fcf4e7d95b76852d63e93ce3f4eeaa6e99704f5f2a8f861f7d4992976c75a0",
+    "path": "claude-sonnet-4_4runs.tar.gz"
+  },
+  {
+    "type": "file",
+    "oid": "8308c6ca3e9f194434d72868f4bcb6e28259623a",
+    "size": 80265503,
+    "lfs": {
+      "oid": "156a0d6aa26d8e2267c63eaec7524fad9037fa83786321fe14a4d20c6006891c",
+      "size": 80265503,
+      "pointerSize": 133
+    },
+    "xetHash": "e00b03695a6470ed2031435551aa63b999fbe499205aa4df3082ed10cbca3436",
+    "path": "claude-sonnet-4_4runs_mini.tar.gz"
+  },
+  {
+    "type": "file",
+    "oid": "8030ac68baa3018b125b8420f8e6a6ab1b1c9b59",
+    "size": 4673704201,
+    "lfs": {
+      "oid": "c52c7b8a1a9e65aa32559507f8a66f9f5bcf132e5a2b5329f57ea16281f34165",
+      "size": 4673704201,
+      "pointerSize": 135
+    },
+    "xetHash": "9895eaa2662a2ef085035fbf76caaab205041ac33bf04a2d1ed2d7e29dac965e",
+    "path": "gemini-3-pro-preview_4runs.tar.gz"
+  },
+  {
+    "type": "file",
+    "oid": "a92a0caebc137861757139a9522e8fe1d356d7b8",
+    "size": 2511747005,
+    "lfs": {
+      "oid": "54385405999746e68e26c41094376afef489827f55380faae963911fcaf44e08",
+      "size": 2511747005,
+      "pointerSize": 135
+    },
+    "xetHash": "d970c26bc063b20293b31f871c99adf0a93e1634ef0295595ea26cdfd88bf3a8",
+    "path": "gpt-5_4runs.tar.gz"
+  },
+  {
+    "type": "file",
+    "oid": "52f068dc969e423e81b48b19b0cd98657d5e7d8d",
+    "size": 78486403,
+    "lfs": {
+      "oid": "c8e89390c4f331125c5f6af7fbda285fb601c14b39d3d07d8455982bc56c27e6",
+      "size": 78486403,
+      "pointerSize": 133
+    },
+    "xetHash": "55ef0ac65d5f5f04ae27fb24bc9e3bfa75f55f4661fc7d4fe08435c5a26ded73",
+    "path": "gpt-5_4runs_mini.tar.gz"
+  },
+  {
+    "type": "file",
+    "oid": "acc7d263a3d0fe327658a3cad3654b1188066712",
+    "size": 2908192516,
+    "lfs": {
+      "oid": "993abcb55aae423f9067d5e6c8e1aeaccf83b9ce31474a215982686527934214",
+      "size": 2908192516,
+      "pointerSize": 135
+    },
+    "xetHash": "5824153171526bdfb245b74fca532407cf68add02079b4fa0f7c1cf47ea1c1c8",
+    "path": "gpt_5.2_4runs.tar.gz"
+  },
+  {
+    "type": "file",
+    "oid": "5a0ab63266385653056c3d5165a72c1423eacf2c",
+    "size": 10035415952,
+    "lfs": {
+      "oid": "b8f4e79c30246e4ce47dc36e3de44875591f4240b2bb6ad3b3d63991dfec51c6",
+      "size": 10035415952,
+      "pointerSize": 136
+    },
+    "xetHash": "384db9f624d0cc57492b2972f7a3f95ad4b82a86ee627ea8bb829dc15070c6bc",
+    "path": "kimi-k2_4runs.tar.gz"
+  },
+  {
+    "type": "file",
+    "oid": "01c874ef3fe610f4191f4e48b2a5fd816b0bffd5",
+    "size": 4604026724,
+    "lfs": {
+      "oid": "8ed3a99d32a2552056a1d467fee1cf104275b9aee9b017c007a0ae96ae0f5c32",
+      "size": 4604026724,
+      "pointerSize": 135
+    },
+    "xetHash": "2dcdf8bcef5e936ed911e421815a46af8fcc4b1e67a18dfc2503d3098b146027",
+    "path": "qwen3-coder-480b-a35b-instruct-4runs.tar.gz"
+  },
+  {
+    "type": "file",
+    "oid": "b51c82f9d7f679e6e50e59e744e789824244ea29",
+    "size": 83899203,
+    "lfs": {
+      "oid": "4346242ceaa4424d0940779635265f7544b54872e155a690bdc8ae25721fe11b",
+      "size": 83899203,
+      "pointerSize": 133
+    },
+    "xetHash": "661a3fd4c2d052d109be514d1cb0b1f5235c2d3aefa4679fe1a8c141b54740e9",
+    "path": "qwen3-coder-480b-a35b-instruct-4runs_mini.tar.gz"
+  }
+]

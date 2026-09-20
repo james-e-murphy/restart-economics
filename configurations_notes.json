@@ -1,0 +1,88 @@
+{
+  "claude-sonnet-3.7_4runs.tar.gz": {
+    "endpoint": "All Hands LLM proxy (app)",
+    "temperature_applied": "1.0 (extended thinking, which requires 1)",
+    "schedule_date": "2025-04-08",
+    "mini_sufficient": "no",
+    "excluded": true,
+    "exclusion_condition": "2: the harness replaced attempts that reached the 100-call cap with fresh ones and kept only the later try, so the recorded attempts are a selected sample",
+    "note": "OpenHands 0.31.0, April 2025. At least 140 of the 267 re-run executions replaced one or more tries that ran to the cap; the discarded tries cost $649 against $1,728 recorded."
+  },
+  "claude-sonnet-4.5_new_v2_4runs.tar.gz": {
+    "config_id": "claude-sonnet-4-5-20250929_sdk_bde715c_maxiter_100",
+    "model_string": "claude-sonnet-4-5-20250929",
+    "agent_class": "OpenHands software-agent SDK agent",
+    "harness_version": "SDK bde715c",
+    "max_iterations": 100,
+    "endpoint": "Anthropic API",
+    "temperature_applied": "not established",
+    "schedule_date": "not priced",
+    "mini_sufficient": "no mini",
+    "excluded": true,
+    "exclusion_condition": "1: a different agent and harness (the SDK), with a critic that allows up to three attempts per task and keeps the one it accepts",
+    "note": "Not extracted: a different file layout. Critic AgentFinishedCritic (finish_and_message), max_attempts 3; in run 1, 487 of 494 records are first attempts, 2 second, 5 third."
+  },
+  "claude-sonnet-4.5_4runs.tar.gz": {
+    "endpoint": "Anthropic API",
+    "temperature_applied": "0.0 (accepted; no extended thinking)",
+    "schedule_date": "2025-12-19",
+    "mini_sufficient": "no",
+    "excluded": false,
+    "exclusion_condition": "",
+    "note": "The Sonnet 4.5 row (item 3): the other Sonnet 4.5 archive is a different agent and is excluded."
+  },
+  "claude-sonnet-4_4runs.tar.gz": {
+    "endpoint": "All Hands LLM proxy (evaluation)",
+    "temperature_applied": "1.0 (extended thinking, which requires 1)",
+    "schedule_date": "2025-06-02",
+    "mini_sufficient": "no",
+    "excluded": false,
+    "exclusion_condition": "",
+    "note": "sympy__sympy-13031 has three runs, not four. One discarded try reached the 500-call cap: the harness may restart at the cap, but only this one instance ever reached it."
+  },
+  "gemini-3-pro-preview_4runs.tar.gz": {
+    "endpoint": "OpenRouter",
+    "temperature_applied": "0.0 (accepted); some trajectories repeat exactly",
+    "schedule_date": "2026-01-18",
+    "mini_sufficient": "no mini",
+    "excluded": false,
+    "exclusion_condition": "",
+    "note": "Four tasks have two or three identical runs (41 to 99 actions): replays at temperature 0, recorded as behaviour. Sixteen attempts ended in an upstream error relayed by OpenRouter without detail and are counted as infrastructure."
+  },
+  "gpt-5_4runs.tar.gz": {
+    "endpoint": "OpenAI API",
+    "temperature_applied": "model default (the snapshot accepts only its default; the client drops the parameter)",
+    "schedule_date": "2025-12-31",
+    "mini_sufficient": "no",
+    "excluded": false,
+    "exclusion_condition": "",
+    "note": "93 provider refusals retained as a stop scored by the report (18 resolved)."
+  },
+  "gpt_5.2_4runs.tar.gz": {
+    "endpoint": "OpenRouter",
+    "temperature_applied": "model default (a temperature is accepted only with reasoning off, and reasoning was on)",
+    "schedule_date": "2026-01-21",
+    "mini_sufficient": "no mini",
+    "excluded": false,
+    "exclusion_condition": "",
+    "note": "25 attempts hit the harness's eight-hour timeout and are counted as infrastructure. Parallel tool calls: 449 executions have more actions than calls."
+  },
+  "kimi-k2_4runs.tar.gz": {
+    "endpoint": "OpenRouter",
+    "temperature_applied": "0.0 (accepted)",
+    "schedule_date": "2026-01-04",
+    "mini_sufficient": "no mini",
+    "excluded": false,
+    "exclusion_condition": "",
+    "note": "OpenHands 1.1.0 running the same CodeActAgent and output format. Two attempts ended when the sandbox rejected a file path with tool-call markup in it, the model's own malformed call; retained and scored by the report. Five reached iteration 500 with fewer than 500 calls recorded."
+  },
+  "qwen3-coder-480b-a35b-instruct-4runs.tar.gz": {
+    "endpoint": "self-hosted OpenAI-compatible server, FP8 weights",
+    "temperature_applied": "1.0",
+    "schedule_date": "2025-07-22",
+    "mini_sufficient": "no",
+    "excluded": false,
+    "exclusion_condition": "",
+    "note": "No cost is logged, so dollars are reconstructed from an imputed schedule and cannot be validated against logged cost; call timestamps are also absent, so it is priced at the model's release, 22 July 2025."
+  }
+}

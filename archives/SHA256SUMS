@@ -1,0 +1,12 @@
+# Checksums of the raw trajectory archives, verified against the SHA-256 Hugging Face
+# records for each file (archives/hf_tree.json). The archives are not committed.
+# Format: sha256  filename
+416715b30a4b216b5ba2e5bf5435a1d62371bd8a109b000b130b9136ab2fe37f  claude-sonnet-3.7_4runs.tar.gz
+20434ed6f2407dde289d4ad1d1c16d1222289c24e0fd5f3c1c168abe0a01e624  claude-sonnet-4.5_4runs.tar.gz
+f1d64f47e2063c0d6054ba6b1843edc35553659597425ee7b6378eca0d7dc367  claude-sonnet-4.5_new_v2_4runs.tar.gz
+f5323150b45766f93b5213f37c63fa69e5d3771b3a772278756637e3d7ef13a8  claude-sonnet-4_4runs.tar.gz
+c52c7b8a1a9e65aa32559507f8a66f9f5bcf132e5a2b5329f57ea16281f34165  gemini-3-pro-preview_4runs.tar.gz
+54385405999746e68e26c41094376afef489827f55380faae963911fcaf44e08  gpt-5_4runs.tar.gz
+993abcb55aae423f9067d5e6c8e1aeaccf83b9ce31474a215982686527934214  gpt_5.2_4runs.tar.gz
+b8f4e79c30246e4ce47dc36e3de44875591f4240b2bb6ad3b3d63991dfec51c6  kimi-k2_4runs.tar.gz
+8ed3a99d32a2552056a1d467fee1cf104275b9aee9b017c007a0ae96ae0f5c32  qwen3-coder-480b-a35b-instruct-4runs.tar.gz
