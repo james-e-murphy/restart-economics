@@ -155,14 +155,14 @@ FIELDS = ("config", "regime_name", "regime", "phi", "crossings", "crossing", "ra
 
 
 def rows_for(pool: ev.Pool, regimes=ld.REGIMES, phi: float = 0.0,
-             ladder_rows: Sequence[dict] = (), log=None) -> List[dict]:
+             ladder_rows: Sequence[dict] = (), log=None, scan: int = SCAN) -> List[dict]:
     """One row per crossing, or one row saying there is none, for each regime."""
     mask = ev.full_draw_tasks({pool.config: pool})
     out = []
     for name, fraction in regimes:
         if log:
             log(f"  {name}")
-        got = crossings(pool, fraction, phi, mask, log=log)
+        got = crossings(pool, fraction, phi, mask, scan=scan, log=log)
         low, high = band(ladder_rows, pool.config, fraction)
         found = got["crossings"]
         bounds = [got["scan_low"] * (1 - 1e-9)] + [c["rate"] for c in found] + \

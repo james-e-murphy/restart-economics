@@ -3,8 +3,8 @@
 Cutoffs, retries, and the cost of a resolved task. Working paper and companion code.
 
 This repository is the paper's reproducibility record. It holds the frozen analysis plan, the data
-audit record, the code that rebuilds the derived tables, the policy evaluator, and the notebook
-that regenerates every exhibit. It does not hold the raw trajectory archives, which are a
+audit record, the code that rebuilds the derived tables, the policy evaluator, the results it
+wrote, and the script that regenerates every exhibit from them. It does not hold the raw trajectory archives, which are a
 third-party release, or the tables derived from them; it records the archives' checksums.
 
 ## What the paper does
@@ -40,7 +40,7 @@ argument, and every prespecified comparison.
     data/derived/        execution and prefix tables, rebuilt locally and not committed
     results/             policy values, margins, break-evens and cascades, each file written by
                          one command listed in results/README.md
-    exhibits/            one notebook that regenerates every figure and table
+    exhibits/            make.py, which regenerates every figure and table from results/
     paper/               manuscript and build
     LICENSE              MIT, for src/ and tests/; the written work is CC BY 4.0
 
@@ -68,8 +68,11 @@ argument, and every prespecified comparison.
     python -m restart.acquire --out data/derived/   # lists, streams, verifies and extracts every archive
     python -m restart.pricing --validate data/derived/   # prices every call, compares with logged cost
     python -m restart.evaluate --check data/derived      # loads and prices each attempt pool
-    python -m restart.ladder --derived data/derived      # steps i to iii, both regimes, the sweep
-    jupyter execute exhibits/exhibits.ipynb
+    python -m restart.ladder --derived data/derived      # steps i to iv and the transfer, the sweep
+    python -m restart.breakeven --derived data/derived   # the break-even of the primary result
+    python -m restart.cascade --derived data/derived     # step v and the outcome correlation
+    python -m restart.coverage                           # the interval's coverage, on synthetic data
+    python exhibits/make.py                              # every figure and table, from results/
 
 ## Data
 

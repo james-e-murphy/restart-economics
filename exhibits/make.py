@@ -1,0 +1,568 @@
+"""Every figure and table in the paper, from the files in results/.
+
+    python exhibits/make.py                 # writes exhibits/out/
+
+Nothing here computes a policy value. The script reads what the evaluator wrote, reshapes it, and
+draws it, so every number in a figure or table can be found in a results file and traced to the
+command that wrote it (results/README.md). Figures are written as PDF for the manuscript and PNG
+for reading; tables as Markdown, LaTeX and CSV.
+
+The main-text exhibits are the ones PLAN.md Section 7 names: the cap's marginal value across the
+sweep (the primary result), the state rule's margin over the best schedule within and across
+configurations (the primary transfer), the table of policy values with break-evens, and the best
+cross-configuration schedule against each configuration's own. Anything not in the registration
+says so in its title and its caption.
+"""
+from __future__ import annotations
+
+import argparse
+import os
+from typing import Dict, List
+
+import numpy as np
+import pandas as pd
+
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt                              # noqa: E402
+from matplotlib.ticker import FuncFormatter, LogLocator      # noqa: E402
+
+# ----------------------------------------------------------------------------- names and order
+
+ORDER = ("gpt-5_4runs", "gpt_5.2_4runs", "claude-sonnet-4_4runs", "claude-sonnet-4.5_4runs",
+         "gemini-3-pro-preview_4runs", "kimi-k2_4runs", "qwen3-coder-480b-a35b-instruct-4runs")
+NAME = {"gpt-5_4runs": "GPT-5", "gpt_5.2_4runs": "GPT-5.2",
+        "claude-sonnet-4_4runs": "Sonnet 4", "claude-sonnet-4.5_4runs": "Sonnet 4.5",
+        "gemini-3-pro-preview_4runs": "Gemini 3 Pro", "kimi-k2_4runs": "Kimi K2",
+        # Qwen's dollar figures rest on an imputed price and are marked so wherever they appear
+        "qwen3-coder-480b-a35b-instruct-4runs": "Qwen3 Coder\u2020"}
+IMPUTED = "\u2020 Qwen3 Coder's dollar figures rest on an imputed price (PLAN.md Section 10)."
+REGIMES = (("automated", 0.0), ("human 0.1", 0.1), ("human 0.3", 0.3), ("human 0.5", 0.5))
+REGIME_LABEL = {"automated": "automated verifier", "human 0.1": "review at 0.1 H",
+                "human 0.3": "review at 0.3 H", "human 0.5": "review at 0.5 H"}
+TABLE_RATES = (25.0, 100.0, 300.0)
+
+# ----------------------------------------------------------------------------- style
+
+INK, INK_2, MUTED = "#0b0b0b", "#52514e", "#898781"
+GRID, AXIS, SURFACE = "#e1e0d9", "#c3c2b7", "#ffffff"
+# review price is an ordered magnitude, so it takes one hue stepped light to dark (blue 300, 450,
+# 550, 700), validated as an ordinal ramp; darker is dearer review
+REGIME_COLOR = {"automated": "#6da7ec", "human 0.1": "#2a78d6", "human 0.3": "#1c5cab",
+                "human 0.5": "#0d366b"}
+SERIES_1, SERIES_2 = "#2a78d6", "#eb6834"      # categorical slots 1 and 2, validated all-pairs
+
+
+def _style():
+    plt.rcParams.update({
+        "font.family": "sans-serif", "font.size": 8.5, "axes.titlesize": 9,
+        "axes.labelsize": 8.5, "xtick.labelsize": 7.5, "ytick.labelsize": 7.5,
+        "legend.fontsize": 7.5, "axes.edgecolor": AXIS, "axes.linewidth": 0.6,
+        "axes.labelcolor": INK_2, "xtick.color": MUTED, "ytick.color": MUTED,
+        "xtick.major.width": 0.6, "ytick.major.width": 0.6, "text.color": INK,
+        "axes.grid": True, "grid.color": GRID, "grid.linewidth": 0.5,
+        "axes.spines.top": False, "axes.spines.right": False,
+        "figure.facecolor": SURFACE, "axes.facecolor": SURFACE, "savefig.facecolor": SURFACE,
+        "lines.linewidth": 1.5, "lines.solid_capstyle": "round", "lines.solid_joinstyle": "round",
+        "legend.frameon": False, "pdf.fonttype": 42,
+    })
+
+
+def _save(fig, out: str, name: str) -> List[str]:
+    paths = []
+    for ext in ("pdf", "png"):
+        p = os.path.join(out, f"{name}.{ext}")
+        fig.savefig(p, dpi=200, bbox_inches="tight")
+        paths.append(p)
+    plt.close(fig)
+    return paths
+
+
+MULTIPLE_TICKS = (1, 3, 10, 30, 100, 300)
+RATE_TICKS = (5, 10, 25, 50, 100, 300)
+
+
+def _log_x(ax, label: str = "", ticks=MULTIPLE_TICKS):
+    ax.set_xscale("log")
+    ax.set_xticks(list(ticks))
+    ax.xaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:g}"))
+    ax.xaxis.set_minor_locator(LogLocator(base=10, subs="auto", numticks=40))
+    ax.xaxis.set_minor_formatter(FuncFormatter(lambda v, _: ""))
+    if label:
+        ax.set_xlabel(label)
+
+
+def _pct(ax):
+    ax.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:+.0f}%" if v else "0"))
+
+
+def _zero(ax):
+    ax.axhline(0.0, color=AXIS, linewidth=0.9, zorder=1)
+
+
+# ----------------------------------------------------------------------------- loading
+
+def load(results: str) -> Dict[str, pd.DataFrame]:
+    got = {}
+    for name in ("ladder", "breakeven", "cascade", "outcome_correlation"):
+        p = os.path.join(results, f"{name}.csv")
+        if os.path.exists(p):
+            got[name] = pd.read_csv(p)
+    if "ladder" not in got:
+        raise FileNotFoundError(f"{results}/ladder.csv: run python -m restart.ladder first")
+    return got
+
+
+def order_of(configs) -> List[str]:
+    """The paper's order for the configurations it knows, then any others, by name."""
+    present = list(dict.fromkeys(configs))
+    return [c for c in ORDER if c in present] + sorted(c for c in present if c not in ORDER)
+
+
+def label_of(config: str) -> str:
+    return NAME.get(config, config)
+
+
+def _sweep(d: pd.DataFrame, config: str, regime: str) -> pd.DataFrame:
+    """Both axes of the sweep for one configuration and regime, in order of the outside option."""
+    here = d[(d.config == config) & (d.regime_name == regime)]
+    return here.sort_values("multiple").drop_duplicates("multiple")
+
+
+def agent_pays_above(d: pd.DataFrame, config: str, regime: str) -> float:
+    """Exploratory, not registered: the outside option, in multiples of the median attempt cost,
+    above which retrying without a cap (step ii) first costs less than sending every task straight
+    to the outside option. Log-interpolated between points of the sweep; NaN if it never does."""
+    s = _sweep(d, config, regime)
+    x, y = s.multiple.values, (s.value_ii - s.value_escalate).values
+    for i in range(len(x) - 1):
+        if y[i] > 0 >= y[i + 1]:
+            t = y[i] / (y[i] - y[i + 1])
+            return float(np.exp(np.log(x[i]) + t * (np.log(x[i + 1]) - np.log(x[i]))))
+    return float("nan") if y[0] > 0 else float(x[0])
+
+
+def _share(x, base):
+    return 100.0 * np.asarray(x, float) / np.asarray(base, float)
+
+
+# ----------------------------------------------------------------------------- figure 1
+
+def fig_cap_margin(d: pd.DataFrame, out: str):
+    """The primary result: the cap's marginal value given retry across the sweep, per configuration
+    and as the median across them, in every regime. The saving is shown as a share of what retrying
+    without a cap costs, so that configurations whose attempts differ manyfold in cost sit on one
+    scale; the dollar values and their intervals are in Table 1 and results/ladder.csv."""
+    order = order_of(d.config)
+    fig, axes = plt.subplots(2, 4, figsize=(9.6, 4.9), sharex=True, sharey=True)
+    panels = (order + ["median"])[:8]
+    grid = np.geomspace(0.5, 500, 40)
+    for ax, config in zip(axes.flat, panels):
+        for regime, _ in REGIMES:
+            color = REGIME_COLOR[regime]
+            if config == "median":
+                ys = []
+                for c in order:
+                    s = _sweep(d, c, regime)
+                    ys.append(np.interp(np.log(grid), np.log(s.multiple),
+                                        _share(s.cap_margin, s.value_ii)))
+                ax.plot(grid, np.median(ys, axis=0), color=color, label=REGIME_LABEL[regime])
+                continue
+            s = _sweep(d, config, regime)
+            if regime in ("automated", "human 0.5"):
+                ax.fill_between(s.multiple, _share(s.cap_margin_low, s.value_ii),
+                                _share(s.cap_margin_high, s.value_ii), color=color, alpha=0.12,
+                                linewidth=0, zorder=2)
+            ax.plot(s.multiple, _share(s.cap_margin, s.value_ii), color=color, zorder=3,
+                    label=REGIME_LABEL[regime])
+        if config != "median":
+            above = agent_pays_above(d, config, "automated")
+            if np.isfinite(above):
+                ax.axvline(above, color=MUTED, linestyle=":", linewidth=1.1, zorder=1,
+                           label="retrying without a cap first beats escalating (automated)*")
+        _zero(ax)
+        ax.set_title("median of the configurations" if config == "median" else label_of(config),
+                     loc="left", color=INK)
+        _pct(ax)
+    for ax in axes.flat:
+        _log_x(ax)
+    fig.supxlabel("outside option, multiples of median attempt cost", fontsize=8.5, color=INK_2,
+                  y=0.07)
+    fig.supylabel("cap's saving, % of retry's cost", fontsize=8.5, color=INK_2, x=0.005)
+    axes[0, 0].set_ylim(-20, 75)
+    handles, labels = axes[0, 0].get_legend_handles_labels()
+    fig.legend(handles, labels, loc="lower center", ncol=5, bbox_to_anchor=(0.5, -0.03))
+    fig.suptitle("The cap's marginal value given retry (step ii minus step iii)", x=0.01,
+                 ha="left", fontsize=10, color=INK)
+    fig.text(0.01, -0.09, "Positive: the cap saves. Bands: 95% intervals from the full-pipeline "
+             "bootstrap (1,000 replicates) for the automated verifier and review at 0.5 H, scaled by "
+             "the point value of step ii. * Exploratory, not registered: to the left of the dotted "
+             "line, escalating every task without running the agent is cheaper than retrying "
+             "without a cap. " + IMPUTED, fontsize=7, color=INK_2, ha="left", wrap=True)
+    fig.tight_layout(rect=(0.01, 0.08, 1, 0.97))
+    return _save(fig, out, "fig1_cap_margin")
+
+
+# ----------------------------------------------------------------------------- figure 2
+
+def fig_transfer(d: pd.DataFrame, out: str, regime: str = "automated", name: str = "fig2_transfer"):
+    """The primary transfer: the state rule's margin over the best schedule, its models fitted on
+    the other six configurations, beside the same rule fitted on the configuration itself and
+    beside the margin of not capping at all. Where the three lines coincide, the rule is not
+    stopping attempts: its margin over the schedule is the schedule's own cost of selection."""
+    order = order_of(d.config)
+    fig, axes = plt.subplots(2, 4, figsize=(9.6, 4.9), sharex=True, sharey=True)
+    panels = (order + ["median"])[:8]
+    grid = np.geomspace(0.5, 500, 40)
+    for ax, config in zip(axes.flat, panels):
+        if config == "median":
+            for col, color, style, lab in (("transfer_margin", SERIES_1, "-", "rule fitted elsewhere"),
+                                           ("state_margin", SERIES_2, "--", "rule fitted here")):
+                ys = []
+                for c in order:
+                    s = _sweep(d, c, regime)
+                    ys.append(np.interp(np.log(grid), np.log(s.multiple),
+                                        _share(s[col], s.value_ii)))
+                ax.plot(grid, np.median(ys, axis=0), color=color, linestyle=style, label=lab)
+        else:
+            s = _sweep(d, config, regime)
+            nocap = _share(s.value_iiib - s.value_ii, s.value_ii)
+            ax.plot(s.multiple, nocap, color=MUTED, linestyle=":", linewidth=1.3, zorder=2,
+                    label="no cap at all (step ii)")
+            ax.plot(s.multiple, _share(s.state_margin, s.value_ii), color=SERIES_2,
+                    linestyle="--", zorder=3, label="rule fitted here")
+            ax.plot(s.multiple, _share(s.transfer_margin, s.value_ii), color=SERIES_1, zorder=4,
+                    label="rule fitted elsewhere")
+            ci = s[s.transfer_margin_low.notna()]
+            if len(ci):
+                lo = _share(ci.transfer_margin - ci.transfer_margin_low, ci.value_ii)
+                hi = _share(ci.transfer_margin_high - ci.transfer_margin, ci.value_ii)
+                ax.errorbar(ci.multiple, _share(ci.transfer_margin, ci.value_ii), yerr=[lo, hi],
+                            fmt="o", color=SERIES_1, markersize=4, elinewidth=1.0, capsize=0,
+                            zorder=5)
+        _zero(ax)
+        ax.set_title("median of the configurations" if config == "median" else label_of(config),
+                     loc="left", color=INK)
+        _pct(ax)
+    for ax in axes.flat:
+        _log_x(ax)
+    fig.supxlabel("outside option, multiples of median attempt cost", fontsize=8.5, color=INK_2,
+                  y=0.07)
+    fig.supylabel("saving over the best schedule, % of retry's cost", fontsize=8.5,
+                  color=INK_2, x=0.005)
+    axes[0, 0].set_ylim(-10, 10)
+    handles, labels = axes[0, 0].get_legend_handles_labels()
+    fig.legend(handles, labels, loc="lower center", ncol=3, bbox_to_anchor=(0.5, -0.03))
+    what = "primary transfer" if regime == "automated" else "not the registered regime"
+    fig.suptitle(f"The state rule against the best schedule, {REGIME_LABEL[regime]} ({what})",
+                 x=0.01, ha="left", fontsize=10, color=INK)
+    fig.text(0.01, -0.09, "Positive: the rule is cheaper than step iii-b. Points: 95% intervals "
+             "for the transferred rule at $25, $100 and $300 an hour (100 replicates, refitting "
+             "inside each), scaled by the point value of step ii. Below about two attempts the "
+             "dotted line leaves the frame: there, not capping at all costs far more than the "
+             "schedule. " + IMPUTED, fontsize=7, color=INK_2, ha="left", wrap=True)
+    fig.tight_layout(rect=(0.01, 0.08, 1, 0.97))
+    return _save(fig, out, name)
+
+
+# ----------------------------------------------------------------------------- figure 3
+
+def fig_cascade(c: pd.DataFrame, out: str):
+    """The best cross-configuration schedule against each configuration's own optimum, in every
+    regime, as a share of what escalating every task would cost. The best single configuration
+    chosen from the same training folds is the comparison switching has to beat."""
+    fig, axes = plt.subplots(1, 4, figsize=(9.6, 2.9), sharey=True)
+    order = order_of(k[len("own_"):] for k in c.columns if k.startswith("own_"))
+    for ax, (regime, _) in zip(axes, REGIMES):
+        s = c[c.regime_name == regime].sort_values("rate")
+        esc = s.value_escalate.values
+        for i, config in enumerate(order):
+            ax.plot(s.rate, s[f"own_{config}"] / esc, color=MUTED, linewidth=0.9, zorder=2,
+                    label="each configuration's own schedule" if i == 0 else None)
+        ax.plot(s.rate, s.value_best_single / esc, color=SERIES_2, zorder=3,
+                label="best single configuration, chosen from data")
+        ax.plot(s.rate, s.value_cascade / esc, color=SERIES_1, zorder=4, label="cascade")
+        ax.axhline(1.0, color=AXIS, linewidth=0.9, zorder=1)
+        ax.set_title(REGIME_LABEL[regime], loc="left", color=INK)
+        _log_x(ax, "outside option, $ an hour", RATE_TICKS)
+        ax.set_xlim(4, 350)
+    axes[0].set_ylabel("cost, share of escalating every task")
+    axes[0].yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:.0%}"))
+    handles, labels = axes[0].get_legend_handles_labels()
+    fig.legend(handles, labels, loc="lower center", ncol=3, bbox_to_anchor=(0.5, -0.09))
+    n = int(c.tasks.iloc[0])
+    fig.suptitle("Switching configurations: the cascade against each configuration's own schedule",
+                 x=0.01, ha="left", fontsize=10, color=INK)
+    fig.text(0.01, -0.2, f"On the {n} tasks with four usable draws in all seven configurations. "
+             "Below 100%: cheaper than sending every task straight to the outside option (a "
+             "reference line that is not in the registration). " + IMPUTED,
+             fontsize=7, color=INK_2, ha="left", wrap=True)
+    fig.tight_layout(rect=(0, 0.05, 1, 0.93))
+    return _save(fig, out, "fig3_cascade")
+
+
+# ----------------------------------------------------------------------------- figure 4 (exploratory)
+
+def attempt_units(b: pd.DataFrame) -> pd.DataFrame:
+    """The first break-even re-expressed in full attempts, tokens plus review: the mean outside
+    option H over the median token cost m plus the review f H. With H = M m this is M / (1 + f M),
+    which under review can never exceed 1 / f. Not registered; computed after the results."""
+    first = b[b.crossing == 1].copy()
+    first["full_attempts"] = first.multiple / (1.0 + first.regime * first.multiple)
+    return first
+
+
+def fig_attempt_units(b: pd.DataFrame, out: str):
+    first = attempt_units(b)
+    order = order_of(b.config)
+    fig, ax = plt.subplots(figsize=(5.6, 3.0))
+    ys = {c: i for i, c in enumerate(reversed(order))}
+    for regime, f in REGIMES[:3]:
+        here = first[first.regime_name == regime]
+        ax.scatter(here.full_attempts, [ys[c] for c in here.config], s=30,
+                   color=REGIME_COLOR[regime], edgecolor=SURFACE, linewidth=1.2, zorder=3,
+                   label=REGIME_LABEL[regime])
+    for f in (0.5, 0.3):
+        ax.axvline(1 / f, color=REGIME_COLOR[f"human {f}"], linewidth=0.9, linestyle="--",
+                   zorder=2)
+        ax.text(1 / f, len(order) - 0.35, f" ceiling at {f} H " if f == 0.5 else
+                f" ceiling at {f} H ", color=INK_2, fontsize=7, va="bottom",
+                ha="left" if f == 0.5 else "right")
+    ax.set_yticks(list(ys.values()))
+    ax.set_yticklabels([label_of(c) for c in ys])
+    ax.set_xlim(1.6, 4.2)
+    ax.set_ylim(-0.6, len(order) + 0.2)
+    ax.set_xlabel("first break-even: outside option in full attempts (tokens + review)")
+    ax.grid(axis="y", visible=False)
+    ax.legend(loc="center left", bbox_to_anchor=(1.01, 0.5))
+    ax.set_title("Exploratory, not registered: the break-even in units of a full attempt",
+                 loc="left", color=INK, fontsize=9)
+    fig.text(0.01, -0.07, "Under review at 0.5 H no configuration crosses: an attempt then costs at "
+             "least half the outside option, so the outside option is at most two attempts, below "
+             "every configuration's threshold. GPT-5.2 at 0.3 H crosses nowhere for the same reason.",
+             fontsize=7, color=INK_2, ha="left", wrap=True)
+    fig.tight_layout()
+    return _save(fig, out, "fig4_break_even_in_attempts")
+
+
+# ----------------------------------------------------------------------------- appendix figure
+
+def fig_correlation(r: pd.DataFrame, out: str, n_tasks: int):
+    order = order_of(r.configuration)
+    r = r.set_index("configuration").loc[order, order]
+    fig, ax = plt.subplots(figsize=(4.6, 3.9))
+    im = ax.imshow(r.values, cmap=matplotlib.colors.LinearSegmentedColormap.from_list(
+        "blue", ["#cde2fb", "#6da7ec", "#2a78d6", "#184f95", "#0d366b"]), vmin=0.5, vmax=1.0)
+    for i in range(len(order)):
+        for j in range(len(order)):
+            v = r.values[i, j]
+            ax.text(j, i, f"{v:.2f}", ha="center", va="center", fontsize=7,
+                    color=SURFACE if v > 0.78 else INK)
+    names = [label_of(c) for c in order]
+    ax.set_xticks(range(len(order)))
+    ax.set_xticklabels(names, rotation=40, ha="right")
+    ax.set_yticks(range(len(order)))
+    ax.set_yticklabels(names)
+    ax.grid(False)
+    for s in ax.spines.values():
+        s.set_visible(False)
+    cb = fig.colorbar(im, ax=ax, fraction=0.046, pad=0.03)
+    cb.outline.set_visible(False)
+    cb.ax.tick_params(labelsize=7, color=MUTED)
+    ax.set_title(f"Outcome correlation across {n_tasks} tasks", loc="left", color=INK)
+    fig.tight_layout()
+    return _save(fig, out, "figA1_outcome_correlation")
+
+
+# ----------------------------------------------------------------------------- tables
+
+def _fmt(x, places=2):
+    return "" if pd.isna(x) else f"{x:,.{places}f}"
+
+
+def _interval(v, lo, hi):
+    if pd.isna(lo):
+        return _fmt(v)
+    return f"{v:,.2f} [{lo:,.2f}, {hi:,.2f}]"
+
+
+def _choice(s: str) -> str:
+    """What the folds chose for step iii, written short: 4x@175 is four attempts at 175 calls."""
+    if pd.isna(s):
+        return ""
+    out = []
+    for c in str(s).split("|"):
+        c = c.split(": ", 1)[-1]
+        out.append(c.replace(" attempts at ", "x@").replace(" cutoff", "").replace("no", "none"))
+    return ", ".join(sorted(set(out)))
+
+
+def table_ladder(d: pd.DataFrame, b: pd.DataFrame, out: str) -> List[str]:
+    """Table 1: policy value by configuration for steps i to iii-b, in the automated regime and
+    under review at 0.5 H, at three rates, with the cap's margin and its interval, what the folds
+    chose, and the first break-even. The full sweep is results/ladder.csv."""
+    rows = []
+    for regime in ("automated", "human 0.5"):
+        for config in order_of(d.config):
+            be = b[(b.config == config) & (b.regime_name == regime) & (b.crossing <= 1)].iloc[0]
+            first = ("none in sweep" if be.crossing == 0 else
+                     f"${be.rate:,.2f}/h = {be.multiple:.2f}x")
+            for rate in TABLE_RATES:
+                r = d[(d.config == config) & (d.regime_name == regime) & (d.axis == "rate")
+                      & (d.rate == rate)].iloc[0]
+                rows.append({
+                    "regime": REGIME_LABEL[regime], "configuration": label_of(config),
+                    "$/h": f"{rate:.0f}", "x attempt": f"{r.multiple:.0f}",
+                    "i": _fmt(r.value_i), "ii": _fmt(r.value_ii), "iii": _fmt(r.value_iii),
+                    "iii-b": _fmt(r.value_iiib),
+                    "cap's saving [95%]": _interval(r.cap_margin, r.cap_margin_low,
+                                                    r.cap_margin_high),
+                    "iii chose": _choice(r.choice_iii),
+                    "escalate all*": _fmt(r.value_escalate),
+                    "first break-even": first if rate == TABLE_RATES[0] else "",
+                })
+    t = pd.DataFrame(rows)
+    return _write_table(t, out, "table1_ladder",
+                        caption="Policy value, expected cost per incoming task in dollars, "
+                        "chosen on training folds and scored on held-out folds. Cap's saving is "
+                        "step ii minus step iii. * Not registered: every task sent straight to the "
+                        "outside option. " + IMPUTED)
+
+
+def table_breakeven(d: pd.DataFrame, b: pd.DataFrame, out: str) -> List[str]:
+    """Table 2: the summary statistic of the primary result, per configuration and regime: the
+    first break-even in both units, how many crossings the scan found and how many the bootstrap
+    supports, and the highest rate at which the cap's saving is resolved."""
+    rows = []
+    for regime, f in REGIMES:
+        for config in order_of(d.config):
+            here = b[(b.config == config) & (b.regime_name == regime)]
+            first = here[here.crossing <= 1].iloc[0]
+            lad = d[(d.config == config) & (d.regime_name == regime)]
+            resolved = lad[lad.cap_margin_low > 0]
+            supported = int((here.supported.astype(str) == "True").sum())
+            units = (first.multiple / (1 + f * first.multiple)) if first.crossing else np.nan
+            rows.append({
+                "regime": REGIME_LABEL[regime], "configuration": label_of(config),
+                "first break-even, $/h": _fmt(first.rate) if first.crossing else "none",
+                "x median attempt": _fmt(first.multiple) if first.crossing else "",
+                "crossings (supported)": f"{int(first.crossings)} ({supported})",
+                "saving resolved up to, $/h": _fmt(resolved.rate.max()) if len(resolved) else "",
+                "in full attempts*": _fmt(units),
+                "retry beats escalating above*": (lambda v: "never in sweep" if np.isnan(v)
+                                                  else _fmt(v))(agent_pays_above(d, config, regime)),
+            })
+    t = pd.DataFrame(rows)
+    return _write_table(t, out, "table2_breakeven",
+                        caption="The rate at which the cap's marginal value changes sign. Every "
+                        "crossing is reported in results/breakeven.csv; one is supported when the "
+                        "bootstrap resolves the sign on both sides of it. * Exploratory, not "
+                        "registered: the break-even over the full cost of an attempt, tokens plus "
+                        "review, M / (1 + f M); and the multiple of the median attempt cost above which retrying without "
+                        "a cap first costs less than escalating every task. " + IMPUTED)
+
+
+def table_transfer(d: pd.DataFrame, out: str) -> List[str]:
+    """Table 3: the primary transfer at the three rates with intervals, and how far the transferred
+    rule sits from not capping at all."""
+    rows = []
+    for config in order_of(d.config):
+        for rate in TABLE_RATES:
+            r = d[(d.config == config) & (d.regime_name == "automated") & (d.axis == "rate")
+                  & (d.rate == rate)].iloc[0]
+            rows.append({
+                "configuration": label_of(config), "$/h": f"{rate:.0f}",
+                "iii-b": _fmt(r.value_iiib), "iv, fitted here": _fmt(r.value_iv),
+                "iv, fitted elsewhere": _fmt(r.value_iv_transfer), "ii": _fmt(r.value_ii),
+                "transfer margin [95%]": _interval(r.transfer_margin, r.transfer_margin_low,
+                                                   r.transfer_margin_high),
+                "elsewhere minus ii": _fmt(r.value_iv_transfer - r.value_ii),
+            })
+    for rate in TABLE_RATES:
+        here = d[(d.regime_name == "automated") & (d.axis == "rate") & (d.rate == rate)]
+        rows.append({"configuration": "median", "$/h": f"{rate:.0f}",
+                     "transfer margin [95%]": _fmt(here.transfer_margin.median()),
+                     "elsewhere minus ii": _fmt((here.value_iv_transfer - here.value_ii).median())})
+    t = pd.DataFrame(rows).fillna("")
+    return _write_table(t, out, "table3_transfer",
+                        caption="The primary transfer, automated verifier: step iii-b minus the "
+                        "state rule with its models fitted on the other six configurations. The "
+                        "last column is how far that rule sits from retrying without any cap. "
+                        + IMPUTED)
+
+
+def _write_table(t: pd.DataFrame, out: str, name: str, caption: str) -> List[str]:
+    paths = []
+    p = os.path.join(out, f"{name}.csv")
+    t.to_csv(p, index=False)
+    paths.append(p)
+    p = os.path.join(out, f"{name}.md")
+    with open(p, "w") as fh:
+        fh.write(_markdown(t) + f"\n\n{caption}\n")
+    paths.append(p)
+    p = os.path.join(out, f"{name}.tex")
+    with open(p, "w") as fh:
+        fh.write(_latex(t, caption, name))
+    paths.append(p)
+    return paths
+
+
+def _markdown(t: pd.DataFrame) -> str:
+    cols = list(t.columns)
+    lines = ["| " + " | ".join(cols) + " |", "|" + "|".join("---" for _ in cols) + "|"]
+    for _, r in t.iterrows():
+        lines.append("| " + " | ".join(str(r[c]) for c in cols) + " |")
+    return "\n".join(lines)
+
+
+def _latex(t: pd.DataFrame, caption: str, label: str) -> str:
+    esc = lambda s: (str(s).replace("\\", "\\textbackslash{}").replace("&", "\\&")
+                     .replace("%", "\\%").replace("$", "\\$").replace("#", "\\#")
+                     .replace("_", "\\_").replace("\u2020", "$^\\dagger$"))
+    cols = list(t.columns)
+    body = ["\\begin{table}[t]", "\\centering", "\\small",
+            f"\\caption{{{esc(caption)}}}", f"\\label{{tab:{label}}}",
+            "\\begin{tabular}{" + "l" * 2 + "r" * (len(cols) - 2) + "}", "\\toprule",
+            " & ".join(esc(c) for c in cols) + " \\\\", "\\midrule"]
+    last = None
+    for _, r in t.iterrows():
+        first = r[cols[0]]
+        if last is not None and first != last:
+            body.append("\\midrule")
+        last = first
+        body.append(" & ".join(esc(r[c]) for c in cols) + " \\\\")
+    body += ["\\bottomrule", "\\end{tabular}", "\\end{table}", ""]
+    return "\n".join(body)
+
+
+# ----------------------------------------------------------------------------- main
+
+def main(argv=None):
+    ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    ap.add_argument("--results", default="results")
+    ap.add_argument("--out", default=os.path.join("exhibits", "out"))
+    a = ap.parse_args(argv)
+    os.makedirs(a.out, exist_ok=True)
+    _style()
+    got = load(a.results)
+    d = got["ladder"]
+    written = []
+    written += fig_cap_margin(d, a.out)
+    written += fig_transfer(d, a.out)
+    written += fig_transfer(d, a.out, regime="human 0.5", name="figA2_transfer_review_05")
+    if "breakeven" in got:
+        written += table_ladder(d, got["breakeven"], a.out)
+        written += table_breakeven(d, got["breakeven"], a.out)
+        written += fig_attempt_units(got["breakeven"], a.out)
+    written += table_transfer(d, a.out)
+    if "cascade" in got:
+        written += fig_cascade(got["cascade"], a.out)
+        if "outcome_correlation" in got:
+            written += fig_correlation(got["outcome_correlation"], a.out,
+                                       int(got["cascade"].tasks.iloc[0]))
+    for p in written:
+        print(p)
+
+
+if __name__ == "__main__":
+    main()
