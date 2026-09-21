@@ -4,7 +4,7 @@
 **Working paper, version 0.1**
 **September 21, 2026**
 
-*Empirical working paper prepared for circulation and comment. The analysis plan was frozen before any policy result was computed, and is registered on OSF. Prices are list prices on each run's first day and should be read as a dated snapshot. Results in Appendices B to D are pending the final appendix run and are marked where they appear.*
+*Empirical working paper prepared for circulation and comment. The analysis plan was frozen before any policy result was computed, and is registered on OSF. Prices are list prices on each run's first day and should be read as a dated snapshot.*
 
 
 # Abstract

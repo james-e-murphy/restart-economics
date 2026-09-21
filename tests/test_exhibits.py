@@ -148,8 +148,8 @@ def test_every_exhibit_is_written_from_the_results_files(results, tmp_path):
     make = _module()
     out = tmp_path / "out"
     make.main(["--results", str(results), "--out", str(out)])
-    for stem in ("fig1_cap_margin", "fig_ladder", "fig2_transfer", "figA2_transfer_review_05", "fig3_cascade",
-                 "fig4_break_even_in_attempts", "figA1_outcome_correlation",
+    for stem in ("fig1_cap_margin", "fig_ladder", "fig2_transfer", "figA1_transfer_review_05", "fig3_cascade",
+                 "fig4_break_even_in_attempts", "figA2_outcome_correlation",
                  "figA3_tail_composition"):
         for ext in ("pdf", "png"):
             assert (out / f"{stem}.{ext}").stat().st_size > 0, stem
@@ -176,12 +176,14 @@ def test_every_exhibit_is_written_from_the_results_files(results, tmp_path):
     make.main(["--results", str(results), "--out", str(bare), "--bare"])
     assert (bare / "fig1_cap_margin.pdf").stat().st_size > 0
     make.BARE = False
-    a6 = pd.read_csv(out / "tableA6_difficulty.csv")
-    assert list(dict.fromkeys(a6.difficulty)) == [
-        "under 15 minutes", "15 minutes to 1 hour", "1 to 4 hours", "over 4 hours",
-        "1 hour or more", "all, chosen within bucket", "all, chosen blind"]
-    small = a6[a6.tasks < 10]
-    assert (small["cap's saving at $100 [95%]"] == "too few to choose on").all()
+    a6 = pd.read_csv(out / "tableA6_difficulty.csv", dtype=str)
+    assert list(a6.columns) == ["regime", "configuration", "under 15 min", "15 min to 1 h",
+                                "1 to 4 h", "over 4 h", "1 h or more", "all, within",
+                                "all, blind"]
+    assert len(a6) == 2 * 2                     # regimes x configurations
+    # a bucket too small to choose on shows its count of tasks, in parentheses
+    cells = a6[["under 15 min", "15 min to 1 h", "1 to 4 h", "over 4 h", "1 h or more"]]
+    assert cells.fillna("").apply(lambda c: c.str.match(r"^(\(\d+\)|-?[\d,]+\.\d\d\*?)?$")).all().all()
 
 
 def test_the_point_where_retrying_first_beats_escalating(results):

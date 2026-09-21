@@ -26,8 +26,8 @@ which the manuscript carries in its captions; the paper's build uses that (`pape
 
 | file | what it shows |
 |---|---|
-| `figA1_outcome_correlation` | the seven-by-seven correlation of outcomes, the portfolio predictor of whether a cascade pays |
-| `figA2_transfer_review_05` | the transfer figure under review at 0.5 H, where the rule does stop attempts |
+| `figA1_transfer_review_05` | the transfer figure under review at 0.5 H, where the rule does stop attempts |
+| `figA2_outcome_correlation` | the seven-by-seven correlation of outcomes, the portfolio predictor of whether a cascade pays |
 | `tableA1_sensitivity_breakeven` | the break-even under each registered sensitivity beside the primary: per regime, how many configurations cross in the sweep, and the first crossing's median and range |
 | `tableA2_sensitivity_margins` | the primary margins under each registered sensitivity, as medians across configurations: the cap's saving in both headline regimes, the primary transfer, and switching |
 | `tableA3_two_stage` | the two-stage bootstrap interval beside the primary task-level one, for the cap's saving and the primary transfer |

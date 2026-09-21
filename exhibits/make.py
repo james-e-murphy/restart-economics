@@ -80,7 +80,9 @@ def _save(fig, out: str, name: str) -> List[str]:
     paths = []
     for ext in ("pdf", "png"):
         p = os.path.join(out, f"{name}.{ext}")
-        fig.savefig(p, dpi=200, bbox_inches="tight")
+        # no creation date in the PDF, so that an unchanged figure is an unchanged file
+        fig.savefig(p, dpi=200, bbox_inches="tight",
+                    metadata={"CreationDate": None} if ext == "pdf" else None)
         paths.append(p)
     plt.close(fig)
     return paths
@@ -441,7 +443,7 @@ def fig_correlation(r: pd.DataFrame, out: str, n_tasks: int):
     cb.ax.tick_params(labelsize=7, color=MUTED)
     ax.set_title(f"Outcome correlation across {n_tasks} tasks", loc="left", color=INK)
     fig.tight_layout()
-    return _save(fig, out, "figA1_outcome_correlation")
+    return _save(fig, out, "figA2_outcome_correlation")
 
 
 # ----------------------------------------------------------------------------- tables
@@ -768,26 +770,44 @@ def table_oracle(o: pd.DataFrame, out: str) -> List[str]:
                         "registered: every task sent straight to the outside option. " + IMPUTED)
 
 
+DIFFICULTY_COLUMNS = (("under 15 minutes", "under 15 min"), ("15 minutes to 1 hour", "15 min to 1 h"),
+                      ("1 to 4 hours", "1 to 4 h"), ("over 4 hours", "over 4 h"),
+                      ("1 hour or more", "1 h or more"), ("all, chosen within bucket", "all, within"),
+                      ("all, chosen blind", "all, blind"))
+
+
 def table_difficulty(dd: pd.DataFrame, out: str) -> List[str]:
+    """One row per configuration and regime, one column per bucket: the cap's saving at $100 an
+    hour, starred where its interval excludes zero. The intervals themselves are in
+    results/difficulty.csv; a bucket too small to choose on shows its count of tasks."""
     rows = []
     for regime in ("automated", "human 0.5"):
         for config in order_of(dd.config):
             here = dd[(dd.config == config) & (dd.regime_name == regime) & (dd.rate == 100.0)]
-            for _, r in here.iterrows():
-                saving = ("too few to choose on" if pd.isna(r.cap_margin) else
-                          _interval(r.cap_margin, r.cap_margin_low, r.cap_margin_high))
-                rows.append({"regime": REGIME_LABEL[regime], "configuration": label_of(config),
-                             "difficulty": r.bucket, "tasks": int(r.tasks),
-                             "cap's saving at $100 [95%]": saving})
+            row = {"regime": REGIME_LABEL[regime], "configuration": label_of(config)}
+            for bucket, short in DIFFICULTY_COLUMNS:
+                r = here[here.bucket == bucket]
+                if not len(r):
+                    row[short] = ""
+                    continue
+                r = r.iloc[0]
+                if pd.isna(r.cap_margin):
+                    row[short] = f"({int(r.tasks)})"
+                    continue
+                lo, hi = r.get("cap_margin_low"), r.get("cap_margin_high")
+                star = "*" if (pd.notna(lo) and (lo > 0 or hi < 0)) else ""
+                row[short] = f"{r.cap_margin:,.2f}{star}"
+            rows.append(row)
     t = pd.DataFrame(rows)
     return _write_table(t, out, "tableA6_difficulty",
                         caption="The cap's marginal value by the benchmark's difficulty annotation, "
-                        "every policy chosen within the bucket, at $100 an hour. The two longest "
-                        "buckets are also shown together, because the longest is too small for a "
-                        "training fold to choose on. 'All, chosen within bucket' pools the choices "
+                        "every policy chosen within the bucket, dollars per task at $100 an hour. "
+                        "* The 95 percent interval from 1,000 replicates excludes zero; every "
+                        "interval is in results/difficulty.csv. Over 4 hours: too few tasks for a "
+                        "training fold to choose on, with their count in parentheses; the two "
+                        "longest buckets are also shown together. 'All, within' pools the choices "
                         "made under 15 minutes, from 15 minutes to 1 hour and at 1 hour or more; "
-                        "'all, chosen blind' is the primary. Intervals: 1,000 replicates. "
-                        + IMPUTED)
+                        "'all, blind' is the primary. " + IMPUTED)
 
 
 def table_distribution(ds: pd.DataFrame, out: str) -> List[str]:
@@ -845,11 +865,14 @@ def table_diagnostics(dg_: pd.DataFrame, out: str) -> List[str]:
                      "all four fail": f"{r.all_fail_share:.0%}",
                      "all four resolve": f"{r.all_resolve_share:.0%}",
                      "median attempt, $": _fmt(r.median_attempt_cost, 3),
-                     "attempts past their outside option at $25/h": f"{r.over_outside_25:.1%}"})
+                     "attempts past their outside option at $25/h": f"{r.over_outside_25:.2%}"})
     t = pd.DataFrame(rows)
     return _write_table(t, out, "tableA9_diagnostics",
                         caption="Per configuration, on its tasks with four usable draws. Both shares "
                         "motivate restarts and neither bounds their value. " + IMPUTED)
+
+
+TAIL_FLOOR = 0.01
 
 
 def fig_tail(tc: pd.DataFrame, out: str):
@@ -858,7 +881,13 @@ def fig_tail(tc: pd.DataFrame, out: str):
     order = order_of(tc.config)
     fig, axes = plt.subplots(2, 4, figsize=(9.6, 4.6), sharex=True, sharey=True)
     for ax, config in zip(axes.flat, order):
-        s = tc[tc.config == config].sort_values("cutoff")
+        s = tc[tc.config == config].sort_values("cutoff").copy()
+        # a share of what a handful of attempts do is noise: draw the ratios only while at least
+        # TAIL_FLOOR of attempts are still running
+        thin = s.running < TAIL_FLOOR
+        for col in ("resolving_beyond", "resolve_if_running", "over_outside_25"):
+            if col in s:
+                s.loc[thin, col] = np.nan
         ax.plot(s.cutoff, s.running, color=MUTED, linestyle=":", linewidth=1.2, zorder=2,
                 label="still running")
         ax.plot(s.cutoff, s.resolving_beyond, color=SERIES_1, zorder=3,
@@ -947,7 +976,7 @@ def main(argv=None):
     written += fig_cap_margin(d, a.out)
     written += fig_ladder(d, a.out)
     written += fig_transfer(d, a.out)
-    written += fig_transfer(d, a.out, regime="human 0.5", name="figA2_transfer_review_05")
+    written += fig_transfer(d, a.out, regime="human 0.5", name="figA1_transfer_review_05")
     if "breakeven" in got:
         written += table_ladder(d, got["breakeven"], a.out)
         written += table_breakeven(d, got["breakeven"], a.out)

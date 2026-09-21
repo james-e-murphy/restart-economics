@@ -1,11 +1,11 @@
 | configuration | tasks | within-task share of log-spend variance | mixed outcomes | all four fail | all four resolve | median attempt, $ | attempts past their outside option at $25/h |
 |---|---|---|---|---|---|---|---|
-| GPT-5 | 496 | 64% | 24% | 30% | 46% | 0.345 | 0.1% |
-| GPT-5.2 | 405 | 30% | 11% | 28% | 61% | 0.556 | 0.7% |
-| Sonnet 4 | 498 | 29% | 19% | 22% | 58% | 1.039 | 4.8% |
-| Sonnet 4.5 | 500 | 24% | 15% | 28% | 56% | 1.661 | 14.5% |
-| Gemini 3 Pro | 410 | 43% | 22% | 30% | 48% | 0.815 | 3.5% |
-| Kimi K2 | 412 | 33% | 25% | 31% | 44% | 0.698 | 3.8% |
-| Qwen3 Coder† | 500 | 26% | 23% | 24% | 53% | 1.085 | 5.8% |
+| GPT-5 | 496 | 64% | 24% | 30% | 46% | 0.345 | 0.05% |
+| GPT-5.2 | 405 | 30% | 11% | 28% | 61% | 0.556 | 0.68% |
+| Sonnet 4 | 498 | 29% | 19% | 22% | 58% | 1.039 | 4.82% |
+| Sonnet 4.5 | 500 | 24% | 15% | 28% | 56% | 1.661 | 14.50% |
+| Gemini 3 Pro | 410 | 43% | 22% | 30% | 48% | 0.815 | 3.54% |
+| Kimi K2 | 412 | 33% | 25% | 31% | 44% | 0.698 | 3.82% |
+| Qwen3 Coder† | 500 | 26% | 23% | 24% | 53% | 1.085 | 5.75% |
 
 Per configuration, on its tasks with four usable draws. Both shares motivate restarts and neither bounds their value. † Qwen3 Coder's dollar figures rest on an imputed price (PLAN.md Section 10).
