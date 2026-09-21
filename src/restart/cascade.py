@@ -123,13 +123,13 @@ def search(b: Bank, train: np.ndarray, k: int, start: Sequence[Tuple[str, int]],
     names = tuple(names or b.names)
     idx = np.flatnonzero(np.asarray(train, bool) & b.mask)
     if idx.size == 0:
-        raise ValueError("the cascade search needs training tasks with every draw usable")
+        raise ValueError("the cascade search needs training tasks")
     width = b.pools[names[0]].n_draws
     u = {c: b.charge[c][:, idx, :] for c in b.names}
     w = {c: b.survive[c][:, idx, :] for c in b.names}
+    ok = {c: b.pools[c].usable[idx] for c in b.names}          # [task, draw]
     h = b.outside[idx]
     n_t = idx.size
-    weight = 1.0 / n_t
     combos_at: Dict[Tuple[str, ...], np.ndarray] = {}
 
     def combos(assignment):
@@ -139,18 +139,30 @@ def search(b: Bank, train: np.ndarray, k: int, start: Sequence[Tuple[str, int]],
         return combos_at[key]
 
     def slot_values(sched, j, config):
-        """The whole policy's mean value for every cutoff of ``config`` in slot *j*."""
+        """The whole policy's mean value for every cutoff of ``config`` in slot *j*.
+
+        A task is scored over the combinations of its draws that are all usable, and only if it
+        has one, which is the evaluator's rule; on tasks with every draw usable in every
+        configuration, the basis the comparisons rest on, every combination qualifies."""
         assignment = [c for c, _ in sched]
         assignment[j] = config
         draws = combos(assignment)                              # [combination, slot]
         m = len(draws)
+        valid = np.ones((m, n_t))
+        for l, c in enumerate(assignment):
+            valid = valid * ok[c][:, draws[:, l]].T
+        count = valid.sum(axis=0)
+        scored = count > 0
+        if not scored.any():
+            return np.full(u[config].shape[0], np.inf)
+        per = np.where(scored, 1.0 / np.maximum(count, 1), 0.0)   # per-task mean over combinations
         views_u = [None] * k
         views_w = [None] * k
         for l, (c, t) in enumerate(sched):
             if l != j:
                 views_u[l] = u[c][t][:, draws[:, l]].T          # [combination, task]
                 views_w[l] = w[c][t][:, draws[:, l]].T
-        running = np.ones((m, n_t))
+        running = valid.copy()
         prefix = np.zeros((m, n_t))
         for l in range(j):
             prefix += running * views_u[l]
@@ -165,10 +177,10 @@ def search(b: Bank, train: np.ndarray, k: int, start: Sequence[Tuple[str, int]],
             if here.any():
                 g[d] = running[here].sum(axis=0)
                 f[d] = (running[here] * tail[here]).sum(axis=0)
-        base = prefix.sum(axis=0) / m                            # the same for every cutoff
-        per_task = ((u[config] * (g / m).T).sum(axis=2) + (w[config] * (f / m).T).sum(axis=2)
+        base = prefix.sum(axis=0) * per                          # the same for every cutoff
+        per_task = ((u[config] * (g * per).T).sum(axis=2) + (w[config] * (f * per).T).sum(axis=2)
                     + base)
-        return per_task.sum(axis=1) * weight
+        return per_task[:, scored].mean(axis=1)
 
     sched = [tuple(s) for s in start]
     if len(sched) != k:
@@ -353,6 +365,16 @@ def cell(pools: Dict[str, ev.Pool], rate: float, fraction: float, phi: float = 0
     return row
 
 
+def fields(names: Sequence[str]) -> Tuple[str, ...]:
+    """The columns of a cascade results file, for configurations ``names``."""
+    return (("regime_name", "regime", "rate", "phi", "tasks", "value_escalate",
+             "value_best_single", "value_cascade", "switch_margin", "switch_margin_low",
+             "switch_margin_high", "replicates", "choice_best_single", "choice_cascade",
+             "configurations_used")
+            + tuple(f"own_{c}" for c in names) + tuple(f"without_{c}" for c in names)
+            + tuple(f"essential_{c}" for c in names))
+
+
 def _short_name(c: str) -> str:
     return (c.replace("_4runs", "").replace("-4runs", "").replace("-instruct", "")
             .replace("claude-", "").replace("-preview", ""))
@@ -414,18 +436,13 @@ def _main(argv=None):
                 print("      essential: " + "  ".join(
                     f"{_short_name(c)} {row[f'essential_{c}']:+.2f}" for c in names), flush=True)
 
-    fields = (["regime_name", "regime", "rate", "phi", "tasks", "value_escalate",
-               "value_best_single", "value_cascade", "switch_margin", "switch_margin_low",
-               "switch_margin_high", "replicates", "choice_best_single", "choice_cascade",
-               "configurations_used"]
-              + [f"own_{c}" for c in names] + [f"without_{c}" for c in names]
-              + [f"essential_{c}" for c in names])
     os.makedirs(os.path.dirname(a.out) or ".", exist_ok=True)
     with open(a.out, "w", newline="") as fh:
-        w = csv.DictWriter(fh, fieldnames=fields)
+        columns = fields(names)
+        w = csv.DictWriter(fh, fieldnames=columns)
         w.writeheader()
         for r in rows:
-            w.writerow({k: r.get(k, "") for k in fields})
+            w.writerow({k: r.get(k, "") for k in columns})
     print(f"\n{len(rows)} rows -> {a.out}")
 
 

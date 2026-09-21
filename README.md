@@ -35,7 +35,8 @@ argument, and every prespecified comparison.
     archives/SHA256SUMS  checksums of the raw archives; archives themselves are not committed
     src/restart/         extraction, cost reconstruction, policies, evaluator, bootstrap,
                          the schedule search, the state rule, the ladder, the break-even,
-                         the cascade, and the coverage check of the intervals
+                         the cascade, the registered sensitivities, and the coverage check of
+                         the intervals
     tests/               hand-walked edge cases and the synthetic dry run
     data/derived/        execution and prefix tables, rebuilt locally and not committed
     results/             policy values, margins, break-evens and cascades, each file written by
@@ -71,6 +72,7 @@ argument, and every prespecified comparison.
     python -m restart.ladder --derived data/derived      # steps i to iv and the transfer, the sweep
     python -m restart.breakeven --derived data/derived   # the break-even of the primary result
     python -m restart.cascade --derived data/derived     # step v and the outcome correlation
+    python -m restart.sensitivity --derived data/derived # every registered sensitivity
     python -m restart.coverage                           # the interval's coverage, on synthetic data
     python exhibits/make.py                              # every figure and table, from results/
 
@@ -94,4 +96,6 @@ record what was known about the data before the freeze, and what was not.
 ## Status
 
 The audit is complete and PLAN.md Section 10 records what it found, including the state rule's class
-and φ. The plan is frozen at the `plan-frozen` tag and registered. No policy result exists.
+and φ. The plan is frozen at the `plan-frozen` tag and registered. The primary results, the
+cascade, the registered sensitivities and the exhibits are computed from it by the commands above;
+the appendix comparators and the manuscript are in progress.

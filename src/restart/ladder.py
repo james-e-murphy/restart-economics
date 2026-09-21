@@ -80,16 +80,18 @@ def rung(pool: ev.Pool, rate: float, fraction: float, phi: float = 0.0,
          seed: int = inf.SEED, tab: Optional[sc.Table] = None,
          fitted_replicates: int = 0, steps: Sequence[str] = ("iii-b", "iv", "transfer"),
          transfer: Optional[Tuple[Dict[str, ev.Pool], Sequence[str]]] = None,
-         state_cache: Optional[dict] = None, transfer_cache: Optional[dict] = None) -> dict:
+         state_cache: Optional[dict] = None, transfer_cache: Optional[dict] = None,
+         label: Optional[np.ndarray] = None) -> dict:
     """One configuration at one rate in one regime: the ladder and the comparisons between rungs.
 
     ``transfer`` is the other configurations' pools, indexed by this configuration's tasks, and
-    their names; without it the transfer step is skipped."""
+    their names; without it the transfer step is skipped. ``label`` replaces the fold split, which
+    the two-stage bootstrap needs when the pool is itself a resample."""
     outside = ev.outside_option(pool, rate)
     verify = ev.verification(outside, fraction)
     if mask is None:
         mask = ev.full_draw_tasks({pool.config: pool})
-    label = inf.folds(pool.n_tasks)
+    label = inf.folds(pool.n_tasks) if label is None else np.asarray(label)
     tab = tab if tab is not None else sc.table(pool)
     ks = tuple(range(1, po.MAX_ATTEMPTS + 1))
 
@@ -207,9 +209,12 @@ def ladder(pool: ev.Pool, rates: Sequence[float] = RATES,
            fitted_replicates: int = FITTED_REPLICATES,
            fitted_regimes: Sequence[str] = FITTED_REGIMES,
            fitted_rates: Sequence[float] = FITTED_RATES,
-           transfer: Optional[Tuple[Dict[str, ev.Pool], Sequence[str]]] = None):
-    """Every point of the sweep by every regime, for one configuration."""
-    mask = ev.full_draw_tasks({pool.config: pool})
+           transfer: Optional[Tuple[Dict[str, ev.Pool], Sequence[str]]] = None,
+           mask: Optional[np.ndarray] = None):
+    """Every point of the sweep by every regime, for one configuration. ``mask`` replaces the tasks
+    scored, the four-draw subset by default; the all-tasks sensitivity passes every task with a
+    usable draw, and each policy is then scored on the tasks that can fill it."""
+    mask = ev.full_draw_tasks({pool.config: pool}) if mask is None else np.asarray(mask, bool)
     tab = sc.table(pool)
     cache: dict = {}
     moved: dict = {}

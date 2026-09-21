@@ -155,9 +155,10 @@ FIELDS = ("config", "regime_name", "regime", "phi", "crossings", "crossing", "ra
 
 
 def rows_for(pool: ev.Pool, regimes=ld.REGIMES, phi: float = 0.0,
-             ladder_rows: Sequence[dict] = (), log=None, scan: int = SCAN) -> List[dict]:
+             ladder_rows: Sequence[dict] = (), log=None, scan: int = SCAN,
+             mask: Optional[np.ndarray] = None) -> List[dict]:
     """One row per crossing, or one row saying there is none, for each regime."""
-    mask = ev.full_draw_tasks({pool.config: pool})
+    mask = ev.full_draw_tasks({pool.config: pool}) if mask is None else np.asarray(mask, bool)
     out = []
     for name, fraction in regimes:
         if log:

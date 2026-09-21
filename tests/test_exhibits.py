@@ -18,6 +18,7 @@ from restart import breakeven as be          # noqa: E402
 from restart import cascade as cs            # noqa: E402
 from restart import evaluate as ev           # noqa: E402
 from restart import ladder as ld             # noqa: E402
+from restart import sensitivity as se        # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 MAKE = os.path.join(HERE, os.pardir, "exhibits", "make.py")
@@ -91,7 +92,31 @@ def results(tmp_path_factory):
         w.writerow(["configuration"] + list(names))
         for c, r in zip(names, corr):
             w.writerow([c] + list(r))
+    _sensitivities(pools, root)
     return root
+
+
+def _sensitivities(pools, root):
+    """What ``restart.sensitivity`` writes, for two of its variants, on the same pools."""
+    rows, found, casc = [], [], []
+    for key in ("phi-0.50", "all-tasks"):
+        v = se.BY_KEY[key]
+        r, c = se.ladder_rows(v, pools, replicates=8, steps=("iii-b", "transfer"),
+                              rates=(5.0, 25.0, 100.0, 300.0), multiples=(0.5, 2.0, 20.0), scan=6)
+        rows += r
+        found += c
+        k, names = se.cascade_rows(v, pools, rates=(25.0, 100.0))
+        casc += k
+    se.write(rows, str(root / "sensitivity_ladder.csv"), se.LADDER_FIELDS)
+    se.write(found, str(root / "sensitivity_breakeven.csv"), se.BREAKEVEN_FIELDS)
+    se.write(casc, str(root / "sensitivity_cascade.csv"), ("variant",) + cs.fields(names))
+    two = []
+    for name, pool in pools.items():
+        two += se.cap_intervals(pool, 6, rates=(25.0, 100.0, 300.0), multiples=())
+        others = [c for c in pools if c != name]
+        source = {c: ev.reindex(pools[c], pool.tasks) for c in others}
+        two += se.two_stage_transfer(pool, source, others, 2, rates=(25.0, 100.0, 300.0))
+    se.write(two, str(root / "sensitivity_two_stage.csv"), se.TWO_STAGE_FIELDS)
 
 
 def test_every_exhibit_is_written_from_the_results_files(results, tmp_path):
@@ -102,12 +127,23 @@ def test_every_exhibit_is_written_from_the_results_files(results, tmp_path):
                  "fig4_break_even_in_attempts", "figA1_outcome_correlation"):
         for ext in ("pdf", "png"):
             assert (out / f"{stem}.{ext}").stat().st_size > 0, stem
-    for stem in ("table1_ladder", "table2_breakeven", "table3_transfer"):
+    for stem in ("table1_ladder", "table2_breakeven", "table3_transfer",
+                 "tableA1_sensitivity_breakeven", "tableA2_sensitivity_margins",
+                 "tableA3_two_stage"):
         for ext in ("csv", "md", "tex"):
             assert (out / f"{stem}.{ext}").stat().st_size > 0, stem
     t1 = pd.read_csv(out / "table1_ladder.csv")
     assert set(t1.configuration) == {"m1", "m2"}
     assert len(t1) == 2 * 2 * 3                 # regimes x configurations x rates
+    a1 = pd.read_csv(out / "tableA1_sensitivity_breakeven.csv")
+    assert list(dict.fromkeys(a1.sensitivity)) == ["primary", "phi 0.50", "all tasks"]
+    assert len(a1) == 3 * 4                     # the primary and two variants, by regime
+    a2 = pd.read_csv(out / "tableA2_sensitivity_margins.csv")
+    assert list(a2.sensitivity) == ["primary", "phi 0.50", "all tasks"]
+    a3 = pd.read_csv(out / "tableA3_two_stage.csv")
+    assert set(a3.margin) == {"cap, automated verifier", "cap, review at 0.5 H",
+                              "transfer, automated verifier"}
+    assert a3["two-stage [95%]"].str.startswith("[").all()
 
 
 def test_the_point_where_retrying_first_beats_escalating(results):

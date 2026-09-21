@@ -1,0 +1,44 @@
+| sensitivity | regime | cross in sweep | with a supported crossing | first break-even, $/h | x median attempt |
+|---|---|---|---|---|---|
+| primary | automated verifier | 7 of 7 | 0 | 4.51 [1.74, 7.08] | 2.54 [2.14, 3.83] |
+| primary | review at 0.1 H | 7 of 7 | 0 | 6.73 [2.18, 8.87] | 3.18 [2.68, 5.90] |
+| primary | review at 0.3 H | 6 of 7 | 0 | 12.59 [4.71, 22.82] | 6.49 [4.98, 10.76] |
+| primary | review at 0.5 H | 0 of 7 | 0 |  |  |
+| phi 0.34 | automated verifier | 7 of 7 | 0 | 6.81 [2.63, 10.71] | 3.83 [3.24, 5.79] |
+| phi 0.34 | review at 0.1 H | 6 of 7 | 0 | 11.27 [3.83, 17.29] | 5.38 [4.62, 12.50] |
+| phi 0.34 | review at 0.3 H | 2 of 7 | 0 | 97.09 [96.10, 98.08] | 38.09 [29.65, 46.53] |
+| phi 0.34 | review at 0.5 H | 0 of 7 | 0 |  |  |
+| phi 0.50 | automated verifier | 7 of 7 | 0 | 9.03 [3.42, 14.19] | 4.98 [4.29, 7.68] |
+| phi 0.50 | review at 0.1 H | 7 of 7 | 0 | 14.43 [6.01, 24.00] | 7.97 [6.99, 12.50] |
+| phi 0.50 | review at 0.3 H | 0 of 7 | 0 |  |  |
+| phi 0.50 | review at 0.5 H | 0 of 7 | 0 |  |  |
+| common horizon 100 | automated verifier | 7 of 7 | 2 | 4.56 [1.74, 9.31] | 2.73 [2.54, 3.30] |
+| common horizon 100 | review at 0.1 H | 7 of 7 | 2 | 5.71 [2.18, 11.44] | 3.30 [2.68, 4.13] |
+| common horizon 100 | review at 0.3 H | 7 of 7 | 0 | 11.14 [4.71, 73.31] | 6.73 [4.62, 53.06] |
+| common horizon 100 | review at 0.5 H | 2 of 7 | 0 | 100.76 [67.76, 133.76] | 49.54 [40.80, 58.28] |
+| all tasks | automated verifier | 7 of 7 | 0 | 4.52 [1.74, 7.08] | 2.49 [2.14, 4.29] |
+| all tasks | review at 0.1 H | 7 of 7 | 0 | 5.55 [2.22, 10.11] | 3.06 [2.68, 7.12] |
+| all tasks | review at 0.3 H | 7 of 7 | 0 | 10.51 [4.80, 25.37] | 6.13 [5.08, 17.86] |
+| all tasks | review at 0.5 H | 2 of 7 | 0 | 138.64 [53.10, 224.17] | 90.65 [45.66, 135.64] |
+| refusals excluded | automated verifier | 7 of 7 | 0 | 4.51 [1.68, 7.08] | 2.44 [2.14, 3.83] |
+| refusals excluded | review at 0.1 H | 7 of 7 | 0 | 6.73 [2.14, 8.87] | 3.12 [2.68, 5.90] |
+| refusals excluded | review at 0.3 H | 6 of 7 | 0 | 12.59 [4.63, 22.82] | 6.43 [4.98, 10.76] |
+| refusals excluded | review at 0.5 H | 0 of 7 | 0 |  |  |
+| no verdict unresolved | automated verifier | 7 of 7 | 0 | 5.30 [1.74, 7.53] | 2.54 [2.14, 6.48] |
+| no verdict unresolved | review at 0.1 H | 7 of 7 | 0 | 7.40 [2.18, 8.87] | 3.18 [2.68, 6.61] |
+| no verdict unresolved | review at 0.3 H | 6 of 7 | 0 | 12.60 [4.71, 22.82] | 6.49 [4.98, 10.76] |
+| no verdict unresolved | review at 0.5 H | 0 of 7 | 0 |  |  |
+| re-runs dropped | automated verifier | 7 of 7 | 0 | 4.35 [1.74, 11.35] | 2.31 [2.14, 7.82] |
+| re-runs dropped | review at 0.1 H | 6 of 7 | 0 | 7.21 [2.19, 14.49] | 3.03 [2.63, 9.98] |
+| re-runs dropped | review at 0.3 H | 7 of 7 | 0 | 18.79 [4.72, 127.87] | 6.86 [4.80, 88.08] |
+| re-runs dropped | review at 0.5 H | 1 of 7 | 0 | 551.72 | 271.66 |
+| Qwen lowest price | automated verifier | 7 of 7 | 0 | 3.90 [1.74, 7.08] | 2.54 [2.14, 3.83] |
+| Qwen lowest price | review at 0.1 H | 7 of 7 | 0 | 5.54 [2.18, 8.87] | 3.18 [2.68, 5.90] |
+| Qwen lowest price | review at 0.3 H | 6 of 7 | 0 | 10.23 [4.71, 18.11] | 6.49 [4.98, 10.76] |
+| Qwen lowest price | review at 0.5 H | 0 of 7 | 0 |  |  |
+| METR minutes | automated verifier | 7 of 7 | 0 | 1.77 [0.66, 5.52] | 2.09 [1.84, 8.75] |
+| METR minutes | review at 0.1 H | 7 of 7 | 0 | 2.13 [0.80, 4.41] | 2.55 [2.22, 6.99] |
+| METR minutes | review at 0.3 H | 7 of 7 | 0 | 3.66 [1.42, 10.59] | 4.53 [3.62, 12.74] |
+| METR minutes | review at 0.5 H | 3 of 7 | 0 | 26.27 [17.47, 46.34] | 35.11 [11.60, 49.22] |
+
+The break-even of the cap's marginal value under each registered sensitivity: median [range] of the first crossing across the configurations whose margin changes sign in the sweep. Every crossing is in results/breakeven.csv and results/sensitivity_breakeven.csv. † Qwen3 Coder's dollar figures rest on an imputed price (PLAN.md Section 10).

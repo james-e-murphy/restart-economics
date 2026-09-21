@@ -141,3 +141,25 @@ def test_pools_on_different_tasks_are_refused_until_aligned():
         cs.bank({"a": pools["a"], "b": short}, rate=50.0, fraction=0.0)
     aligned = ev.align({"a": pools["a"], "b": short})
     assert cs.bank(aligned, rate=50.0, fraction=0.0).n_tasks == 20
+
+
+def test_the_search_agrees_with_the_evaluator_when_some_draws_are_unusable():
+    """The all-tasks sensitivity scores every task that can fill the policy, over the combinations
+    of its draws that are usable. The factorized search must weight tasks exactly as the evaluator
+    does, both in which tasks count and in how many combinations each contributes."""
+    pools = _pools(n=40, seed=21)
+    rng = np.random.default_rng(3)
+    for c, p in list(pools.items()):
+        usable = p.usable.copy()
+        usable[rng.random(usable.shape) < 0.2] = False       # a fifth of draws lost
+        pools[c] = ev.dataclasses.replace(p, usable=usable)
+    anywhere = np.ones(40, bool)
+    b = cs.bank(pools, rate=60.0, fraction=0.3, mask=anywhere)
+    train = np.arange(40) % 4 != 0
+    for sched in ([("a", 1), ("b", 3)], [("b", 0), ("b", 2), ("c", 4)],
+                  [("a", 4), ("c", 1), ("a", 2), ("b", 4)]):
+        k = len(sched)
+        got, value = cs.search(b, train, k, sched, passes=1)
+        res = cs.replay(b, got)
+        here = train & res.used
+        assert value == pytest.approx(res.per_task[here].mean(), rel=1e-12)

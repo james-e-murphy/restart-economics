@@ -317,3 +317,46 @@ def test_the_loader_carries_the_prespecified_sensitivities(synthetic_archive, tm
     rerun = sum(1 for r in rows if int(r["prior_try_logs"] or 0) > 0
                 and r["usable"] == "True")
     assert ev.load(str(out), key="gpt-5_4runs", drop_reruns=True).usable.sum() == 6 - rerun
+
+
+# ----------------------------------------------------------------------------- sensitivities
+
+def test_the_common_horizon_stops_every_attempt_still_running_at_it_as_a_failure():
+    tasks = ("a", "b")
+    # a resolves at call 60; b resolves at call 180, past the horizon
+    cost = [[[0.01] * 60], [[0.01] * 180]]
+    out = [[[5.0] * 60], [[5.0] * 180]]
+    pool = ev.build("m", 500, tasks, ("1",), cost, out, resolved=[[True], [True]],
+                    candidate=[[True], [True]], usable=[[True], [True]], minutes=[30.0, 30.0])
+    short = ev.truncate(pool, 100)
+    assert short.cap == 100 and max(short.grid) == 95
+    assert short.resolved.tolist() == [[True], [False]]
+    assert short.candidate.tolist() == [[True], [False]]
+    assert short.cost_end[0, 0] == pytest.approx(0.60)       # unchanged: it stopped at 60
+    assert short.cost_end[1, 0] == pytest.approx(1.00)       # what it had spent by call 100
+    assert short.calls.tolist() == [[60], [100]]
+    # a configuration already capped at the horizon is left as it is
+    assert ev.truncate(short, 100) is short
+
+
+def test_the_two_stage_resample_draws_attempts_within_the_tasks_it_draws():
+    pool = _pool()
+    idx = np.array([1, 1, 0])
+    draws = np.array([[0, 0, 1, 2], [3, 3, 3, 3], [2, 1, 0, 0]])
+    got = ev.resample(pool, idx, draws)
+    assert got.tasks == (pool.tasks[1], pool.tasks[1], pool.tasks[0])
+    for r, (i, row) in enumerate(zip(idx, draws)):
+        for c, d in enumerate(row):
+            assert got.cost_end[r, c] == pool.cost_end[i, d]
+            assert got.resolved[r, c] == pool.resolved[i, d]
+            assert (got.cost_grid[r, c] == pool.cost_grid[i, d]).all()
+
+
+def test_the_metr_correction_keeps_the_measured_buckets_and_interpolates_between_them():
+    m = ev.metr_minutes()
+    assert m["<15 min fix"] == 32.9 and m["1-4 hours"] == 131.6
+    # between the two measured buckets the factor falls from about 8.4 to about 1.1
+    factor = m["15 min - 1 hour"] / ev.MINUTES["15 min - 1 hour"]
+    assert 131.6 / 120.0 < factor < 32.9 / 3.9
+    # above the last measured bucket it is held, not extrapolated
+    assert m[">4 hours"] / 480.0 == pytest.approx(131.6 / 120.0)

@@ -104,7 +104,8 @@ def _zero(ax):
 
 def load(results: str) -> Dict[str, pd.DataFrame]:
     got = {}
-    for name in ("ladder", "breakeven", "cascade", "outcome_correlation"):
+    for name in ("ladder", "breakeven", "cascade", "outcome_correlation", "sensitivity_ladder",
+                 "sensitivity_breakeven", "sensitivity_cascade", "sensitivity_two_stage"):
         p = os.path.join(results, f"{name}.csv")
         if os.path.exists(p):
             got[name] = pd.read_csv(p)
@@ -386,6 +387,11 @@ def _interval(v, lo, hi):
     return f"{v:,.2f} [{lo:,.2f}, {hi:,.2f}]"
 
 
+def _band(lo, hi) -> str:
+    lo, hi = pd.to_numeric(lo, errors="coerce"), pd.to_numeric(hi, errors="coerce")
+    return "" if pd.isna(lo) or pd.isna(hi) else f"[{lo:,.2f}, {hi:,.2f}]"
+
+
 def _choice(s: str) -> str:
     """What the folds chose for step iii, written short: 4x@175 is four attempts at 175 calls."""
     if pd.isna(s):
@@ -491,6 +497,133 @@ def table_transfer(d: pd.DataFrame, out: str) -> List[str]:
                         + IMPUTED)
 
 
+# ----------------------------------------------------------------------------- appendix: sensitivities
+
+PRIMARY = "primary"
+
+
+def _with_primary(primary: pd.DataFrame, variants: pd.DataFrame) -> pd.DataFrame:
+    """The primary rows labelled as a variant, then every sensitivity's, in the order run."""
+    variants = variants[variants.variant != PRIMARY]        # the runner's check of itself
+    return pd.concat([primary.assign(variant=PRIMARY), variants], ignore_index=True, sort=False)
+
+
+def _median_range(x: pd.Series, places: int = 2) -> str:
+    x = pd.to_numeric(x, errors="coerce").dropna()
+    if x.empty:
+        return ""
+    if len(x) == 1:
+        return _fmt(x.iloc[0], places)
+    return f"{x.median():,.{places}f} [{x.min():,.{places}f}, {x.max():,.{places}f}]"
+
+
+def table_sensitivity_breakeven(b: pd.DataFrame, sb: pd.DataFrame, out: str) -> List[str]:
+    """Appendix: the summary statistic of the primary result under each registered sensitivity.
+    Per regime, how many configurations' margins change sign in the sweep, and the first
+    break-even's median and range across them, in dollars an hour and in multiples of the median
+    attempt cost."""
+    both = _with_primary(b, sb)
+    rows = []
+    for variant in dict.fromkeys(both.variant):
+        for regime, _ in REGIMES:
+            here = both[(both.variant == variant) & (both.regime_name == regime)]
+            first = here[here.crossing <= 1].drop_duplicates("config")
+            crossed = first[first.crossing == 1]
+            supported = here[here.supported.astype(str) == "True"].config.nunique()
+            rows.append({
+                "sensitivity": variant, "regime": REGIME_LABEL[regime],
+                "cross in sweep": f"{len(crossed)} of {len(first)}",
+                "with a supported crossing": str(supported),
+                "first break-even, $/h": _median_range(crossed.rate),
+                "x median attempt": _median_range(crossed.multiple),
+            })
+    t = pd.DataFrame(rows)
+    return _write_table(t, out, "tableA1_sensitivity_breakeven",
+                        caption="The break-even of the cap's marginal value under each registered "
+                        "sensitivity: median [range] of the first crossing across the "
+                        "configurations whose margin changes sign in the sweep. Every crossing is "
+                        "in results/breakeven.csv and results/sensitivity_breakeven.csv. " + IMPUTED)
+
+
+def table_sensitivity_margins(d: pd.DataFrame, sd: pd.DataFrame, c: pd.DataFrame,
+                              sc_: pd.DataFrame, out: str) -> List[str]:
+    """Appendix: the primary margins under each registered sensitivity, as medians across the
+    configurations: the cap's saving in both headline regimes, the primary transfer, and the value
+    of switching configurations."""
+    both = _with_primary(d[d.axis == "rate"], sd[sd.axis == "rate"])
+    casc = _with_primary(c, sc_) if c is not None and sc_ is not None else None
+    rows = []
+    for variant in dict.fromkeys(both.variant):
+        here = both[both.variant == variant]
+        row = {"sensitivity": variant}
+        for regime, short in (("automated", "automated"), ("human 0.5", "review 0.5 H")):
+            for rate in TABLE_RATES:
+                x = here[(here.regime_name == regime) & (here.rate == rate)].cap_margin
+                row[f"cap, {short}, ${rate:.0f}"] = _fmt(x.median())
+        for rate in TABLE_RATES:
+            x = here[(here.regime_name == "automated") & (here.rate == rate)].transfer_margin
+            row[f"transfer, ${rate:.0f}"] = _fmt(pd.to_numeric(x, errors="coerce").median())
+        if casc is not None:
+            k = casc[(casc.variant == variant) & (casc.regime_name == "automated")
+                     & (casc.rate == 100.0)]
+            row["switching, $100"] = _fmt(k.switch_margin.iloc[0]) if len(k) else ""
+        rows.append(row)
+    t = pd.DataFrame(rows)
+    return _write_table(t, out, "tableA2_sensitivity_margins",
+                        caption="The primary margins under each registered sensitivity, medians "
+                        "across configurations, in dollars per task; positive is what the richer "
+                        "policy saves. Cap: step ii minus step iii. Transfer: step iii-b minus the "
+                        "state rule fitted on the other configurations, automated verifier. "
+                        "Switching: the best single configuration minus the cascade, automated "
+                        "verifier. " + IMPUTED)
+
+
+def table_two_stage(two: pd.DataFrame, d: pd.DataFrame, out: str) -> List[str]:
+    """Appendix: the one-stage and two-stage intervals side by side, for the cap's margin in the
+    two headline regimes and for the primary transfer, at the three table rates."""
+    rows = []
+    cap = two[(two.margin == "cap") & (two.axis == "rate")]
+    for regime in ("automated", "human 0.5"):
+        for config in order_of(cap.config):
+            for rate in TABLE_RATES:
+                r = cap[(cap.config == config) & (cap.regime_name == regime) & (cap.rate == rate)]
+                if not len(r):
+                    continue
+                r = r.iloc[0]
+                rows.append({"margin": f"cap, {REGIME_LABEL[regime]}",
+                             "configuration": label_of(config), "$/h": f"{rate:.0f}",
+                             "estimate": _fmt(r.estimate),
+                             "one-stage [95%]": _band(r.one_stage_low, r.one_stage_high),
+                             "one-stage mean": _fmt(r.one_stage_mean),
+                             "two-stage [95%]": _band(r.two_stage_low, r.two_stage_high),
+                             "two-stage mean": _fmt(r.two_stage_mean)})
+    moved = two[two.margin == "transfer"]
+    for config in order_of(moved.config):
+        for rate in TABLE_RATES:
+            r = moved[(moved.config == config) & (moved.rate == rate)]
+            if not len(r):
+                continue
+            r = r.iloc[0]
+            lad = d[(d.config == config) & (d.regime_name == "automated") & (d.axis == "rate")
+                    & (d.rate == rate)]
+            lo, hi = ((lad.transfer_margin_low.iloc[0], lad.transfer_margin_high.iloc[0])
+                      if len(lad) else (np.nan, np.nan))
+            rows.append({"margin": "transfer, automated verifier",
+                         "configuration": label_of(config), "$/h": f"{rate:.0f}",
+                         "estimate": _fmt(r.estimate),
+                         "one-stage [95%]": _band(lo, hi), "one-stage mean": "",
+                         "two-stage [95%]": _band(r.two_stage_low, r.two_stage_high),
+                         "two-stage mean": _fmt(r.two_stage_mean)})
+    t = pd.DataFrame(rows)
+    return _write_table(t, out, "tableA3_two_stage",
+                        caption="The two-stage bootstrap, which resamples each task's attempts as "
+                        "well as the tasks, beside the primary task-level interval, on the same "
+                        "task resamples, with the mean of each bootstrap's replicates: a draw "
+                        "resampled twice is an attempt a retry can meet twice, so the two need "
+                        "not be centred alike. The transfer's one-stage interval is the one in "
+                        "results/ladder.csv. " + IMPUTED)
+
+
 def _write_table(t: pd.DataFrame, out: str, name: str, caption: str) -> List[str]:
     paths = []
     p = os.path.join(out, f"{name}.csv")
@@ -560,6 +693,14 @@ def main(argv=None):
         if "outcome_correlation" in got:
             written += fig_correlation(got["outcome_correlation"], a.out,
                                        int(got["cascade"].tasks.iloc[0]))
+    if "sensitivity_breakeven" in got and "breakeven" in got:
+        written += table_sensitivity_breakeven(got["breakeven"], got["sensitivity_breakeven"],
+                                               a.out)
+    if "sensitivity_ladder" in got:
+        written += table_sensitivity_margins(d, got["sensitivity_ladder"], got.get("cascade"),
+                                             got.get("sensitivity_cascade"), a.out)
+    if "sensitivity_two_stage" in got:
+        written += table_two_stage(got["sensitivity_two_stage"], d, a.out)
     for p in written:
         print(p)
 

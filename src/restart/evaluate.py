@@ -37,6 +37,31 @@ from .policies import Policy, decision_points
 # Table 8, in minutes. The bucket strings are the release's own.
 MINUTES = {"<15 min fix": 3.9, "15 min - 1 hour": 30.0, "1-4 hours": 120.0, ">4 hours": 480.0}
 
+# The prespecified sensitivity to the annotation's optimism (PLAN.md Section 3): METR baselined
+# four tasks from the shortest bucket at a geometric mean of 32.9 minutes and two from the 1-to-4
+# hour bucket at 131.6. The plan fixes those two buckets at the measured means and interpolates the
+# other two. The interpolation is of the correction factor, measured over annotated minutes, in
+# logarithms on both axes, between the two measured buckets; above the last one, where there is
+# nothing to interpolate toward, the factor is held where it was measured rather than extrapolated.
+METR_MEASURED = {"<15 min fix": 32.9, "1-4 hours": 131.6}
+
+
+def metr_minutes() -> Dict[str, float]:
+    """The outside option's minutes under the bucket-specific METR correction."""
+    lo, hi = "<15 min fix", "1-4 hours"
+    f_lo = np.log(METR_MEASURED[lo] / MINUTES[lo])
+    f_hi = np.log(METR_MEASURED[hi] / MINUTES[hi])
+    x_lo, x_hi = np.log(MINUTES[lo]), np.log(MINUTES[hi])
+    out = {}
+    for bucket, m in MINUTES.items():
+        if bucket in METR_MEASURED:
+            out[bucket] = METR_MEASURED[bucket]
+            continue
+        x = np.log(m)
+        t = min(max((x - x_lo) / (x_hi - x_lo), 0.0), 1.0)
+        out[bucket] = float(m * np.exp(f_lo + t * (f_hi - f_lo)))
+    return out
+
 WINDOW = 5      # the recent-rate window, one decision point wide in the fine part of the grid
 
 
@@ -127,7 +152,8 @@ def build(config: str, cap: int, tasks: Sequence[str], runs: Sequence[str],
 def load(folder: str, key: Optional[str] = None, schedules: Optional[dict] = None,
          retain_refusals: bool = True, no_verdict_unresolved: bool = False,
          drop_reruns: bool = False, grid: Optional[Sequence[int]] = None,
-         cap: Optional[int] = None) -> Pool:
+         cap: Optional[int] = None,
+         annotation_minutes: Optional[Dict[str, float]] = None) -> Pool:
     """Read one configuration's derived tables and price every call.
 
     ``key`` selects the price schedule and defaults to the folder's name, which is the archive's.
@@ -153,6 +179,7 @@ def load(folder: str, key: Optional[str] = None, schedules: Optional[dict] = Non
     logged_calls = np.zeros((n_t, n_d), int)
     minutes = np.full(n_t, np.nan)
     caps = set()
+    table = MINUTES if annotation_minutes is None else annotation_minutes
     for r in execs:
         i, d = t_at[r["instance_id"]], r_at[r["run"]]
         state, res, _limit, use = reclassify(r, retain_refusals=retain_refusals)
@@ -166,7 +193,7 @@ def load(folder: str, key: Optional[str] = None, schedules: Optional[dict] = Non
         usable[i, d], resolved[i, d] = use, bool(res)
         candidate[i, d] = r["verdict"] != "empty_patch"
         logged_calls[i, d] = _int(r["n_calls"])
-        minutes[i] = _minutes(r["difficulty"], minutes[i], r["instance_id"])
+        minutes[i] = _minutes(r["difficulty"], minutes[i], r["instance_id"], table)
         if r.get("max_iterations"):
             caps.add(int(r["max_iterations"]))
     if np.isnan(minutes).any():
@@ -202,13 +229,14 @@ def load(folder: str, key: Optional[str] = None, schedules: Optional[dict] = Non
                  resolved, candidate, usable, minutes, grid=grid)
 
 
-def _minutes(annotation: str, seen: float, task: str) -> float:
+def _minutes(annotation: str, seen: float, task: str,
+             table: Optional[Dict[str, float]] = None) -> float:
     """The outside option's engineer minutes, from the benchmark's own difficulty bucket. Every
     run of a task carries the same annotation, and a disagreement is a join error."""
     if annotation in (None, ""):
         return seen
     try:
-        value = MINUTES[annotation]
+        value = (MINUTES if table is None else table)[annotation]
     except KeyError:
         raise ValueError(f"unknown difficulty annotation {annotation!r} on {task}") from None
     if not np.isnan(seen) and seen != value:
@@ -326,6 +354,52 @@ def restrict(pool: Pool, keep: np.ndarray) -> Pool:
         cost_grid=pool.cost_grid[idx], out_grid=pool.out_grid[idx],
         out_recent=pool.out_recent[idx], cost_rate=pool.cost_rate[idx], alive=pool.alive[idx],
         minutes=pool.minutes[idx])
+
+
+def truncate(pool: Pool, horizon: int = 100) -> Pool:
+    """The common-horizon sensitivity (PLAN.md Section 10): every configuration at cutoffs up to
+    ``horizon`` calls, and any attempt still running there stopped and scored as a failure.
+
+    The attempt then costs what it had spent by the horizon, resolves nothing and produces nothing
+    to verify. An attempt that reached its own stop at or before the horizon is unchanged. The
+    decision points are those below the horizon, and the configuration's own stop becomes the
+    horizon, so a policy with no cutoff runs every attempt at most that far.
+    """
+    if horizon >= pool.cap:
+        return pool
+    if horizon not in pool.grid:
+        raise ValueError(f"the horizon {horizon} is not a decision point of {pool.config}")
+    j = pool.grid.index(horizon)
+    running = pool.alive[:, :, j]
+    keep = [i for i, t in enumerate(pool.grid) if t < horizon]
+    return dataclasses.replace(
+        pool, cap=horizon, grid=tuple(pool.grid[i] for i in keep),
+        calls=np.minimum(pool.calls, horizon),
+        resolved=pool.resolved & ~running, candidate=pool.candidate & ~running,
+        cost_end=np.where(running, pool.cost_grid[:, :, j], pool.cost_end),
+        out_end=np.where(running, pool.out_grid[:, :, j], pool.out_end),
+        cost_grid=pool.cost_grid[:, :, keep], out_grid=pool.out_grid[:, :, keep],
+        out_recent=pool.out_recent[:, :, keep], cost_rate=pool.cost_rate[:, :, keep],
+        alive=pool.alive[:, :, keep])
+
+
+def resample(pool: Pool, idx: np.ndarray, draws: np.ndarray) -> Pool:
+    """The two-stage bootstrap's resample: tasks ``idx``, and within each the draws ``draws``,
+    [task, draw] indices into that task's own draws, drawn with replacement. A task drawn twice
+    keeps its name, so the fold split can keep its copies together."""
+    idx = np.asarray(idx, int)
+    draws = np.asarray(draws, int)
+    rows = idx[:, None]
+
+    def pick(x):
+        return x[rows, draws]
+
+    return dataclasses.replace(
+        pool, tasks=tuple(pool.tasks[i] for i in idx), usable=pick(pool.usable),
+        calls=pick(pool.calls), resolved=pick(pool.resolved), candidate=pick(pool.candidate),
+        cost_end=pick(pool.cost_end), out_end=pick(pool.out_end), cost_grid=pick(pool.cost_grid),
+        out_grid=pick(pool.out_grid), out_recent=pick(pool.out_recent),
+        cost_rate=pick(pool.cost_rate), alive=pick(pool.alive), minutes=pool.minutes[idx])
 
 
 def reindex(pool: Pool, tasks: Sequence[str]) -> Pool:
