@@ -34,7 +34,7 @@ Kapoor, Sayash, Benedikt Stroebl, Zachary S. Siegel, Nitya Nadgir, and Arvind Na
 
 Kitagawa, Toru, and Aleksey Tetenov. 2018. "Who Should Be Treated? Empirical Welfare Maximization Methods for Treatment Choice." *Econometrica* 86(2): 591-616.
 
-Kwa, Thomas, Ben West, Joel Becker, Amy Deng, Katharyn Garcia, Max Hasin, Sami Jawhar, Megan Kinniment, Nate Rush, Sydney Von Arx, et al. 2025. "Measuring AI Ability to Complete Long Software Tasks." *Advances in Neural Information Processing Systems* 38: 92213-92266. arXiv:2503.14499.
+Kwa, Thomas, Ben West, Joel Becker, Amy Deng, Katharyn Garcia, Max Hasin, Sami Jawhar, Megan Kinniment, Nate Rush, Sydney Von Arx, et al. 2025. "Measuring AI Ability to Complete Long Software Tasks." *Advances in Neural Information Processing Systems* 38: 92213-92266. arXiv:2503.14499v4.
 
 Lin, Yuxiang, Zihan Wang, Mengyang Liu, Yuxuan Shan, Longju Bai, Junyao Zhang, Xing Jin, Boshan Chen, Jinyan Su, Xingyao Wang, Jiaxin Pei, and Manling Li. 2026. "BAGEN: Are LLM Agents Budget-Aware?" arXiv:2606.00198.
 

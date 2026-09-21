@@ -63,7 +63,7 @@ Three properties are deliberate. The estimand is finite: with at most four attem
 
 ## 3.3 The outside option
 
-SWE-bench Verified annotates each task with the time an engineer with a few hours of familiarity with the codebase would need to fix it, in four buckets: under 15 minutes, 15 minutes to an hour, 1 to 4 hours, and over 4 hours (Chowdhury et al. 2024). Following Kwa et al. (2025), the buckets are converted to 3.9, 30, 120 and 480 minutes, and \(H_i\) is that time at a fully loaded engineer wage. The wage is swept from $5 to $300 an hour. The lower end is far below any human wage on purpose: it stands for a cheap automated fallback, a deferral, or a task that may simply be dropped.
+SWE-bench Verified annotates each task with the time an engineer with a few hours of familiarity with the codebase would need to fix it, in four buckets: under 15 minutes, 15 minutes to an hour, 1 to 4 hours, and over 4 hours (Chowdhury et al. 2024). Following Kwa et al. (2025, Table 8), each bucket is converted to the geometric mean of its bounds, 3.9, 30, 120 and 480 minutes, with 16 hours as the upper bound of the longest, and \(H_i\) is that time at a fully loaded engineer wage. The wage is swept from $5 to $300 an hour. The lower end is far below any human wage on purpose: it stands for a cheap automated fallback, a deferral, or a task that may simply be dropped.
 
 The tasks are mostly short. On the tasks scored here the mean annotated time is about 30 minutes, so at $100 an hour the mean outside option is about $50, against a median attempt cost of $0.34 to $1.66 depending on the configuration. Because attempt costs differ fivefold across configurations, the sweep is also run in units of attempt cost: at a multiple \(M\), the wage is set so that the mean outside option equals \(M\) times the configuration's median attempt cost. A break-even in these units compares across configurations; the same break-even in dollars does not.
 
@@ -385,7 +385,7 @@ Each sensitivity changes one input and reruns the ladder, the break-even and the
 - **All tasks.** Every task with a usable draw is scored, each policy on the tasks that can fill it, rather than only the tasks with four usable draws. The two sides of a margin can then rest on different tasks.
 - **Refusals excluded, evaluations without a verdict counted as failures, and re-runs dropped.** The three changes to the attempt pool of Section 4.2.
 - **The lowest third-party price for Qwen3 Coder**, $0.22 per million input tokens and $1.80 per million output tokens. Every configuration is rescored, since Qwen's attempts are among those the others' transfer rules are fitted on.
-- **The bucket-specific correction to the annotated times.** Kwa et al. (2025) measured engineers' times on a few tasks from two buckets, which put the shortest bucket at 32.9 minutes rather than 3.9 and the 1 to 4 hour bucket at 131.6 rather than 120. The correction factor is interpolated in the logarithm of annotated minutes for the 15 minute to 1 hour bucket, giving 75.1 minutes, and the factor measured at 1 to 4 hours is held above 4 hours, giving 526.4.
+- **The bucket-specific correction to the annotated times.** Kwa et al. (2025, Table 8) timed seven baseline runs on six tasks: four tasks from the shortest bucket took a geometric mean of 32.9 minutes rather than 3.9, and two from the 1 to 4 hour bucket averaged 131.6 minutes rather than 120. The correction factor is interpolated in the logarithm of annotated minutes for the 15 minute to 1 hour bucket, giving 75.1 minutes, and the factor measured at 1 to 4 hours is held above 4 hours, giving 526.4.
 
 Table A1 gives the break-even under each, Table A2 the primary margins, and Table A3 the two-stage bootstrap. Section 7.6 summarizes them.
 
@@ -781,7 +781,7 @@ Kapoor, Sayash, Benedikt Stroebl, Zachary S. Siegel, Nitya Nadgir, and Arvind Na
 
 Kitagawa, Toru, and Aleksey Tetenov. 2018. "Who Should Be Treated? Empirical Welfare Maximization Methods for Treatment Choice." *Econometrica* 86(2): 591-616.
 
-Kwa, Thomas, Ben West, Joel Becker, Amy Deng, Katharyn Garcia, Max Hasin, Sami Jawhar, Megan Kinniment, Nate Rush, Sydney Von Arx, et al. 2025. "Measuring AI Ability to Complete Long Software Tasks." *Advances in Neural Information Processing Systems* 38: 92213-92266. arXiv:2503.14499.
+Kwa, Thomas, Ben West, Joel Becker, Amy Deng, Katharyn Garcia, Max Hasin, Sami Jawhar, Megan Kinniment, Nate Rush, Sydney Von Arx, et al. 2025. "Measuring AI Ability to Complete Long Software Tasks." *Advances in Neural Information Processing Systems* 38: 92213-92266. arXiv:2503.14499v4.
 
 Lin, Yuxiang, Zihan Wang, Mengyang Liu, Yuxuan Shan, Longju Bai, Junyao Zhang, Xing Jin, Boshan Chen, Jinyan Su, Xingyao Wang, Jiaxin Pei, and Manling Li. 2026. "BAGEN: Are LLM Agents Budget-Aware?" arXiv:2606.00198.
 
