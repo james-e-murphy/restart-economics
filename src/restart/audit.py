@@ -129,6 +129,23 @@ def _row(archive_dir: str, notes: dict, sums: dict) -> dict:
     return row
 
 
+def excluded(notes_path: str = "configurations_notes.json") -> set:
+    """The configurations the protocol's exclusion conditions keep out, by extraction folder name.
+
+    A configuration is excluded in ``configurations_notes.json`` or not at all, and every analysis
+    reads that one record, so an excluded configuration cannot reach a results table by being
+    forgotten in a second list. A missing notes file is an error rather than an empty set, for the
+    same reason.
+    """
+    if not os.path.exists(notes_path):
+        raise FileNotFoundError(
+            f"{notes_path}: the exclusion record. Analyses read it to know which configurations "
+            "the audit keeps out; run from the repository root or pass --notes.")
+    notes = json.load(open(notes_path))
+    return {name[: -len(".tar.gz")] if name.endswith(".tar.gz") else name
+            for name, n in notes.items() if str(n.get("excluded", "")).lower() == "true"}
+
+
 def build(derived: str = "data/derived", notes_path: str = "configurations_notes.json",
           sums_path: str = "archives/SHA256SUMS", out: str = "configurations.csv") -> list[dict]:
     notes = json.load(open(notes_path)) if os.path.exists(notes_path) else {}

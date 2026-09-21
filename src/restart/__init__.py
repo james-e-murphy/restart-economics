@@ -9,16 +9,19 @@ Module map, in dependency order:
     audit      builds configurations.csv from the extraction audits and the hand-kept notes
     pricing    a pure function from physical quantities and a dated schedule to dollars,
                kept separate from everything else so a price change never touches a policy
-    policies   the policy classes: single attempt, retry without cutoff, constant cutoff,
-               attempt-indexed schedule, cross-model schedule, receding-horizon state rule,
-               two-parameter threshold comparator
+    policies   the policy classes as data: single attempt, retry without cutoff, constant cutoff,
+               attempt-indexed schedule, cross-configuration schedule
     evaluate   the enumerating evaluator: policy value by replay over attempt orderings
-    inference  outer task folds, full-pipeline bootstrap, transfer cells
+    state      the receding-horizon restart rule and the two models it reads the state with
+    inference  outer task folds, cross-fitting, the full-pipeline bootstrap
+    ladder     the ladder of steps i to iii across the rate sweep and both verifier regimes
 
-acquire, extract, audit and pricing are implemented and tested against a synthetic archive with the schema
-of the real release. policies, evaluate and inference are stubs until the plan is
-frozen. Nothing here computes a quantity indexed by a cutoff, an attempt budget, an
-outside-option rate, or a verification cost until then; see README working rule 1.
+Every module is implemented. acquire, extract, audit and pricing are tested against a synthetic
+archive with the schema of the real release; policies, evaluate, state, inference and ladder
+against costs worked out by hand and a synthetic dry run whose answers are known. The plan is
+frozen and registered, so quantities indexed by a cutoff, an attempt budget, an outside-option rate
+or a verification cost may now be computed; see README working rule 1. Steps iii-b and v, the
+schedule search and the cascade, are the remaining policy classes.
 """
 
 __version__ = "0.1.0.dev0"

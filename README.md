@@ -33,9 +33,13 @@ argument, and every prespecified comparison.
     configurations.csv   one row per archive, built by python -m restart.audit
     configurations_notes.json  the facts no table holds: endpoints, applied temperature, exclusions
     archives/SHA256SUMS  checksums of the raw archives; archives themselves are not committed
-    src/restart/         extraction, cost reconstruction, policies, evaluator, bootstrap
+    src/restart/         extraction, cost reconstruction, policies, evaluator, bootstrap,
+                         the schedule search, the state rule, the ladder, the break-even,
+                         the cascade, and the coverage check of the intervals
     tests/               hand-walked edge cases and the synthetic dry run
     data/derived/        execution and prefix tables, rebuilt locally and not committed
+    results/             policy values, margins, break-evens and cascades, each file written by
+                         one command listed in results/README.md
     exhibits/            one notebook that regenerates every figure and table
     paper/               manuscript and build
     LICENSE              MIT, for src/ and tests/; the written work is CC BY 4.0
@@ -63,7 +67,8 @@ argument, and every prespecified comparison.
     pytest                                    # edge cases and the synthetic dry run
     python -m restart.acquire --out data/derived/   # lists, streams, verifies and extracts every archive
     python -m restart.pricing --validate data/derived/   # prices every call, compares with logged cost
-    python -m restart.evaluate --all
+    python -m restart.evaluate --check data/derived      # loads and prices each attempt pool
+    python -m restart.ladder --derived data/derived      # steps i to iii, both regimes, the sweep
     jupyter execute exhibits/exhibits.ipynb
 
 ## Data

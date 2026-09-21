@@ -1,0 +1,5 @@
+population of 12000 tasks: median attempt $0.452, resolve rate 0.48
+    1.0x median attempt cost, review 0.0:  target +0.464 (oracle +0.464)  point - target +0.003 (se 0.003)  replicate mean - point -0.000  width 0.111  covers 93% of 120
+    5.0x median attempt cost, review 0.0:  target +0.374 (oracle +0.386)  point - target -0.006 (se 0.008)  replicate mean - point +0.001  width 0.417  covers 98% of 120
+   50.0x median attempt cost, review 0.0:  target -0.029 (oracle +0.043)  point - target +0.015 (se 0.022)  replicate mean - point -0.038  width 1.022  covers 98% of 120
+   20.0x median attempt cost, review 0.5:  target +1.527 (oracle +1.612)  point - target -0.020 (se 0.031)  replicate mean - point -0.025  width 1.435  covers 99% of 120
