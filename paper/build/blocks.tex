@@ -1,0 +1,22 @@
+\usepackage{mdframed}
+\newmdenv[
+  leftline=true, rightline=false, topline=false, bottomline=false,
+  linewidth=1.8pt, linecolor=housegreen,
+  innerleftmargin=11pt, innerrightmargin=0pt,
+  innertopmargin=3pt, innerbottommargin=5pt,
+  skipabove=10pt, skipbelow=11pt,
+  leftmargin=0pt, rightmargin=14pt,
+  backgroundcolor=white
+]{keystatement}
+\newenvironment{figcaption}
+  {\par\vspace{4pt}\begingroup\small}
+  {\par\endgroup\vspace{6pt}}
+
+\newmdenv[
+  linewidth=0.9pt, linecolor=housegreen,
+  backgroundcolor=white,
+  innerleftmargin=12pt, innerrightmargin=12pt,
+  innertopmargin=9pt, innerbottommargin=9pt,
+  skipabove=12pt, skipbelow=13pt,
+  roundcorner=2pt
+]{examplebox}

@@ -7,7 +7,8 @@ One script regenerates every figure and table in the paper from the files in `re
 It computes no policy value. It reads what the evaluator wrote, reshapes it and draws it, so every
 number in an exhibit can be found in a results file and traced to the command that wrote that file
 (`results/README.md`). Figures are written as PDF for the manuscript and PNG for reading, tables as
-Markdown, LaTeX and CSV.
+Markdown, LaTeX and CSV. With `--bare` the figures are drawn without their titles and notes,
+which the manuscript carries in its captions; the paper's build uses that (`paper/README.md`).
 
 ## Main text, as PLAN.md Section 7 names them
 
@@ -35,7 +36,7 @@ Markdown, LaTeX and CSV.
 | `tableA7_distribution` | the median and 95th percentile of cost per task, and the median-cost version of the primary comparison |
 | `tableA8_spread` | the spread across configurations against the spread across policies |
 | `tableA9_diagnostics` | within-task share of log-spend variance, mixed outcomes, attempts past their outside option |
-| `figA3_tail_composition` | what a cutoff at each decision point would cut from attempts that go on to resolve |
+| `figA3_tail_composition` | what a cutoff at each decision point would cut from attempts that go on to resolve, with where the annotated outside option falls on the grid |
 
 Each appendix exhibit is written when `results/` holds the file its command writes, and skipped
 otherwise.

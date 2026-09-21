@@ -1,9 +1,10 @@
 """The appendix displays of PLAN.md Section 7 that re-read the ladder rather than add a policy.
 
     difficulty     the cap's marginal value by difficulty bucket, every policy choosing within the
-                   bucket: ex-ante task information admitted to all of them at once. The two
-                   longest buckets are shown together, because the longest holds about five tasks,
-                   too few for a training fold to choose a policy on.
+                   bucket: ex-ante task information admitted to all of them at once. Each of the
+                   four annotated buckets is shown, and the two longest also together, because the
+                   longest holds a handful of tasks, too few for a training fold to choose on; a
+                   bucket with fewer than two tasks per fold is shown by its count alone.
     distribution   the median and 95th percentile of cost per incoming task under the policies
                    steps i to iii-b choose on mean cost, because a cap is partly insurance and the
                    mean alone undervalues it; and the median-cost version of the primary
@@ -38,7 +39,12 @@ from . import sensitivity as se
 KS = tuple(range(1, po.MAX_ATTEMPTS + 1))
 BUCKETS = (("under 15 minutes", (ev.MINUTES["<15 min fix"],)),
            ("15 minutes to 1 hour", (ev.MINUTES["15 min - 1 hour"],)),
+           ("1 to 4 hours", (ev.MINUTES["1-4 hours"],)),
+           ("over 4 hours", (ev.MINUTES[">4 hours"],)),
            ("1 hour or more", (ev.MINUTES["1-4 hours"], ev.MINUTES[">4 hours"])))
+# the buckets whose choices are pooled into "all, chosen within bucket": a partition of the tasks
+# in which every part can be chosen on
+PARTITION = ("under 15 minutes", "15 minutes to 1 hour", "1 hour or more")
 
 
 # ----------------------------------------------------------------------------- quantiles
@@ -193,15 +199,20 @@ DIFFICULTY_FIELDS = ("config", "bucket", "regime_name", "regime", "rate", "multi
 def difficulty_rows(pool: ev.Pool, rates: Sequence[float] = ld.RATES, regimes=ld.REGIMES,
                     replicates: int = inf.REPLICATES, phi: float = 0.0) -> List[dict]:
     """The cap's margin within each bucket, every policy choosing within it, with its interval;
-    then every bucket's choices pooled, the value of admitting the bucket to every policy, beside
-    the primary's blind choice. ``multiple`` is on the configuration's whole scored set, so that
-    rows compare across buckets."""
+    then the choices within the parts of PARTITION pooled, the value of admitting the bucket to
+    every policy, beside the primary's blind choice. A bucket with fewer than two scored tasks per
+    fold gets a row with its count and no value. ``multiple`` is on the configuration's whole
+    scored set, so that rows compare across buckets."""
     full = ev.full_draw_tasks({pool.config: pool})
     rows = []
     pooled: Dict[tuple, dict] = {}
     for bucket, inside in bucket_masks(pool).items():
         mask = full & inside
         if mask.sum() < inf.FOLDS * 2:
+            rows += [dict(config=pool.config, bucket=bucket, regime_name=name, regime=fraction,
+                          rate=rate, multiple=ev.multiple_for_rate(pool, rate, full),
+                          tasks=int(mask.sum()))
+                     for name, fraction in regimes for rate in rates]
             continue
         bands = {(b["regime_name"], b["rate"]): b
                  for b in se.cap_intervals(pool, replicates, phi=phi, mask=mask, regimes=regimes,
@@ -219,6 +230,8 @@ def difficulty_rows(pool: ev.Pool, rates: Sequence[float] = ld.RATES, regimes=ld
                                  cap_margin_high=b["one_stage_high"],
                                  replicates=b["one_stage_replicates"],
                                  choice_ii=r["choice_ii"], choice_iii=r["choice_iii"]))
+                if bucket not in PARTITION:
+                    continue
                 acc = pooled.setdefault((name, fraction, rate), dict(n=0, ii=0.0, iii=0.0))
                 acc["n"] += r["tasks"]
                 acc["ii"] += r["tasks"] * r["value_ii"]
@@ -311,7 +324,7 @@ def _main(argv=None):
             rows += difficulty_rows(pool, a.rates, replicates=a.replicates)
             write(rows, out("difficulty"), DIFFICULTY_FIELDS)
             here = [r for r in rows if r["config"] == name and r["rate"] == 100.0
-                    and r["regime_name"] in ("automated", "human 0.5")]
+                    and r["regime_name"] in ("automated", "human 0.5") and "cap_margin" in r]
             print(f"{name}: cap's saving at $100/h by bucket  " + "  ".join(
                 f"{r['regime_name']} {r['bucket']} {r['cap_margin']:+.3f}" for r in here),
                 flush=True)

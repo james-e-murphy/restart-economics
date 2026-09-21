@@ -1,0 +1,80 @@
+\usepackage{graphicx}
+\usepackage[absolute,overlay]{textpos}
+\definecolor{housegreen}{RGB}{11,110,79}
+\setlength{\TPHorizModule}{1in}\setlength{\TPVertModule}{1in}
+\renewcommand{\maketitle}{%
+  \thispagestyle{empty}%
+  \begin{textblock}{6}(1.25,2.64)
+    {\color{housegreen}\rule{2in}{2.2pt}}
+  \end{textblock}
+  \begin{textblock}{5.6}(1.25,3.28)
+    \begin{flushleft}
+    {\sffamily\bfseries\fontsize{25}{30}\selectfont Restart Economics for AI Agents\par}
+    \vspace{10pt}
+    {\sffamily\color{housegreen}\fontsize{14}{18}\selectfont Cutoffs, Retries, and the Cost\\of a Resolved Task\par}
+    \end{flushleft}
+  \end{textblock}
+  \begin{textblock}{5.8}(1.25,8.28)
+    \begin{flushleft}
+    {\sffamily\fontsize{10.5}{13}\selectfont James E. Murphy\par}
+    \vspace{2pt}
+    {\sffamily\fontsize{8.5}{11}\selectfont ORCID 0009-0001-2217-4306\par}
+    \vspace{15pt}
+    {\sffamily\fontsize{10}{13}\selectfont Working paper for discussion $\cdot$ v0.1 $\cdot$ 21 September 2026\par}
+    \vspace{2pt}
+    {\sffamily\fontsize{8.5}{11}\selectfont jamesemurphy.com/ai-economics/restart-economics\par}
+    \end{flushleft}
+  \end{textblock}
+  \mbox{}\clearpage}
+\usepackage{sectsty}
+\usepackage{fancyhdr}
+\usepackage{titletoc}
+\allsectionsfont{\sffamily\color{housegreen}}
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancyhead[L]{\sffamily\fontsize{8}{10}\selectfont Restart Economics for AI Agents}
+\fancyhead[R]{\sffamily\fontsize{8}{10}\selectfont Cutoffs, Retries, and the Cost of a Resolved Task}
+\fancyfoot[C]{\fontsize{9}{11}\selectfont\thepage}
+\fancypagestyle{plain}{\fancyhf{}\renewcommand{\headrulewidth}{0pt}\fancyfoot[C]{\fontsize{9}{11}\selectfont\thepage}}
+\renewcommand{\contentsname}{\sffamily\color{housegreen}Contents}
+\titlecontents{section}[0pt]{\sffamily\bfseries\small\addvspace{3pt}}{\thecontentslabel\ }{}{\hfill\contentspage}
+\titlecontents{subsection}[14pt]{\sffamily\small}{\thecontentslabel\ }{}{\titlerule*[0.6pc]{.}\contentspage}
+\usepackage{etoolbox}
+\usepackage{array}
+\AtBeginEnvironment{longtable}{%
+  \footnotesize
+  \setlength{\tabcolsep}{5pt}%
+  \setlength{\extrarowheight}{3pt}%
+  \renewcommand{\arraystretch}{1.32}%
+}
+\setlength{\LTpre}{10pt}
+\setlength{\LTpost}{12pt}
+\setlength{\aboverulesep}{2.5pt}
+\setlength{\belowrulesep}{3.5pt}
+\usepackage{needspace}
+\usepackage{caption}
+\captionsetup[table]{labelformat=empty,font=small,justification=raggedright,singlelinecheck=false}
+\setlength{\LTcapwidth}{\textwidth}
+\usepackage{mdframed}
+\newmdenv[
+  leftline=true, rightline=false, topline=false, bottomline=false,
+  linewidth=1.8pt, linecolor=housegreen,
+  innerleftmargin=11pt, innerrightmargin=0pt,
+  innertopmargin=3pt, innerbottommargin=5pt,
+  skipabove=10pt, skipbelow=11pt,
+  leftmargin=0pt, rightmargin=14pt,
+  backgroundcolor=white
+]{keystatement}
+\newenvironment{figcaption}
+  {\par\vspace{4pt}\begingroup\small}
+  {\par\endgroup\vspace{6pt}}
+
+\newmdenv[
+  linewidth=0.9pt, linecolor=housegreen,
+  backgroundcolor=white,
+  innerleftmargin=12pt, innerrightmargin=12pt,
+  innertopmargin=9pt, innerbottommargin=9pt,
+  skipabove=12pt, skipbelow=13pt,
+  roundcorner=2pt
+]{examplebox}

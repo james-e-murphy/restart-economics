@@ -81,18 +81,26 @@ def test_the_median_version_scores_every_held_out_task_once():
 def test_the_difficulty_display_chooses_within_each_bucket():
     pool = _pool(n=120)
     rows = ap.difficulty_rows(pool, rates=(50.0,), regimes=(("automated", 0.0),), replicates=20)
-    buckets = [r["bucket"] for r in rows]
-    assert buckets[:3] == ["under 15 minutes", "15 minutes to 1 hour", "1 hour or more"]
-    assert buckets[3:] == ["all, chosen within bucket", "all, chosen blind"]
+    by = {r["bucket"]: r for r in rows}
+    assert [r["bucket"] for r in rows] == [b for b, _ in ap.BUCKETS] + [
+        "all, chosen within bucket", "all, chosen blind"]
     full = ev.full_draw_tasks({"m": pool})
+    # every registered bucket is shown; one too small to choose on carries its count alone
+    few = by["over 4 hours"]
+    assert few["tasks"] == (full & (pool.minutes == 480.0)).sum() < inf.FOLDS * 2
+    assert "cap_margin" not in few
     long = full & np.isin(pool.minutes, (120.0, 480.0))
     ref = ld.rung(pool, 50.0, 0.0, replicates=0, mask=long, steps=())
-    got = rows[2]
+    got = by["1 hour or more"]
     assert got["tasks"] == ref["tasks"] == long.sum()
     assert got["cap_margin"] == pytest.approx(ref["cap_margin"])
     assert got["cap_margin_low"] <= got["cap_margin_high"]
-    pooled = rows[3]
-    assert pooled["tasks"] == sum(r["tasks"] for r in rows[:3])
+    assert by["1 to 4 hours"]["tasks"] == (full & (pool.minutes == 120.0)).sum()
+    # the pooled choices cover the tasks once, through the partition
+    within = by["all, chosen within bucket"]
+    assert within["tasks"] == sum(by[b]["tasks"] for b in ap.PARTITION) == full.sum()
+    assert within["value_ii"] == pytest.approx(
+        sum(by[b]["tasks"] * by[b]["value_ii"] for b in ap.PARTITION) / full.sum())
 
 
 def test_the_spread_sets_configurations_against_policies_on_common_tasks():

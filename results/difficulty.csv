@@ -71,6 +71,78 @@ claude-sonnet-4.5_4runs,15 minutes to 1 hour,human 0.5,0.5,100.0,30.234184898638
 claude-sonnet-4.5_4runs,15 minutes to 1 hour,human 0.5,0.5,150.0,45.351277347957144,261,67.1457357099138,67.34662420272987,-0.2008884928160768,-2.0875675040290607,0.8455659442841384,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 150 cutoff|iii: 1 attempts at 175 cutoff
 claude-sonnet-4.5_4runs,15 minutes to 1 hour,human 0.5,0.5,200.0,60.46836979727619,261,88.87705754899426,89.14978512227012,-0.2727275732758585,-2.761152685379694,0.963772470177626,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 150 cutoff|iii: 1 attempts at 175 cutoff
 claude-sonnet-4.5_4runs,15 minutes to 1 hour,human 0.5,0.5,300.0,90.70255469591429,261,132.3397012271552,132.75610696135058,-0.4164057341953935,-3.9862361970493314,1.4161258662099114,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 150 cutoff|iii: 1 attempts at 175 cutoff
+claude-sonnet-4.5_4runs,1 to 4 hours,automated,0.0,5.0,1.5117092449319047,42,9.46014336190476,9.510079620535713,-0.04993625863095197,-1.2560165696134589,0.40432967345973114,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 150 cutoff|iii: 1 attempts at 175 cutoff
+claude-sonnet-4.5_4runs,1 to 4 hours,automated,0.0,10.0,3.0234184898638095,42,16.678659348115076,16.78519669394841,-0.10653734583333474,-1.2563189188176347,0.2102096325139472,1000,"ii: 1 attempts, no cutoff|ii: 2 attempts, no cutoff",iii: 1 attempts at 150 cutoff|iii: 2 attempts at 175 cutoff
+claude-sonnet-4.5_4runs,1 to 4 hours,automated,0.0,25.0,7.558546224659524,42,33.567453972619035,33.846173832142846,-0.27871985952381095,-3.408052573624235,0.3230647345011739,1000,"ii: 3 attempts, no cutoff|ii: 4 attempts, no cutoff",iii: 3 attempts at 150 cutoff|iii: 3 attempts at 175 cutoff|iii: 4 attempts at 150 cutoff
+claude-sonnet-4.5_4runs,1 to 4 hours,automated,0.0,50.0,15.117092449319047,42,59.24724041726191,64.16852000714286,-4.921279589880953,-8.897703142597813,0.5109718281975516,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 125 cutoff|iii: 4 attempts at 150 cutoff|iii: 4 attempts at 175 cutoff
+claude-sonnet-4.5_4runs,1 to 4 hours,automated,0.0,75.0,22.675638673978572,42,85.4377166077381,92.73994857857143,-7.302231970833333,-14.567837194384795,0.4314961154110039,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 125 cutoff|iii: 4 attempts at 150 cutoff|iii: 4 attempts at 175 cutoff
+claude-sonnet-4.5_4runs,1 to 4 hours,automated,0.0,100.0,30.234184898638095,42,111.62819279821427,121.31137714999998,-9.683184351785712,-19.94590629263601,0.4576926935930211,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 125 cutoff|iii: 4 attempts at 150 cutoff|iii: 4 attempts at 175 cutoff
+claude-sonnet-4.5_4runs,1 to 4 hours,automated,0.0,150.0,45.351277347957144,42,164.00914517916667,178.45423429285717,-14.4450891136905,-30.979609268541985,0.3753548689786218,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 125 cutoff|iii: 4 attempts at 150 cutoff|iii: 4 attempts at 175 cutoff
+claude-sonnet-4.5_4runs,1 to 4 hours,automated,0.0,200.0,60.46836979727619,42,216.39009756011905,235.5970914357143,-19.20699387559526,-41.18499911678897,0.3651595533703938,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 125 cutoff|iii: 4 attempts at 150 cutoff|iii: 4 attempts at 175 cutoff
+claude-sonnet-4.5_4runs,1 to 4 hours,automated,0.0,300.0,90.70255469591429,42,321.1520023220238,349.88280572142855,-28.73080339940475,-61.59577881328294,0.3651595533703938,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 125 cutoff|iii: 4 attempts at 150 cutoff|iii: 4 attempts at 175 cutoff
+claude-sonnet-4.5_4runs,1 to 4 hours,human 0.1,0.1,5.0,1.5117092449319047,42,10.45419098095238,10.0586815,0.3955094809523789,-1.132733588451214,1.4715927477029611,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+claude-sonnet-4.5_4runs,1 to 4 hours,human 0.1,0.1,10.0,3.0234184898638095,42,18.531571933333332,18.605317715773808,-0.0737457824404757,-2.2933293006773465,0.28110199690427823,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 150 cutoff|iii: 1 attempts at 175 cutoff
+claude-sonnet-4.5_4runs,1 to 4 hours,human 0.1,0.1,25.0,7.558546224659524,42,43.85127839573413,45.037774477281744,-1.1864960815476167,-4.414739711552407,0.9467147014823994,1000,"ii: 1 attempts, no cutoff|ii: 2 attempts, no cutoff",iii: 1 attempts at 150 cutoff|iii: 2 attempts at 125 cutoff|iii: 2 attempts at 175 cutoff
+claude-sonnet-4.5_4runs,1 to 4 hours,human 0.1,0.1,50.0,15.117092449319047,42,83.96040537986111,87.56897946676587,-3.6085740869047527,-9.191716002292283,2.999478437798197,1000,"ii: 1 attempts, no cutoff|ii: 2 attempts, no cutoff",iii: 1 attempts at 150 cutoff|iii: 2 attempts at 175 cutoff|iii: 3 attempts at 125 cutoff
+claude-sonnet-4.5_4runs,1 to 4 hours,human 0.1,0.1,75.0,22.675638673978572,42,124.0695323639881,129.34477311755953,-5.275240753571424,-13.478123162962477,5.140223158802098,1000,"ii: 1 attempts, no cutoff|ii: 2 attempts, no cutoff",iii: 1 attempts at 150 cutoff|iii: 2 attempts at 175 cutoff|iii: 3 attempts at 125 cutoff
+claude-sonnet-4.5_4runs,1 to 4 hours,human 0.1,0.1,100.0,30.234184898638095,42,166.4999375409722,168.24667887946427,-1.7467413384920576,-19.184268738922455,6.7363354707828575,1000,"ii: 1 attempts, no cutoff|ii: 2 attempts, no cutoff|ii: 3 attempts, no cutoff",iii: 2 attempts at 150 cutoff|iii: 2 attempts at 175 cutoff|iii: 3 attempts at 125 cutoff|iii: 3 attempts at 175 cutoff
+claude-sonnet-4.5_4runs,1 to 4 hours,human 0.1,0.1,150.0,45.351277347957144,42,239.2115563297619,249.97286935565475,-10.76131302589286,-30.13627014535003,12.443636595692606,1000,"ii: 2 attempts, no cutoff|ii: 3 attempts, no cutoff",iii: 2 attempts at 150 cutoff|iii: 2 attempts at 175 cutoff|iii: 3 attempts at 125 cutoff|iii: 3 attempts at 175 cutoff
+claude-sonnet-4.5_4runs,1 to 4 hours,human 0.1,0.1,200.0,60.46836979727619,42,317.4456833138889,331.6990598318452,-14.253376517956326,-38.778720955163514,14.843865125761157,1000,"ii: 2 attempts, no cutoff|ii: 3 attempts, no cutoff",iii: 2 attempts at 150 cutoff|iii: 2 attempts at 175 cutoff|iii: 3 attempts at 125 cutoff|iii: 3 attempts at 175 cutoff
+claude-sonnet-4.5_4runs,1 to 4 hours,human 0.1,0.1,300.0,90.70255469591429,42,478.16611901220233,499.04355693482154,-20.877437922619208,-61.900710456774505,23.26822992395918,1000,"ii: 2 attempts, no cutoff|ii: 3 attempts, no cutoff",iii: 2 attempts at 150 cutoff|iii: 2 attempts at 175 cutoff|iii: 3 attempts at 125 cutoff|iii: 3 attempts at 175 cutoff
+claude-sonnet-4.5_4runs,1 to 4 hours,human 0.3,0.3,5.0,1.5117092449319047,42,12.44228621904762,10.0586815,2.3836047190476197,1.2243113445414662,3.4713427477029613,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+claude-sonnet-4.5_4runs,1 to 4 hours,human 0.3,0.3,10.0,3.0234184898638095,42,22.507762409523806,20.0586815,2.4490809095238077,-1.4765665961934789,4.566118117089841,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+claude-sonnet-4.5_4runs,1 to 4 hours,human 0.3,0.3,25.0,7.558546224659524,42,52.70419098095239,50.0586815,2.6455094809523914,-5.57500279163897,7.860096309062494,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+claude-sonnet-4.5_4runs,1 to 4 hours,human 0.3,0.3,50.0,15.117092449319047,42,103.03157193333334,105.85323302232143,-2.821661088988094,-13.18909040752947,13.198074566415034,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 125 cutoff|iii: 1 attempts at 5 cutoff
+claude-sonnet-4.5_4runs,1 to 4 hours,human 0.3,0.3,75.0,22.675638673978572,42,153.3589528857143,158.3532330223214,-4.994280136607102,-20.54186376842523,18.236795671718742,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 125 cutoff|iii: 1 attempts at 5 cutoff
+claude-sonnet-4.5_4runs,1 to 4 hours,human 0.3,0.3,100.0,30.234184898638095,42,203.6863338380952,210.8532330223214,-7.166899184226196,-27.31648240054346,23.18261246082235,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 125 cutoff|iii: 1 attempts at 5 cutoff
+claude-sonnet-4.5_4runs,1 to 4 hours,human 0.3,0.3,150.0,45.351277347957144,42,304.34109574285714,315.85323302232143,-11.512137279464298,-42.80290237065593,33.10260292645341,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 125 cutoff|iii: 1 attempts at 5 cutoff
+claude-sonnet-4.5_4runs,1 to 4 hours,human 0.3,0.3,200.0,60.46836979727619,42,404.995857647619,420.85323302232143,-15.857375374702428,-57.01207857876532,42.788574547236344,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 125 cutoff|iii: 1 attempts at 5 cutoff
+claude-sonnet-4.5_4runs,1 to 4 hours,human 0.3,0.3,300.0,90.70255469591429,42,606.3053814571429,630.8532330223215,-24.54785156517869,-90.17488494074698,62.62226364167377,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 125 cutoff|iii: 1 attempts at 5 cutoff
+claude-sonnet-4.5_4runs,1 to 4 hours,human 0.5,0.5,5.0,1.5117092449319047,42,14.430381457142857,10.0586815,4.371699957142857,3.2169569785472953,5.471092747702958,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+claude-sonnet-4.5_4runs,1 to 4 hours,human 0.5,0.5,10.0,3.0234184898638095,42,26.48395288571428,20.0586815,6.425271385714282,4.167563802085151,8.54914177314453,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+claude-sonnet-4.5_4runs,1 to 4 hours,human 0.5,0.5,25.0,7.558546224659524,42,62.64466717142858,50.0586815,12.585985671428581,6.36712853845951,17.91059438753698,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+claude-sonnet-4.5_4runs,1 to 4 hours,human 0.5,0.5,50.0,15.117092449319047,42,122.91252431428572,100.05868149999999,22.853842814285727,6.962485270071674,33.20171787266624,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+claude-sonnet-4.5_4runs,1 to 4 hours,human 0.5,0.5,75.0,22.675638673978572,42,183.18038145714286,150.0586815,33.12169995714285,7.0983306266543815,48.59225529655878,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+claude-sonnet-4.5_4runs,1 to 4 hours,human 0.5,0.5,100.0,30.234184898638095,42,243.44823860000002,200.0586815,43.38955710000002,9.091386182209899,63.99817403461136,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+claude-sonnet-4.5_4runs,1 to 4 hours,human 0.5,0.5,150.0,45.351277347957144,42,363.9839528857143,300.0586815,63.925271385714325,11.166262119516993,94.12541342570312,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+claude-sonnet-4.5_4runs,1 to 4 hours,human 0.5,0.5,200.0,60.46836979727619,42,484.5196671714285,400.0586815,84.46098567142855,12.262119896046595,123.68162588915924,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+claude-sonnet-4.5_4runs,1 to 4 hours,human 0.5,0.5,300.0,90.70255469591429,42,725.5910957428571,600.0586815,125.53241424285704,17.526454954264874,184.40149196058775,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+claude-sonnet-4.5_4runs,over 4 hours,automated,0.0,5.0,1.5117092449319047,3,,,,,,,,
+claude-sonnet-4.5_4runs,over 4 hours,automated,0.0,10.0,3.0234184898638095,3,,,,,,,,
+claude-sonnet-4.5_4runs,over 4 hours,automated,0.0,25.0,7.558546224659524,3,,,,,,,,
+claude-sonnet-4.5_4runs,over 4 hours,automated,0.0,50.0,15.117092449319047,3,,,,,,,,
+claude-sonnet-4.5_4runs,over 4 hours,automated,0.0,75.0,22.675638673978572,3,,,,,,,,
+claude-sonnet-4.5_4runs,over 4 hours,automated,0.0,100.0,30.234184898638095,3,,,,,,,,
+claude-sonnet-4.5_4runs,over 4 hours,automated,0.0,150.0,45.351277347957144,3,,,,,,,,
+claude-sonnet-4.5_4runs,over 4 hours,automated,0.0,200.0,60.46836979727619,3,,,,,,,,
+claude-sonnet-4.5_4runs,over 4 hours,automated,0.0,300.0,90.70255469591429,3,,,,,,,,
+claude-sonnet-4.5_4runs,over 4 hours,human 0.1,0.1,5.0,1.5117092449319047,3,,,,,,,,
+claude-sonnet-4.5_4runs,over 4 hours,human 0.1,0.1,10.0,3.0234184898638095,3,,,,,,,,
+claude-sonnet-4.5_4runs,over 4 hours,human 0.1,0.1,25.0,7.558546224659524,3,,,,,,,,
+claude-sonnet-4.5_4runs,over 4 hours,human 0.1,0.1,50.0,15.117092449319047,3,,,,,,,,
+claude-sonnet-4.5_4runs,over 4 hours,human 0.1,0.1,75.0,22.675638673978572,3,,,,,,,,
+claude-sonnet-4.5_4runs,over 4 hours,human 0.1,0.1,100.0,30.234184898638095,3,,,,,,,,
+claude-sonnet-4.5_4runs,over 4 hours,human 0.1,0.1,150.0,45.351277347957144,3,,,,,,,,
+claude-sonnet-4.5_4runs,over 4 hours,human 0.1,0.1,200.0,60.46836979727619,3,,,,,,,,
+claude-sonnet-4.5_4runs,over 4 hours,human 0.1,0.1,300.0,90.70255469591429,3,,,,,,,,
+claude-sonnet-4.5_4runs,over 4 hours,human 0.3,0.3,5.0,1.5117092449319047,3,,,,,,,,
+claude-sonnet-4.5_4runs,over 4 hours,human 0.3,0.3,10.0,3.0234184898638095,3,,,,,,,,
+claude-sonnet-4.5_4runs,over 4 hours,human 0.3,0.3,25.0,7.558546224659524,3,,,,,,,,
+claude-sonnet-4.5_4runs,over 4 hours,human 0.3,0.3,50.0,15.117092449319047,3,,,,,,,,
+claude-sonnet-4.5_4runs,over 4 hours,human 0.3,0.3,75.0,22.675638673978572,3,,,,,,,,
+claude-sonnet-4.5_4runs,over 4 hours,human 0.3,0.3,100.0,30.234184898638095,3,,,,,,,,
+claude-sonnet-4.5_4runs,over 4 hours,human 0.3,0.3,150.0,45.351277347957144,3,,,,,,,,
+claude-sonnet-4.5_4runs,over 4 hours,human 0.3,0.3,200.0,60.46836979727619,3,,,,,,,,
+claude-sonnet-4.5_4runs,over 4 hours,human 0.3,0.3,300.0,90.70255469591429,3,,,,,,,,
+claude-sonnet-4.5_4runs,over 4 hours,human 0.5,0.5,5.0,1.5117092449319047,3,,,,,,,,
+claude-sonnet-4.5_4runs,over 4 hours,human 0.5,0.5,10.0,3.0234184898638095,3,,,,,,,,
+claude-sonnet-4.5_4runs,over 4 hours,human 0.5,0.5,25.0,7.558546224659524,3,,,,,,,,
+claude-sonnet-4.5_4runs,over 4 hours,human 0.5,0.5,50.0,15.117092449319047,3,,,,,,,,
+claude-sonnet-4.5_4runs,over 4 hours,human 0.5,0.5,75.0,22.675638673978572,3,,,,,,,,
+claude-sonnet-4.5_4runs,over 4 hours,human 0.5,0.5,100.0,30.234184898638095,3,,,,,,,,
+claude-sonnet-4.5_4runs,over 4 hours,human 0.5,0.5,150.0,45.351277347957144,3,,,,,,,,
+claude-sonnet-4.5_4runs,over 4 hours,human 0.5,0.5,200.0,60.46836979727619,3,,,,,,,,
+claude-sonnet-4.5_4runs,over 4 hours,human 0.5,0.5,300.0,90.70255469591429,3,,,,,,,,
 claude-sonnet-4.5_4runs,1 hour or more,automated,0.0,5.0,1.5117092449319047,45,10.970374412777776,11.016981587499998,-0.04660717472222231,-1.878765422529641,0.16806955598396792,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 150 cutoff|iii: 1 attempts at 175 cutoff
 claude-sonnet-4.5_4runs,1 hour or more,automated,0.0,10.0,3.0234184898638095,45,18.872512390092588,19.018207292962963,-0.14569490287037468,-1.012400355724533,0.1562473808824447,1000,"ii: 2 attempts, no cutoff",iii: 2 attempts at 150 cutoff|iii: 2 attempts at 175 cutoff
 claude-sonnet-4.5_4runs,1 hour or more,automated,0.0,25.0,7.558546224659524,45,40.53966614027777,40.79980467583333,-0.2601385355555621,-3.066318003144918,0.3704348123980921,1000,"ii: 3 attempts, no cutoff|ii: 4 attempts, no cutoff",iii: 3 attempts at 150 cutoff|iii: 3 attempts at 175 cutoff|iii: 4 attempts at 150 cutoff
@@ -251,6 +323,78 @@ claude-sonnet-4_4runs,15 minutes to 1 hour,human 0.5,0.5,100.0,48.416350678454,2
 claude-sonnet-4_4runs,15 minutes to 1 hour,human 0.5,0.5,150.0,72.624526017681,260,65.24690382,66.12675833177886,-0.8798545117788592,-2.1113757194924485,1.49550973504609,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 150 cutoff|iii: 1 attempts at 175 cutoff|iii: 1 attempts at 75 cutoff|iii: 1 attempts at 80 cutoff
 claude-sonnet-4_4runs,15 minutes to 1 hour,human 0.5,0.5,200.0,96.832701356908,260,86.54498074307692,87.76137371639425,-1.2163929733173262,-2.834237319443181,1.9808923150785953,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 150 cutoff|iii: 1 attempts at 175 cutoff|iii: 1 attempts at 75 cutoff|iii: 1 attempts at 80 cutoff
 claude-sonnet-4_4runs,15 minutes to 1 hour,human 0.5,0.5,300.0,145.249052035362,260,129.14113458923077,131.03060448562502,-1.889469896394246,-4.278296155751649,2.7431540556625493,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 150 cutoff|iii: 1 attempts at 175 cutoff|iii: 1 attempts at 75 cutoff|iii: 1 attempts at 80 cutoff
+claude-sonnet-4_4runs,1 to 4 hours,automated,0.0,5.0,2.4208175339227003,42,8.490031094940477,8.548552911607143,-0.05852181666666567,-1.1130576766618028,0.026792392054686993,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 175 cutoff|iii: 1 attempts at 200 cutoff
+claude-sonnet-4_4runs,1 to 4 hours,automated,0.0,10.0,4.8416350678454005,42,15.36373601369048,15.283003517559527,0.08073249613095257,-1.666165533014952,0.2084969652874601,1000,"ii: 1 attempts, no cutoff|ii: 2 attempts, no cutoff",iii: 1 attempts at 200 cutoff|iii: 2 attempts at 150 cutoff
+claude-sonnet-4_4runs,1 to 4 hours,automated,0.0,25.0,12.1040876696135,42,32.98846737797619,32.99712655178571,-0.008659173809519416,-4.637726877335124,1.0792003295323314,1000,"ii: 3 attempts, no cutoff|ii: 4 attempts, no cutoff",iii: 3 attempts at 150 cutoff|iii: 4 attempts at 125 cutoff|iii: 4 attempts at 150 cutoff
+claude-sonnet-4_4runs,1 to 4 hours,automated,0.0,50.0,24.208175339227,42,59.766481414285714,59.76363023273809,0.0028511815476264246,-10.190528573966338,0.8942289627773381,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 125 cutoff|iii: 4 attempts at 150 cutoff
+claude-sonnet-4_4runs,1 to 4 hours,automated,0.0,75.0,36.3122630088405,42,87.14743379523809,87.14458261369047,0.0028511815476122138,-15.38733632161607,0.719000339733581,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 125 cutoff|iii: 4 attempts at 150 cutoff
+claude-sonnet-4_4runs,1 to 4 hours,automated,0.0,100.0,48.416350678454,42,114.5283861761905,114.52553499464287,0.0028511815476264246,-21.063634861372343,0.6666822228115148,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 125 cutoff|iii: 4 attempts at 150 cutoff
+claude-sonnet-4_4runs,1 to 4 hours,automated,0.0,150.0,72.624526017681,42,169.29029093809527,169.28743975654766,0.0028511815476122138,-31.75839081755346,0.6550335757704253,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 125 cutoff|iii: 4 attempts at 150 cutoff
+claude-sonnet-4_4runs,1 to 4 hours,automated,0.0,200.0,96.832701356908,42,224.0521957,224.04934451845236,0.0028511815476406355,-42.414822152176235,0.6550335757703707,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 125 cutoff|iii: 4 attempts at 150 cutoff
+claude-sonnet-4_4runs,1 to 4 hours,automated,0.0,300.0,145.249052035362,42,333.57600522380955,333.5731540422619,0.002851181547669057,-63.72768482142185,0.6550335757704261,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 125 cutoff|iii: 4 attempts at 150 cutoff
+claude-sonnet-4_4runs,1 to 4 hours,human 0.1,0.1,5.0,2.4208175339227003,42,9.490031094940477,9.542600530654763,-0.05256943571428607,-1.4357946065197387,0.6747620485672153,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 175 cutoff|iii: 1 attempts at 200 cutoff
+claude-sonnet-4_4runs,1 to 4 hours,human 0.1,0.1,10.0,4.8416350678454005,42,17.216221571130948,17.322362435416665,-0.10614086428571667,-2.460274422886339,0.06696249547872321,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 175 cutoff|iii: 1 attempts at 200 cutoff
+claude-sonnet-4_4runs,1 to 4 hours,human 0.1,0.1,25.0,12.1040876696135,42,40.39479299970238,40.66164814970238,-0.2668551499999978,-5.874821723155961,0.29976484358164907,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 175 cutoff|iii: 1 attempts at 200 cutoff
+claude-sonnet-4_4runs,1 to 4 hours,human 0.1,0.1,50.0,24.208175339227,42,79.02574538065475,79.5604576735119,-0.5347122928571508,-12.781747111858449,1.3721813342548672,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 175 cutoff|iii: 1 attempts at 200 cutoff
+claude-sonnet-4_4runs,1 to 4 hours,human 0.1,0.1,75.0,36.3122630088405,42,117.65669776160716,120.0330594357143,-2.3763616741071445,-19.407288491435228,3.1681473527663453,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 175 cutoff|iii: 1 attempts at 200 cutoff|iii: 2 attempts at 150 cutoff
+claude-sonnet-4_4runs,1 to 4 hours,human 0.1,0.1,100.0,48.416350678454,42,156.28765014255956,159.4080594357143,-3.1204092931547507,-25.507188011974158,5.266695400271972,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 175 cutoff|iii: 1 attempts at 200 cutoff|iii: 2 attempts at 150 cutoff
+claude-sonnet-4_4runs,1 to 4 hours,human 0.1,0.1,150.0,72.624526017681,42,236.5519185714286,238.15805943571434,-1.6061408642857486,-37.94465223078175,7.447423964798993,1000,"ii: 1 attempts, no cutoff|ii: 2 attempts, no cutoff",iii: 1 attempts at 175 cutoff|iii: 1 attempts at 200 cutoff|iii: 2 attempts at 150 cutoff
+claude-sonnet-4_4runs,1 to 4 hours,human 0.1,0.1,200.0,96.832701356908,42,314.76620428571425,316.9080594357142,-2.1418551499999694,-51.532546380280436,10.449736044717882,1000,"ii: 1 attempts, no cutoff|ii: 2 attempts, no cutoff",iii: 1 attempts at 175 cutoff|iii: 1 attempts at 200 cutoff|iii: 2 attempts at 150 cutoff
+claude-sonnet-4_4runs,1 to 4 hours,human 0.1,0.1,300.0,145.249052035362,42,471.1947757142857,474.4080594357142,-3.2132837214285246,-78.18757234988303,18.061034138742126,1000,"ii: 1 attempts, no cutoff|ii: 2 attempts, no cutoff",iii: 1 attempts at 175 cutoff|iii: 1 attempts at 200 cutoff|iii: 2 attempts at 150 cutoff
+claude-sonnet-4_4runs,1 to 4 hours,human 0.3,0.3,5.0,2.4208175339227003,42,11.490031094940477,10.050749283928573,1.439281811011904,-0.8366837127288248,2.734831069393893,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+claude-sonnet-4_4runs,1 to 4 hours,human 0.3,0.3,10.0,4.8416350678454005,42,21.216221571130948,20.05074928392857,1.1654722872023768,-2.862952335658197,3.715568737344092,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+claude-sonnet-4_4runs,1 to 4 hours,human 0.3,0.3,25.0,12.1040876696135,42,50.39479299970238,52.79114012440476,-2.3963471247023804,-7.785548090479397,6.010116032773726,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 200 cutoff|iii: 1 attempts at 5 cutoff|iii: 1 attempts at 60 cutoff|iii: 1 attempts at 70 cutoff
+claude-sonnet-4_4runs,1 to 4 hours,human 0.3,0.3,50.0,24.208175339227,42,99.02574538065475,105.71079511279761,-6.685049732142858,-16.720894862495093,9.2579017718821,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 150 cutoff|iii: 1 attempts at 200 cutoff|iii: 1 attempts at 70 cutoff|iii: 1 attempts at 90 cutoff|iii: 2 attempts at 60 cutoff
+claude-sonnet-4_4runs,1 to 4 hours,human 0.3,0.3,75.0,36.3122630088405,42,147.65669776160718,157.79412844613097,-10.137430684523792,-25.45951467882528,14.002155901764842,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 150 cutoff|iii: 1 attempts at 200 cutoff|iii: 1 attempts at 70 cutoff|iii: 1 attempts at 90 cutoff|iii: 2 attempts at 60 cutoff
+claude-sonnet-4_4runs,1 to 4 hours,human 0.3,0.3,100.0,48.416350678454,42,196.28765014255953,211.56458317529757,-15.276933032738043,-33.81965785350157,18.023414618436806,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 200 cutoff|iii: 1 attempts at 70 cutoff|iii: 1 attempts at 90 cutoff|iii: 2 attempts at 60 cutoff|iii: 3 attempts at 55 cutoff
+claude-sonnet-4_4runs,1 to 4 hours,human 0.3,0.3,150.0,72.624526017681,42,293.5495549044643,316.5050593657738,-22.955504461309488,-51.4395952621406,27.306546505200284,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 200 cutoff|iii: 1 attempts at 70 cutoff|iii: 1 attempts at 90 cutoff|iii: 2 attempts at 60 cutoff|iii: 3 attempts at 55 cutoff
+claude-sonnet-4_4runs,1 to 4 hours,human 0.3,0.3,200.0,96.832701356908,42,390.81145966636905,421.44553555625,-30.634075889880933,-68.0227636473614,36.051674940317525,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 200 cutoff|iii: 1 attempts at 70 cutoff|iii: 1 attempts at 90 cutoff|iii: 2 attempts at 60 cutoff|iii: 3 attempts at 55 cutoff
+claude-sonnet-4_4runs,1 to 4 hours,human 0.3,0.3,300.0,145.249052035362,42,585.3352691901786,631.3264879372024,-45.99121874702382,-101.65787700550412,52.78572882880912,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 200 cutoff|iii: 1 attempts at 70 cutoff|iii: 1 attempts at 90 cutoff|iii: 2 attempts at 60 cutoff|iii: 3 attempts at 55 cutoff
+claude-sonnet-4_4runs,1 to 4 hours,human 0.5,0.5,5.0,2.4208175339227003,42,13.490031094940472,10.050749283928573,3.439281811011899,2.159040827828123,4.734831069393893,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+claude-sonnet-4_4runs,1 to 4 hours,human 0.5,0.5,10.0,4.8416350678454005,42,25.21622157113095,20.05074928392857,5.16547228720238,1.5922741903802022,7.716846629205981,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+claude-sonnet-4_4runs,1 to 4 hours,human 0.5,0.5,25.0,12.1040876696135,42,60.39479299970237,50.050749283928575,10.344043715773793,0.042817121942893,16.570272331692056,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+claude-sonnet-4_4runs,1 to 4 hours,human 0.5,0.5,50.0,24.208175339227,42,119.02574538065478,100.05074928392857,18.974996096726215,-2.142825966052635,30.901595584490405,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+claude-sonnet-4_4runs,1 to 4 hours,human 0.5,0.5,75.0,36.3122630088405,42,177.65669776160715,152.38812744821428,25.26857031339287,-4.546612301578103,44.56036860564678,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff|iii: 1 attempts at 55 cutoff
+claude-sonnet-4_4runs,1 to 4 hours,human 0.5,0.5,100.0,48.416350678454,42,236.28765014255953,202.72462739166664,33.563022750892884,-8.030511593190848,58.80850434882165,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff|iii: 4 attempts at 40 cutoff
+claude-sonnet-4_4runs,1 to 4 hours,human 0.5,0.5,150.0,72.624526017681,42,353.5495549044643,303.9151035821428,49.63445132232147,-11.777871331097455,87.04380990735407,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff|iii: 4 attempts at 40 cutoff
+claude-sonnet-4_4runs,1 to 4 hours,human 0.5,0.5,200.0,96.832701356908,42,470.81145966636905,405.10557977261914,65.70587989374991,-15.661449762470088,115.77884882995484,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff|iii: 4 attempts at 40 cutoff
+claude-sonnet-4_4runs,1 to 4 hours,human 0.5,0.5,300.0,145.249052035362,42,705.3352691901786,607.4865321535715,97.84873703660708,-25.275585489993503,172.87530751223218,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff|iii: 4 attempts at 40 cutoff
+claude-sonnet-4_4runs,over 4 hours,automated,0.0,5.0,2.4208175339227003,3,,,,,,,,
+claude-sonnet-4_4runs,over 4 hours,automated,0.0,10.0,4.8416350678454005,3,,,,,,,,
+claude-sonnet-4_4runs,over 4 hours,automated,0.0,25.0,12.1040876696135,3,,,,,,,,
+claude-sonnet-4_4runs,over 4 hours,automated,0.0,50.0,24.208175339227,3,,,,,,,,
+claude-sonnet-4_4runs,over 4 hours,automated,0.0,75.0,36.3122630088405,3,,,,,,,,
+claude-sonnet-4_4runs,over 4 hours,automated,0.0,100.0,48.416350678454,3,,,,,,,,
+claude-sonnet-4_4runs,over 4 hours,automated,0.0,150.0,72.624526017681,3,,,,,,,,
+claude-sonnet-4_4runs,over 4 hours,automated,0.0,200.0,96.832701356908,3,,,,,,,,
+claude-sonnet-4_4runs,over 4 hours,automated,0.0,300.0,145.249052035362,3,,,,,,,,
+claude-sonnet-4_4runs,over 4 hours,human 0.1,0.1,5.0,2.4208175339227003,3,,,,,,,,
+claude-sonnet-4_4runs,over 4 hours,human 0.1,0.1,10.0,4.8416350678454005,3,,,,,,,,
+claude-sonnet-4_4runs,over 4 hours,human 0.1,0.1,25.0,12.1040876696135,3,,,,,,,,
+claude-sonnet-4_4runs,over 4 hours,human 0.1,0.1,50.0,24.208175339227,3,,,,,,,,
+claude-sonnet-4_4runs,over 4 hours,human 0.1,0.1,75.0,36.3122630088405,3,,,,,,,,
+claude-sonnet-4_4runs,over 4 hours,human 0.1,0.1,100.0,48.416350678454,3,,,,,,,,
+claude-sonnet-4_4runs,over 4 hours,human 0.1,0.1,150.0,72.624526017681,3,,,,,,,,
+claude-sonnet-4_4runs,over 4 hours,human 0.1,0.1,200.0,96.832701356908,3,,,,,,,,
+claude-sonnet-4_4runs,over 4 hours,human 0.1,0.1,300.0,145.249052035362,3,,,,,,,,
+claude-sonnet-4_4runs,over 4 hours,human 0.3,0.3,5.0,2.4208175339227003,3,,,,,,,,
+claude-sonnet-4_4runs,over 4 hours,human 0.3,0.3,10.0,4.8416350678454005,3,,,,,,,,
+claude-sonnet-4_4runs,over 4 hours,human 0.3,0.3,25.0,12.1040876696135,3,,,,,,,,
+claude-sonnet-4_4runs,over 4 hours,human 0.3,0.3,50.0,24.208175339227,3,,,,,,,,
+claude-sonnet-4_4runs,over 4 hours,human 0.3,0.3,75.0,36.3122630088405,3,,,,,,,,
+claude-sonnet-4_4runs,over 4 hours,human 0.3,0.3,100.0,48.416350678454,3,,,,,,,,
+claude-sonnet-4_4runs,over 4 hours,human 0.3,0.3,150.0,72.624526017681,3,,,,,,,,
+claude-sonnet-4_4runs,over 4 hours,human 0.3,0.3,200.0,96.832701356908,3,,,,,,,,
+claude-sonnet-4_4runs,over 4 hours,human 0.3,0.3,300.0,145.249052035362,3,,,,,,,,
+claude-sonnet-4_4runs,over 4 hours,human 0.5,0.5,5.0,2.4208175339227003,3,,,,,,,,
+claude-sonnet-4_4runs,over 4 hours,human 0.5,0.5,10.0,4.8416350678454005,3,,,,,,,,
+claude-sonnet-4_4runs,over 4 hours,human 0.5,0.5,25.0,12.1040876696135,3,,,,,,,,
+claude-sonnet-4_4runs,over 4 hours,human 0.5,0.5,50.0,24.208175339227,3,,,,,,,,
+claude-sonnet-4_4runs,over 4 hours,human 0.5,0.5,75.0,36.3122630088405,3,,,,,,,,
+claude-sonnet-4_4runs,over 4 hours,human 0.5,0.5,100.0,48.416350678454,3,,,,,,,,
+claude-sonnet-4_4runs,over 4 hours,human 0.5,0.5,150.0,72.624526017681,3,,,,,,,,
+claude-sonnet-4_4runs,over 4 hours,human 0.5,0.5,200.0,96.832701356908,3,,,,,,,,
+claude-sonnet-4_4runs,over 4 hours,human 0.5,0.5,300.0,145.249052035362,3,,,,,,,,
 claude-sonnet-4_4runs,1 hour or more,automated,0.0,5.0,2.4208175339227003,45,9.797642769722225,9.852263131944447,-0.054620362222221885,-1.1791870105192295,0.026146002663190775,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 175 cutoff|iii: 1 attempts at 200 cutoff
 claude-sonnet-4_4runs,1 hour or more,automated,0.0,10.0,4.8416350678454005,45,18.01546161166667,17.987260845277778,0.028200766388891907,-1.5398734309266415,0.19065098656320476,1000,"ii: 1 attempts, no cutoff|ii: 2 attempts, no cutoff",iii: 1 attempts at 200 cutoff|iii: 2 attempts at 150 cutoff
 claude-sonnet-4_4runs,1 hour or more,automated,0.0,25.0,12.1040876696135,45,39.92834070333334,39.9364225988889,-0.008081895555562824,-4.642070959675384,1.1226557539262187,1000,"ii: 3 attempts, no cutoff|ii: 4 attempts, no cutoff",iii: 3 attempts at 150 cutoff|iii: 4 attempts at 125 cutoff|iii: 4 attempts at 150 cutoff
@@ -431,6 +575,78 @@ gemini-3-pro-preview_4runs,15 minutes to 1 hour,human 0.5,0.5,100.0,60.330319685
 gemini-3-pro-preview_4runs,15 minutes to 1 hour,human 0.5,0.5,150.0,90.49547952795741,210,67.61726759166666,67.68869567785715,-0.0714280861904939,-2.1628661570918513,0.38722053823103864,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 200 cutoff|iii: 1 attempts at 275 cutoff
 gemini-3-pro-preview_4runs,15 minutes to 1 hour,human 0.5,0.5,200.0,120.66063937060987,210,89.78988663928571,89.8910766302381,-0.1011899909523919,-2.7495104185918473,0.507157457049293,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 200 cutoff|iii: 1 attempts at 275 cutoff
 gemini-3-pro-preview_4runs,15 minutes to 1 hour,human 0.5,0.5,300.0,180.99095905591483,210,134.13512473452383,134.295838535,-0.16071380047617367,-4.02875956741125,0.7349752567022328,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 200 cutoff|iii: 1 attempts at 275 cutoff
+gemini-3-pro-preview_4runs,1 to 4 hours,automated,0.0,5.0,3.016515984265247,35,8.23856513,8.302813819999999,-0.06424868999999944,-0.9853659044633888,0.023545526320463996,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 200 cutoff|iii: 1 attempts at 275 cutoff
+gemini-3-pro-preview_4runs,1 to 4 hours,automated,0.0,10.0,6.033031968530494,35,15.25969332952381,15.267237879523812,-0.007544550000002204,-1.3243144893020802,0.03347569776960858,1000,"ii: 1 attempts, no cutoff|ii: 2 attempts, no cutoff",iii: 1 attempts at 275 cutoff|iii: 2 attempts at 200 cutoff|iii: 2 attempts at 275 cutoff
+gemini-3-pro-preview_4runs,1 to 4 hours,automated,0.0,25.0,15.082579921326234,35,32.56756646333333,32.57511101333333,-0.007544549999998651,-4.462228948366762,0.11182597809054465,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 200 cutoff|iii: 4 attempts at 275 cutoff
+gemini-3-pro-preview_4runs,1 to 4 hours,automated,0.0,50.0,30.165159842652468,35,61.13899503476189,61.146539584761896,-0.007544550000005756,-10.692251285771807,0.15366408820106583,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 200 cutoff|iii: 4 attempts at 275 cutoff
+gemini-3-pro-preview_4runs,1 to 4 hours,automated,0.0,75.0,45.24773976397871,35,89.71042360619047,89.71796815619048,-0.007544550000005756,-16.050600706621232,0.16551724700232234,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 200 cutoff|iii: 4 attempts at 275 cutoff
+gemini-3-pro-preview_4runs,1 to 4 hours,automated,0.0,100.0,60.330319685304936,35,118.28185217761906,118.28939672761906,-0.007544550000005756,-21.408950127470625,0.16551724700229425,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 200 cutoff|iii: 4 attempts at 275 cutoff
+gemini-3-pro-preview_4runs,1 to 4 hours,automated,0.0,150.0,90.49547952795741,35,175.42470932047624,175.43225387047625,-0.007544550000005756,-32.12564896916949,0.16551724700233655,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 200 cutoff|iii: 4 attempts at 275 cutoff
+gemini-3-pro-preview_4runs,1 to 4 hours,automated,0.0,200.0,120.66063937060987,35,232.56756646333338,232.57511101333338,-0.007544550000005756,-42.84234781086831,0.16551724700233725,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 200 cutoff|iii: 4 attempts at 275 cutoff
+gemini-3-pro-preview_4runs,1 to 4 hours,automated,0.0,300.0,180.99095905591483,35,346.8532807490476,346.8608252990476,-0.007544549999977335,-64.27574549426598,0.16551724700233725,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 200 cutoff|iii: 4 attempts at 275 cutoff
+gemini-3-pro-preview_4runs,1 to 4 hours,human 0.1,0.1,5.0,3.016515984265247,35,9.217136558571429,9.27424239142857,-0.057105832857141436,-1.4984529604492498,0.379193497313596,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 200 cutoff|iii: 1 attempts at 275 cutoff
+gemini-3-pro-preview_4runs,1 to 4 hours,human 0.1,0.1,10.0,6.033031968530494,35,17.052850844285715,17.174242391428567,-0.12139154714285283,-2.5474842322773683,0.03418680552917992,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 200 cutoff|iii: 1 attempts at 275 cutoff
+gemini-3-pro-preview_4runs,1 to 4 hours,human 0.1,0.1,25.0,15.082579921326234,35,40.559993701428574,40.874242391428574,-0.31424868999999944,-5.2690416670572935,0.1588350102269267,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 200 cutoff|iii: 1 attempts at 275 cutoff
+gemini-3-pro-preview_4runs,1 to 4 hours,human 0.1,0.1,50.0,30.165159842652468,35,79.73856513,80.37424239142858,-0.635677261428583,-10.277253640118237,0.30735909826260255,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 200 cutoff|iii: 1 attempts at 275 cutoff
+gemini-3-pro-preview_4runs,1 to 4 hours,human 0.1,0.1,75.0,45.24773976397871,35,118.91713655857143,119.87424239142857,-0.9571058328571382,-15.265807551952365,0.4534269057142808,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 200 cutoff|iii: 1 attempts at 275 cutoff
+gemini-3-pro-preview_4runs,1 to 4 hours,human 0.1,0.1,100.0,60.330319685304936,35,158.09570798714282,159.37424239142857,-1.2785344042857503,-20.092169163238115,0.6324224757575792,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 200 cutoff|iii: 1 attempts at 275 cutoff
+gemini-3-pro-preview_4runs,1 to 4 hours,human 0.1,0.1,150.0,90.49547952795741,35,236.45285084428568,238.37424239142857,-1.921391547142889,-30.468271065803513,0.9354527787878354,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 200 cutoff|iii: 1 attempts at 275 cutoff
+gemini-3-pro-preview_4runs,1 to 4 hours,human 0.1,0.1,200.0,120.66063937060987,35,314.80999370142854,317.3742423914285,-2.5642486899999426,-40.707164567030674,1.3626207872523235,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 200 cutoff|iii: 1 attempts at 275 cutoff
+gemini-3-pro-preview_4runs,1 to 4 hours,human 0.1,0.1,300.0,180.99095905591483,35,471.5242794157143,475.37424239142854,-3.84996297571422,-61.18307818829314,2.0231139232549165,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 200 cutoff|iii: 1 attempts at 275 cutoff
+gemini-3-pro-preview_4runs,1 to 4 hours,human 0.3,0.3,5.0,3.016515984265247,35,11.174279415714286,10.08086155857143,1.0934178571428568,-1.2074102916977993,2.503022717857139,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+gemini-3-pro-preview_4runs,1 to 4 hours,human 0.3,0.3,10.0,6.033031968530494,35,20.96713655857143,21.56901846857143,-0.6018819099999995,-2.9614106960151543,3.704602954181542,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 275 cutoff|iii: 1 attempts at 5 cutoff|iii: 1 attempts at 60 cutoff
+gemini-3-pro-preview_4runs,1 to 4 hours,human 0.3,0.3,25.0,15.082579921326234,35,50.345707987142866,53.02254332285714,-2.676835335714273,-7.320856489822579,7.106890067410706,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 275 cutoff|iii: 1 attempts at 5 cutoff|iii: 1 attempts at 60 cutoff
+gemini-3-pro-preview_4runs,1 to 4 hours,human 0.3,0.3,50.0,30.165159842652468,35,99.30999370142858,107.12984592,-7.8198522185714125,-14.798448274789052,12.113054030356667,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 275 cutoff|iii: 1 attempts at 5 cutoff|iii: 1 attempts at 60 cutoff
+gemini-3-pro-preview_4runs,1 to 4 hours,human 0.3,0.3,75.0,45.24773976397871,35,148.27427941571426,160.23698877714287,-11.962709361428608,-21.44038830936826,17.78963059677424,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 275 cutoff|iii: 1 attempts at 5 cutoff|iii: 1 attempts at 60 cutoff
+gemini-3-pro-preview_4runs,1 to 4 hours,human 0.3,0.3,100.0,60.330319685304936,35,197.23856512999996,213.34413163428573,-16.105566504285775,-29.43344755279169,23.477468813086794,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 275 cutoff|iii: 1 attempts at 5 cutoff|iii: 1 attempts at 60 cutoff
+gemini-3-pro-preview_4runs,1 to 4 hours,human 0.3,0.3,150.0,90.49547952795741,35,295.16713655857137,319.5584173485715,-24.39128079000011,-43.551347270424216,34.54367775503118,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 275 cutoff|iii: 1 attempts at 5 cutoff|iii: 1 attempts at 60 cutoff
+gemini-3-pro-preview_4runs,1 to 4 hours,human 0.3,0.3,200.0,120.66063937060987,35,393.0957079871429,425.7727030628572,-32.67699507571433,-58.33146604870478,45.77551310118054,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 275 cutoff|iii: 1 attempts at 5 cutoff|iii: 1 attempts at 60 cutoff
+gemini-3-pro-preview_4runs,1 to 4 hours,human 0.3,0.3,300.0,180.99095905591483,35,588.9528508442858,638.2012744914286,-49.248423647142886,-87.89170360526565,68.2323539137615,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 275 cutoff|iii: 1 attempts at 5 cutoff|iii: 1 attempts at 60 cutoff
+gemini-3-pro-preview_4runs,1 to 4 hours,human 0.5,0.5,5.0,3.016515984265247,35,13.131422272857142,10.08086155857143,3.0505607142857123,1.1736818051214293,4.476638208870369,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+gemini-3-pro-preview_4runs,1 to 4 hours,human 0.5,0.5,10.0,6.033031968530494,35,24.881422272857144,20.08086155857143,4.800560714285712,0.7195438338873463,7.718177713717108,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+gemini-3-pro-preview_4runs,1 to 4 hours,human 0.5,0.5,25.0,15.082579921326234,35,60.13142227285715,50.08086155857143,10.050560714285723,-1.0978480558680603,17.29063077741008,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+gemini-3-pro-preview_4runs,1 to 4 hours,human 0.5,0.5,50.0,30.165159842652468,35,118.88142227285714,100.08086155857143,18.80056071428571,-3.406471562934179,33.13151220320392,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+gemini-3-pro-preview_4runs,1 to 4 hours,human 0.5,0.5,75.0,45.24773976397871,35,177.63142227285712,150.08086155857143,27.550560714285695,-5.8582801644031175,48.96786088741444,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+gemini-3-pro-preview_4runs,1 to 4 hours,human 0.5,0.5,100.0,60.330319685304936,35,236.38142227285712,200.08086155857143,36.300560714285695,-8.110623914403115,64.80420957162494,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+gemini-3-pro-preview_4runs,1 to 4 hours,human 0.5,0.5,150.0,90.49547952795741,35,353.8814222728571,300.08086155857137,53.80056071428572,-12.615311414403138,96.48429666654603,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+gemini-3-pro-preview_4runs,1 to 4 hours,human 0.5,0.5,200.0,120.66063937060987,35,471.38142227285715,400.0808615585714,71.30056071428572,-17.119998914403133,128.1860118921098,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+gemini-3-pro-preview_4runs,1 to 4 hours,human 0.5,0.5,300.0,180.99095905591483,35,706.3814222728572,600.0808615585714,106.30056071428578,-26.129373914403015,191.58944234323758,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+gemini-3-pro-preview_4runs,over 4 hours,automated,0.0,5.0,3.016515984265247,2,,,,,,,,
+gemini-3-pro-preview_4runs,over 4 hours,automated,0.0,10.0,6.033031968530494,2,,,,,,,,
+gemini-3-pro-preview_4runs,over 4 hours,automated,0.0,25.0,15.082579921326234,2,,,,,,,,
+gemini-3-pro-preview_4runs,over 4 hours,automated,0.0,50.0,30.165159842652468,2,,,,,,,,
+gemini-3-pro-preview_4runs,over 4 hours,automated,0.0,75.0,45.24773976397871,2,,,,,,,,
+gemini-3-pro-preview_4runs,over 4 hours,automated,0.0,100.0,60.330319685304936,2,,,,,,,,
+gemini-3-pro-preview_4runs,over 4 hours,automated,0.0,150.0,90.49547952795741,2,,,,,,,,
+gemini-3-pro-preview_4runs,over 4 hours,automated,0.0,200.0,120.66063937060987,2,,,,,,,,
+gemini-3-pro-preview_4runs,over 4 hours,automated,0.0,300.0,180.99095905591483,2,,,,,,,,
+gemini-3-pro-preview_4runs,over 4 hours,human 0.1,0.1,5.0,3.016515984265247,2,,,,,,,,
+gemini-3-pro-preview_4runs,over 4 hours,human 0.1,0.1,10.0,6.033031968530494,2,,,,,,,,
+gemini-3-pro-preview_4runs,over 4 hours,human 0.1,0.1,25.0,15.082579921326234,2,,,,,,,,
+gemini-3-pro-preview_4runs,over 4 hours,human 0.1,0.1,50.0,30.165159842652468,2,,,,,,,,
+gemini-3-pro-preview_4runs,over 4 hours,human 0.1,0.1,75.0,45.24773976397871,2,,,,,,,,
+gemini-3-pro-preview_4runs,over 4 hours,human 0.1,0.1,100.0,60.330319685304936,2,,,,,,,,
+gemini-3-pro-preview_4runs,over 4 hours,human 0.1,0.1,150.0,90.49547952795741,2,,,,,,,,
+gemini-3-pro-preview_4runs,over 4 hours,human 0.1,0.1,200.0,120.66063937060987,2,,,,,,,,
+gemini-3-pro-preview_4runs,over 4 hours,human 0.1,0.1,300.0,180.99095905591483,2,,,,,,,,
+gemini-3-pro-preview_4runs,over 4 hours,human 0.3,0.3,5.0,3.016515984265247,2,,,,,,,,
+gemini-3-pro-preview_4runs,over 4 hours,human 0.3,0.3,10.0,6.033031968530494,2,,,,,,,,
+gemini-3-pro-preview_4runs,over 4 hours,human 0.3,0.3,25.0,15.082579921326234,2,,,,,,,,
+gemini-3-pro-preview_4runs,over 4 hours,human 0.3,0.3,50.0,30.165159842652468,2,,,,,,,,
+gemini-3-pro-preview_4runs,over 4 hours,human 0.3,0.3,75.0,45.24773976397871,2,,,,,,,,
+gemini-3-pro-preview_4runs,over 4 hours,human 0.3,0.3,100.0,60.330319685304936,2,,,,,,,,
+gemini-3-pro-preview_4runs,over 4 hours,human 0.3,0.3,150.0,90.49547952795741,2,,,,,,,,
+gemini-3-pro-preview_4runs,over 4 hours,human 0.3,0.3,200.0,120.66063937060987,2,,,,,,,,
+gemini-3-pro-preview_4runs,over 4 hours,human 0.3,0.3,300.0,180.99095905591483,2,,,,,,,,
+gemini-3-pro-preview_4runs,over 4 hours,human 0.5,0.5,5.0,3.016515984265247,2,,,,,,,,
+gemini-3-pro-preview_4runs,over 4 hours,human 0.5,0.5,10.0,6.033031968530494,2,,,,,,,,
+gemini-3-pro-preview_4runs,over 4 hours,human 0.5,0.5,25.0,15.082579921326234,2,,,,,,,,
+gemini-3-pro-preview_4runs,over 4 hours,human 0.5,0.5,50.0,30.165159842652468,2,,,,,,,,
+gemini-3-pro-preview_4runs,over 4 hours,human 0.5,0.5,75.0,45.24773976397871,2,,,,,,,,
+gemini-3-pro-preview_4runs,over 4 hours,human 0.5,0.5,100.0,60.330319685304936,2,,,,,,,,
+gemini-3-pro-preview_4runs,over 4 hours,human 0.5,0.5,150.0,90.49547952795741,2,,,,,,,,
+gemini-3-pro-preview_4runs,over 4 hours,human 0.5,0.5,200.0,120.66063937060987,2,,,,,,,,
+gemini-3-pro-preview_4runs,over 4 hours,human 0.5,0.5,300.0,180.99095905591483,2,,,,,,,,
 gemini-3-pro-preview_4runs,1 hour or more,automated,0.0,5.0,3.016515984265247,37,9.996833943243242,10.05760973108108,-0.060775787837837214,-1.0361864085955859,0.021231351550306497,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 200 cutoff|iii: 1 attempts at 275 cutoff
 gemini-3-pro-preview_4runs,1 hour or more,automated,0.0,10.0,6.033031968530494,37,18.842038357657657,18.849175094144144,-0.007136736486486939,-1.2353474416594838,0.029023054991381757,1000,"ii: 1 attempts, no cutoff|ii: 2 attempts, no cutoff",iii: 1 attempts at 275 cutoff|iii: 2 attempts at 200 cutoff|iii: 2 attempts at 275 cutoff
 gemini-3-pro-preview_4runs,1 hour or more,automated,0.0,25.0,15.082579921326234,37,41.7837062599099,41.790842996396385,-0.007136736486486939,-4.1331872185952365,0.10644551947199149,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 200 cutoff|iii: 4 attempts at 275 cutoff
@@ -611,6 +827,78 @@ gpt-5_4runs,15 minutes to 1 hour,human 0.5,0.5,100.0,145.65927183859387,257,45.3
 gpt-5_4runs,15 minutes to 1 hour,human 0.5,0.5,150.0,218.4889077578908,257,67.8153095313716,67.77230518093386,0.04300435043774087,-2.261992280545652,0.5175522228379881,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 70 cutoff|iii: 1 attempts at 85 cutoff
 gpt-5_4runs,15 minutes to 1 hour,human 0.5,0.5,200.0,291.31854367718773,257,90.27396711892024,90.21880323540856,0.05516388351168189,-3.0049871828352446,0.7021980981007625,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 70 cutoff|iii: 1 attempts at 85 cutoff
 gpt-5_4runs,15 minutes to 1 hour,human 0.5,0.5,300.0,436.9778155157816,257,135.1912822940175,135.111799344358,0.07948294965950709,-4.522603796683834,1.0291045542704107,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 70 cutoff|iii: 1 attempts at 85 cutoff
+gpt-5_4runs,1 to 4 hours,automated,0.0,5.0,7.2829635919296924,42,8.064910112103174,8.182026372519841,-0.11711626041666712,-0.8030831579631612,0.0031286036806874766,1000,"ii: 1 attempts, no cutoff|ii: 2 attempts, no cutoff",iii: 1 attempts at 85 cutoff|iii: 2 attempts at no cutoff
+gpt-5_4runs,1 to 4 hours,automated,0.0,10.0,14.565927183859385,42,14.784103404761906,14.872881139384921,-0.08877773462301519,-1.8242108765981218,0.010762435357480038,1000,"ii: 2 attempts, no cutoff|ii: 3 attempts, no cutoff|ii: 4 attempts, no cutoff",iii: 2 attempts at 85 cutoff|iii: 3 attempts at no cutoff|iii: 4 attempts at no cutoff
+gpt-5_4runs,1 to 4 hours,automated,0.0,25.0,36.41481795964847,42,33.43782905803572,33.45106718055556,-0.013238122519844353,-5.297276123947956,-0.005813913365304131,1000,"ii: 3 attempts, no cutoff|ii: 4 attempts, no cutoff",iii: 3 attempts at 85 cutoff|iii: 4 attempts at no cutoff
+gpt-5_4runs,1 to 4 hours,automated,0.0,50.0,72.82963591929693,42,63.843035688988095,63.856273811507926,-0.013238122519830142,-10.571832613178486,-0.005364369123626521,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 85 cutoff|iii: 4 attempts at no cutoff
+gpt-5_4runs,1 to 4 hours,automated,0.0,75.0,109.2444538789454,42,94.79541664136903,94.80865476388888,-0.013238122519851458,-15.85280108164696,-0.005813913365311414,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 85 cutoff|iii: 4 attempts at no cutoff
+gpt-5_4runs,1 to 4 hours,automated,0.0,100.0,145.65927183859387,42,125.74779759375001,125.76103571626984,-0.013238122519837248,-21.133769550115435,-0.005813913365311059,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 85 cutoff|iii: 4 attempts at no cutoff
+gpt-5_4runs,1 to 4 hours,automated,0.0,150.0,218.4889077578908,42,187.65255949851186,187.66579762103171,-0.013238122519851458,-31.695706487052338,-0.005813913365269492,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 85 cutoff|iii: 4 attempts at no cutoff
+gpt-5_4runs,1 to 4 hours,automated,0.0,200.0,291.31854367718773,42,249.55732140327376,249.5705595257936,-0.013238122519851458,-42.25764342398926,-0.005813913365324915,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 85 cutoff|iii: 4 attempts at no cutoff
+gpt-5_4runs,1 to 4 hours,automated,0.0,300.0,436.9778155157816,42,373.36684521279756,373.3800833353174,-0.013238122519851458,-63.38151729786312,-0.005813913365295783,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 85 cutoff|iii: 4 attempts at no cutoff
+gpt-5_4runs,1 to 4 hours,human 0.1,0.1,5.0,7.2829635919296924,42,8.928063446428572,9.033274944940477,-0.10521149851190437,-1.1815109382781492,0.0036225719622103073,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 85 cutoff|iii: 1 attempts at no cutoff
+gpt-5_4runs,1 to 4 hours,human 0.1,0.1,10.0,14.565927183859385,42,17.219730113095235,17.43208446875,-0.2123543556547638,-2.069922792281773,-0.004727734573738509,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 85 cutoff|iii: 1 attempts at no cutoff
+gpt-5_4runs,1 to 4 hours,human 0.1,0.1,25.0,36.41481795964847,42,42.92307377132936,43.45685669841269,-0.5337829270833296,-4.789853217778006,0.14616380538902798,1000,"ii: 1 attempts, no cutoff|ii: 2 attempts, no cutoff",iii: 1 attempts at 85 cutoff|iii: 1 attempts at no cutoff|iii: 2 attempts at no cutoff
+gpt-5_4runs,1 to 4 hours,human 0.1,0.1,50.0,72.82963591929693,42,86.29526512400795,87.36476233680557,-1.0694972127976143,-9.658815313984377,0.299215677487694,1000,"ii: 1 attempts, no cutoff|ii: 2 attempts, no cutoff",iii: 1 attempts at 85 cutoff|iii: 1 attempts at no cutoff|iii: 2 attempts at 95 cutoff|iii: 2 attempts at no cutoff
+gpt-5_4runs,1 to 4 hours,human 0.1,0.1,75.0,109.2444538789454,42,129.03336036210317,130.6385718606151,-1.6052114985119204,-14.975795653029193,0.3694948759272489,1000,"ii: 1 attempts, no cutoff|ii: 2 attempts, no cutoff",iii: 1 attempts at 85 cutoff|iii: 1 attempts at no cutoff|iii: 2 attempts at 95 cutoff|iii: 2 attempts at no cutoff
+gpt-5_4runs,1 to 4 hours,human 0.1,0.1,100.0,145.65927183859387,42,171.7714556001984,173.91238138442463,-2.1409257842262264,-19.941736419579666,0.556622656120295,1000,"ii: 1 attempts, no cutoff|ii: 2 attempts, no cutoff",iii: 1 attempts at 85 cutoff|iii: 1 attempts at no cutoff|iii: 2 attempts at 95 cutoff|iii: 2 attempts at no cutoff
+gpt-5_4runs,1 to 4 hours,human 0.1,0.1,150.0,218.4889077578908,42,257.2476460763889,260.4600004320436,-3.2123543556547247,-29.87361795268075,-0.00407299832219105,1000,"ii: 1 attempts, no cutoff|ii: 2 attempts, no cutoff",iii: 1 attempts at 85 cutoff|iii: 1 attempts at no cutoff|iii: 2 attempts at 95 cutoff|iii: 2 attempts at no cutoff
+gpt-5_4runs,1 to 4 hours,human 0.1,0.1,200.0,291.31854367718773,42,342.72383655257937,347.0076194796627,-4.283782927083337,-39.456085292963174,-0.004072998322302606,1000,"ii: 1 attempts, no cutoff|ii: 2 attempts, no cutoff",iii: 1 attempts at 85 cutoff|iii: 1 attempts at no cutoff|iii: 2 attempts at 95 cutoff|iii: 2 attempts at no cutoff
+gpt-5_4runs,1 to 4 hours,human 0.1,0.1,300.0,436.9778155157816,42,513.6762175049604,523.2862996626984,-9.61008215773802,-58.77336741954789,0.038613103762787246,1000,"ii: 1 attempts, no cutoff|ii: 2 attempts, no cutoff",iii: 1 attempts at 85 cutoff|iii: 1 attempts at no cutoff|iii: 2 attempts at 95 cutoff|iii: 2 attempts at no cutoff
+gpt-5_4runs,1 to 4 hours,human 0.3,0.3,5.0,7.2829635919296924,42,10.868539636904764,10.042448808035715,0.8260908288690487,-1.1588931058152712,1.9668816497193966,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+gpt-5_4runs,1 to 4 hours,human 0.3,0.3,10.0,14.565927183859385,42,21.100682494047618,20.060305950892854,1.040376543154764,-2.5387727172697394,3.2691143693576383,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+gpt-5_4runs,1 to 4 hours,human 0.3,0.3,25.0,36.41481795964847,42,51.79711106547619,53.99267634821428,-2.1955652827380945,-6.635290607049415,7.178747994912792,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff|iii: 1 attempts at no cutoff
+gpt-5_4runs,1 to 4 hours,human 0.3,0.3,50.0,72.82963591929693,42,102.9578253511905,107.77243825297617,-4.814612901785679,-13.749862234834549,13.662645861744142,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff|iii: 1 attempts at no cutoff
+gpt-5_4runs,1 to 4 hours,human 0.3,0.3,75.0,109.2444538789454,42,154.11853963690479,161.5522001577381,-7.433660520833314,-20.503112078564246,20.176655178015963,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff|iii: 1 attempts at no cutoff
+gpt-5_4runs,1 to 4 hours,human 0.3,0.3,100.0,145.65927183859387,42,205.27925392261906,215.33196206250003,-10.052708139880963,-27.433240992632925,26.694356589976145,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff|iii: 1 attempts at no cutoff
+gpt-5_4runs,1 to 4 hours,human 0.3,0.3,150.0,218.4889077578908,42,307.6006824940476,322.8914858720238,-15.290803377976204,-42.295532445592016,39.59765871047383,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff|iii: 1 attempts at no cutoff
+gpt-5_4runs,1 to 4 hours,human 0.3,0.3,200.0,291.31854367718773,42,409.9221110654762,430.45100968154753,-20.52889861607133,-56.438033977454815,52.54709366336232,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff|iii: 1 attempts at no cutoff
+gpt-5_4runs,1 to 4 hours,human 0.3,0.3,300.0,436.9778155157816,42,614.5649682083333,645.5700573005952,-31.00508909226187,-85.1938470057818,78.54648390726472,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff|iii: 1 attempts at no cutoff
+gpt-5_4runs,1 to 4 hours,human 0.5,0.5,5.0,7.2829635919296924,42,12.809015827380952,10.054353569940478,2.754662257440474,1.4389148355078099,3.8987395258522706,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+gpt-5_4runs,1 to 4 hours,human 0.5,0.5,10.0,14.565927183859385,42,24.981634875,20.08411547470238,4.897519400297622,1.9687864315784807,7.158006475437814,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+gpt-5_4runs,1 to 4 hours,human 0.5,0.5,25.0,36.41481795964847,42,61.49949201785714,50.173401188988095,11.326090828869049,2.4450812859556286,16.885590713057166,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+gpt-5_4runs,1 to 4 hours,human 0.5,0.5,50.0,72.82963591929693,42,122.36258725595239,100.32221071279761,22.04037654315478,3.0987440073132175,33.19286761919884,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+gpt-5_4runs,1 to 4 hours,human 0.5,0.5,75.0,109.2444538789454,42,183.22568249404762,150.47102023660713,32.754662257440486,4.433330473478629,49.496017824854654,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+gpt-5_4runs,1 to 4 hours,human 0.5,0.5,100.0,145.65927183859387,42,244.08877773214283,200.61982976041668,43.46894797172615,5.7679169396439995,65.77508759229652,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+gpt-5_4runs,1 to 4 hours,human 0.5,0.5,150.0,218.4889077578908,42,365.8149682083333,300.9174488080357,64.8975194002976,8.43708987197485,98.33322712718025,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+gpt-5_4runs,1 to 4 hours,human 0.5,0.5,200.0,291.31854367718773,42,487.5411586845238,401.21506785565475,86.32609082886904,11.106262804305647,130.8913666620638,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+gpt-5_4runs,1 to 4 hours,human 0.5,0.5,300.0,436.9778155157816,42,730.9935396369048,601.8103059508928,129.18323368601193,16.44460866896752,196.00764573183125,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+gpt-5_4runs,over 4 hours,automated,0.0,5.0,7.2829635919296924,3,,,,,,,,
+gpt-5_4runs,over 4 hours,automated,0.0,10.0,14.565927183859385,3,,,,,,,,
+gpt-5_4runs,over 4 hours,automated,0.0,25.0,36.41481795964847,3,,,,,,,,
+gpt-5_4runs,over 4 hours,automated,0.0,50.0,72.82963591929693,3,,,,,,,,
+gpt-5_4runs,over 4 hours,automated,0.0,75.0,109.2444538789454,3,,,,,,,,
+gpt-5_4runs,over 4 hours,automated,0.0,100.0,145.65927183859387,3,,,,,,,,
+gpt-5_4runs,over 4 hours,automated,0.0,150.0,218.4889077578908,3,,,,,,,,
+gpt-5_4runs,over 4 hours,automated,0.0,200.0,291.31854367718773,3,,,,,,,,
+gpt-5_4runs,over 4 hours,automated,0.0,300.0,436.9778155157816,3,,,,,,,,
+gpt-5_4runs,over 4 hours,human 0.1,0.1,5.0,7.2829635919296924,3,,,,,,,,
+gpt-5_4runs,over 4 hours,human 0.1,0.1,10.0,14.565927183859385,3,,,,,,,,
+gpt-5_4runs,over 4 hours,human 0.1,0.1,25.0,36.41481795964847,3,,,,,,,,
+gpt-5_4runs,over 4 hours,human 0.1,0.1,50.0,72.82963591929693,3,,,,,,,,
+gpt-5_4runs,over 4 hours,human 0.1,0.1,75.0,109.2444538789454,3,,,,,,,,
+gpt-5_4runs,over 4 hours,human 0.1,0.1,100.0,145.65927183859387,3,,,,,,,,
+gpt-5_4runs,over 4 hours,human 0.1,0.1,150.0,218.4889077578908,3,,,,,,,,
+gpt-5_4runs,over 4 hours,human 0.1,0.1,200.0,291.31854367718773,3,,,,,,,,
+gpt-5_4runs,over 4 hours,human 0.1,0.1,300.0,436.9778155157816,3,,,,,,,,
+gpt-5_4runs,over 4 hours,human 0.3,0.3,5.0,7.2829635919296924,3,,,,,,,,
+gpt-5_4runs,over 4 hours,human 0.3,0.3,10.0,14.565927183859385,3,,,,,,,,
+gpt-5_4runs,over 4 hours,human 0.3,0.3,25.0,36.41481795964847,3,,,,,,,,
+gpt-5_4runs,over 4 hours,human 0.3,0.3,50.0,72.82963591929693,3,,,,,,,,
+gpt-5_4runs,over 4 hours,human 0.3,0.3,75.0,109.2444538789454,3,,,,,,,,
+gpt-5_4runs,over 4 hours,human 0.3,0.3,100.0,145.65927183859387,3,,,,,,,,
+gpt-5_4runs,over 4 hours,human 0.3,0.3,150.0,218.4889077578908,3,,,,,,,,
+gpt-5_4runs,over 4 hours,human 0.3,0.3,200.0,291.31854367718773,3,,,,,,,,
+gpt-5_4runs,over 4 hours,human 0.3,0.3,300.0,436.9778155157816,3,,,,,,,,
+gpt-5_4runs,over 4 hours,human 0.5,0.5,5.0,7.2829635919296924,3,,,,,,,,
+gpt-5_4runs,over 4 hours,human 0.5,0.5,10.0,14.565927183859385,3,,,,,,,,
+gpt-5_4runs,over 4 hours,human 0.5,0.5,25.0,36.41481795964847,3,,,,,,,,
+gpt-5_4runs,over 4 hours,human 0.5,0.5,50.0,72.82963591929693,3,,,,,,,,
+gpt-5_4runs,over 4 hours,human 0.5,0.5,75.0,109.2444538789454,3,,,,,,,,
+gpt-5_4runs,over 4 hours,human 0.5,0.5,100.0,145.65927183859387,3,,,,,,,,
+gpt-5_4runs,over 4 hours,human 0.5,0.5,150.0,218.4889077578908,3,,,,,,,,
+gpt-5_4runs,over 4 hours,human 0.5,0.5,200.0,291.31854367718773,3,,,,,,,,
+gpt-5_4runs,over 4 hours,human 0.5,0.5,300.0,436.9778155157816,3,,,,,,,,
 gpt-5_4runs,1 hour or more,automated,0.0,5.0,7.2829635919296924,45,9.93523105138889,9.981053233333334,-0.04582218194444465,-0.8501600922601737,0.05028334156295096,1000,"ii: 2 attempts, no cutoff|ii: 4 attempts, no cutoff",iii: 2 attempts at 85 cutoff|iii: 2 attempts at no cutoff|iii: 4 attempts at no cutoff
 gpt-5_4runs,1 hour or more,automated,0.0,10.0,14.565927183859385,45,17.03577743194444,17.048133012962957,-0.01235558101851808,-2.0546986842105253,0.07376789661695077,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 85 cutoff|iii: 4 attempts at no cutoff
 gpt-5_4runs,1 hour or more,automated,0.0,25.0,36.41481795964847,45,39.70244409861111,39.714799679629635,-0.012355581018525186,-7.0979522182274435,0.07124434246558112,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 85 cutoff|iii: 4 attempts at no cutoff
@@ -791,6 +1079,78 @@ gpt_5.2_4runs,15 minutes to 1 hour,human 0.5,0.5,100.0,86.01612219994465,215,41.
 gpt_5.2_4runs,15 minutes to 1 hour,human 0.5,0.5,150.0,129.02418329991696,215,62.524879377151166,63.21707117197675,-0.6921917948255825,-1.747752494762711,1.109442411391258,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 125 cutoff|iii: 1 attempts at 65 cutoff|iii: 1 attempts at 70 cutoff|iii: 1 attempts at 75 cutoff|iii: 1 attempts at 90 cutoff
 gpt_5.2_4runs,15 minutes to 1 hour,human 0.5,0.5,200.0,172.0322443998893,215,83.10627472598838,84.04555954406977,-0.93928481808139,-2.3331236221379186,1.4159186245189601,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 125 cutoff|iii: 1 attempts at 65 cutoff|iii: 1 attempts at 70 cutoff|iii: 1 attempts at 75 cutoff|iii: 1 attempts at 90 cutoff
 gpt_5.2_4runs,15 minutes to 1 hour,human 0.5,0.5,300.0,258.0483665998339,215,124.2690654236628,125.7025362882558,-1.433470864593005,-3.44774146794008,2.082625051856497,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 125 cutoff|iii: 1 attempts at 65 cutoff|iii: 1 attempts at 70 cutoff|iii: 1 attempts at 75 cutoff|iii: 1 attempts at 90 cutoff
+gpt_5.2_4runs,1 to 4 hours,automated,0.0,5.0,4.300806109997232,30,7.77445899875,7.709185604583334,0.06527339416666589,-1.1214850061827952,0.2765117271148981,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 90 cutoff|iii: 1 attempts at 95 cutoff
+gpt_5.2_4runs,1 to 4 hours,automated,0.0,10.0,8.601612219994465,30,14.274458998749997,14.860468610416667,-0.58600961166667,-1.9517323739313284,0.3859311926646176,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 90 cutoff|iii: 1 attempts at 95 cutoff|iii: 2 attempts at 95 cutoff
+gpt_5.2_4runs,1 to 4 hours,automated,0.0,25.0,21.50403054998616,30,34.213686619583335,36.284843554999995,-2.07115693541666,-6.090200605221351,0.8288235637105051,1000,"ii: 1 attempts, no cutoff|ii: 2 attempts, no cutoff",iii: 1 attempts at 90 cutoff|iii: 2 attempts at 95 cutoff|iii: 4 attempts at 60 cutoff
+gpt_5.2_4runs,1 to 4 hours,automated,0.0,50.0,43.00806109997232,30,67.98945521374999,68.52320849750001,-0.5337532837500163,-12.745100474772943,1.500927873680566,1000,"ii: 1 attempts, no cutoff|ii: 4 attempts, no cutoff",iii: 2 attempts at 90 cutoff|iii: 4 attempts at 60 cutoff|iii: 4 attempts at 70 cutoff
+gpt_5.2_4runs,1 to 4 hours,automated,0.0,75.0,64.51209164995848,30,96.44470569986112,101.30098627527781,-4.85628057541669,-19.407445010792713,1.1867734713819427,1000,"ii: 2 attempts, no cutoff|ii: 4 attempts, no cutoff",iii: 2 attempts at 90 cutoff|iii: 4 attempts at 60 cutoff|iii: 4 attempts at 70 cutoff
+gpt_5.2_4runs,1 to 4 hours,automated,0.0,100.0,86.01612219994465,30,127.27803903319446,134.07876405305558,-6.800725019861119,-25.934151415654807,1.1726234268307991,1000,"ii: 2 attempts, no cutoff|ii: 4 attempts, no cutoff",iii: 2 attempts at 90 cutoff|iii: 4 attempts at 60 cutoff|iii: 4 attempts at 70 cutoff
+gpt_5.2_4runs,1 to 4 hours,automated,0.0,150.0,129.02418329991696,30,188.94470569986106,199.6343196086111,-10.689613908750033,-39.04689085750937,1.1726234268307854,1000,"ii: 2 attempts, no cutoff|ii: 4 attempts, no cutoff",iii: 2 attempts at 90 cutoff|iii: 4 attempts at 60 cutoff|iii: 4 attempts at 70 cutoff
+gpt_5.2_4runs,1 to 4 hours,automated,0.0,200.0,172.0322443998893,30,250.61137236652772,265.18987516416666,-14.578502797638947,-52.38023160012499,1.17262342683084,1000,"ii: 2 attempts, no cutoff|ii: 4 attempts, no cutoff",iii: 2 attempts at 90 cutoff|iii: 4 attempts at 60 cutoff|iii: 4 attempts at 70 cutoff
+gpt_5.2_4runs,1 to 4 hours,automated,0.0,300.0,258.0483665998339,30,373.9447056998612,396.3009862752777,-22.35628057541652,-79.04689826679166,1.172623426830786,1000,"ii: 2 attempts, no cutoff|ii: 4 attempts, no cutoff",iii: 2 attempts at 90 cutoff|iii: 4 attempts at 60 cutoff|iii: 4 attempts at 70 cutoff
+gpt_5.2_4runs,1 to 4 hours,human 0.1,0.1,5.0,4.300806109997232,30,8.77445899875,8.668735175416666,0.1057238233333333,-1.3174721777389693,0.49986112772434255,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 75 cutoff|iii: 1 attempts at 90 cutoff|iii: 1 attempts at 95 cutoff
+gpt_5.2_4runs,1 to 4 hours,human 0.1,0.1,10.0,8.601612219994465,30,16.27445899875,15.992518937916666,0.28194006083333356,-2.3727370011810334,0.6849066957949822,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 90 cutoff|iii: 1 attempts at 95 cutoff
+gpt_5.2_4runs,1 to 4 hours,human 0.1,0.1,25.0,21.50403054998616,30,38.77445899874999,38.292518937916675,0.48194006083331686,-6.338405333918276,1.3444334643632465,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 90 cutoff|iii: 1 attempts at 95 cutoff
+gpt_5.2_4runs,1 to 4 hours,human 0.1,0.1,50.0,43.00806109997232,30,76.27445899875,75.45918560458334,0.8152733941666668,-12.806884382228112,2.436032025140245,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 90 cutoff|iii: 1 attempts at 95 cutoff
+gpt_5.2_4runs,1 to 4 hours,human 0.1,0.1,75.0,64.51209164995848,30,113.77445899875002,112.62585227125001,1.1486067275000096,-18.58029326642438,3.6407272740749974,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 90 cutoff|iii: 1 attempts at 95 cutoff
+gpt_5.2_4runs,1 to 4 hours,human 0.1,0.1,100.0,86.01612219994465,30,151.27445899875,149.79251893791667,1.481940060833324,-25.603510411688184,4.763227274075001,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 90 cutoff|iii: 1 attempts at 95 cutoff
+gpt_5.2_4runs,1 to 4 hours,human 0.1,0.1,150.0,129.02418329991696,30,226.27445899875002,224.12585227124998,2.148606727500038,-38.65828905590869,7.117294029061262,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 90 cutoff|iii: 1 attempts at 95 cutoff
+gpt_5.2_4runs,1 to 4 hours,human 0.1,0.1,200.0,172.0322443998893,30,301.27445899875005,298.45918560458335,2.815273394166695,-51.992542723269786,9.629274507096014,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 90 cutoff|iii: 1 attempts at 95 cutoff
+gpt_5.2_4runs,1 to 4 hours,human 0.1,0.1,300.0,258.0483665998339,30,451.27445899874994,447.1258522712499,4.14860672750001,-77.5450256351333,14.877402982315854,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 90 cutoff|iii: 1 attempts at 95 cutoff
+gpt_5.2_4runs,1 to 4 hours,human 0.3,0.3,5.0,4.300806109997232,30,10.774458998749997,10.777631497500002,-0.003172498750004138,-1.2046940283729146,2.4296753682754635,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff|iii: 1 attempts at 75 cutoff
+gpt_5.2_4runs,1 to 4 hours,human 0.3,0.3,10.0,8.601612219994465,30,20.274458998750006,20.731636555833333,-0.45717755708332675,-2.5404063947321793,3.25373886741619,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 30 cutoff|iii: 1 attempts at 65 cutoff|iii: 1 attempts at 75 cutoff|iii: 1 attempts at 95 cutoff
+gpt_5.2_4runs,1 to 4 hours,human 0.3,0.3,25.0,21.50403054998616,30,48.77445899874999,47.549092951666665,1.2253660470833267,-7.104467402851634,5.044995513163898,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 70 cutoff|iii: 1 attempts at 75 cutoff|iii: 1 attempts at 95 cutoff
+gpt_5.2_4runs,1 to 4 hours,human 0.3,0.3,50.0,43.00806109997232,30,96.27445899875002,94.04909295166667,2.225366047083355,-14.863248881722864,8.303043290313193,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 70 cutoff|iii: 1 attempts at 75 cutoff|iii: 1 attempts at 95 cutoff
+gpt_5.2_4runs,1 to 4 hours,human 0.3,0.3,75.0,64.51209164995848,30,143.77445899875,140.54909295166667,3.2253660470833267,-22.578684714764446,12.856208402020862,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 70 cutoff|iii: 1 attempts at 75 cutoff|iii: 1 attempts at 95 cutoff
+gpt_5.2_4runs,1 to 4 hours,human 0.3,0.3,100.0,86.01612219994465,30,191.27445899875002,187.04909295166667,4.225366047083355,-31.27614662834174,16.799437568687523,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 70 cutoff|iii: 1 attempts at 75 cutoff|iii: 1 attempts at 95 cutoff
+gpt_5.2_4runs,1 to 4 hours,human 0.3,0.3,150.0,129.02418329991696,30,286.27445899875005,280.04909295166664,6.225366047083412,-47.13778115552331,24.420092730305182,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 70 cutoff|iii: 1 attempts at 75 cutoff|iii: 1 attempts at 95 cutoff
+gpt_5.2_4runs,1 to 4 hours,human 0.3,0.3,200.0,172.0322443998893,30,381.27445899874994,373.04909295166664,8.225366047083298,-62.7508676657872,32.24143082255572,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 70 cutoff|iii: 1 attempts at 75 cutoff|iii: 1 attempts at 95 cutoff
+gpt_5.2_4runs,1 to 4 hours,human 0.3,0.3,300.0,258.0483665998339,30,571.27445899875,559.0490929516667,12.225366047083298,-94.02041885461071,48.199031451519424,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 70 cutoff|iii: 1 attempts at 75 cutoff|iii: 1 attempts at 95 cutoff
+gpt_5.2_4runs,1 to 4 hours,human 0.5,0.5,5.0,4.300806109997232,30,12.774458998749997,10.042342717083335,2.732116281666663,-0.13806960538825905,4.429675368275464,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+gpt_5.2_4runs,1 to 4 hours,human 0.5,0.5,10.0,8.601612219994465,30,24.274458998750003,20.042342717083333,4.23211628166667,-0.9842673970796147,7.337401698691448,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+gpt_5.2_4runs,1 to 4 hours,human 0.5,0.5,25.0,21.50403054998616,30,58.77445899874999,50.941121054166665,7.833337944583327,-4.037099974162939,15.970283424607853,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 30 cutoff|iii: 1 attempts at 5 cutoff
+gpt_5.2_4runs,1 to 4 hours,human 0.5,0.5,50.0,43.00806109997232,30,116.27445899875002,102.76033541333332,13.514123585416698,-9.407362883445366,30.288861383375952,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 30 cutoff|iii: 1 attempts at 5 cutoff
+gpt_5.2_4runs,1 to 4 hours,human 0.5,0.5,75.0,64.51209164995848,30,173.77445899875002,154.01033541333334,19.764123585416684,-14.2109091568297,44.71594471670927,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 30 cutoff|iii: 1 attempts at 5 cutoff
+gpt_5.2_4runs,1 to 4 hours,human 0.5,0.5,100.0,86.01612219994465,30,231.27445899875002,205.26033541333337,26.014123585416655,-19.087542432091023,59.17063266353868,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 30 cutoff|iii: 1 attempts at 5 cutoff
+gpt_5.2_4runs,1 to 4 hours,human 0.5,0.5,150.0,129.02418329991696,30,346.27445899874994,307.76033541333334,38.5141235854166,-28.840808982613723,88.09450932554587,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 30 cutoff|iii: 1 attempts at 5 cutoff
+gpt_5.2_4runs,1 to 4 hours,human 0.5,0.5,200.0,172.0322443998893,30,461.27445899874994,410.2603354133333,51.014123585416655,-39.34471056129728,117.04399998768505,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 30 cutoff|iii: 1 attempts at 5 cutoff
+gpt_5.2_4runs,1 to 4 hours,human 0.5,0.5,300.0,258.0483665998339,30,691.27445899875,615.2603354133332,76.01412358541677,-59.07008934917598,174.9429813119636,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 30 cutoff|iii: 1 attempts at 5 cutoff
+gpt_5.2_4runs,over 4 hours,automated,0.0,5.0,4.300806109997232,2,,,,,,,,
+gpt_5.2_4runs,over 4 hours,automated,0.0,10.0,8.601612219994465,2,,,,,,,,
+gpt_5.2_4runs,over 4 hours,automated,0.0,25.0,21.50403054998616,2,,,,,,,,
+gpt_5.2_4runs,over 4 hours,automated,0.0,50.0,43.00806109997232,2,,,,,,,,
+gpt_5.2_4runs,over 4 hours,automated,0.0,75.0,64.51209164995848,2,,,,,,,,
+gpt_5.2_4runs,over 4 hours,automated,0.0,100.0,86.01612219994465,2,,,,,,,,
+gpt_5.2_4runs,over 4 hours,automated,0.0,150.0,129.02418329991696,2,,,,,,,,
+gpt_5.2_4runs,over 4 hours,automated,0.0,200.0,172.0322443998893,2,,,,,,,,
+gpt_5.2_4runs,over 4 hours,automated,0.0,300.0,258.0483665998339,2,,,,,,,,
+gpt_5.2_4runs,over 4 hours,human 0.1,0.1,5.0,4.300806109997232,2,,,,,,,,
+gpt_5.2_4runs,over 4 hours,human 0.1,0.1,10.0,8.601612219994465,2,,,,,,,,
+gpt_5.2_4runs,over 4 hours,human 0.1,0.1,25.0,21.50403054998616,2,,,,,,,,
+gpt_5.2_4runs,over 4 hours,human 0.1,0.1,50.0,43.00806109997232,2,,,,,,,,
+gpt_5.2_4runs,over 4 hours,human 0.1,0.1,75.0,64.51209164995848,2,,,,,,,,
+gpt_5.2_4runs,over 4 hours,human 0.1,0.1,100.0,86.01612219994465,2,,,,,,,,
+gpt_5.2_4runs,over 4 hours,human 0.1,0.1,150.0,129.02418329991696,2,,,,,,,,
+gpt_5.2_4runs,over 4 hours,human 0.1,0.1,200.0,172.0322443998893,2,,,,,,,,
+gpt_5.2_4runs,over 4 hours,human 0.1,0.1,300.0,258.0483665998339,2,,,,,,,,
+gpt_5.2_4runs,over 4 hours,human 0.3,0.3,5.0,4.300806109997232,2,,,,,,,,
+gpt_5.2_4runs,over 4 hours,human 0.3,0.3,10.0,8.601612219994465,2,,,,,,,,
+gpt_5.2_4runs,over 4 hours,human 0.3,0.3,25.0,21.50403054998616,2,,,,,,,,
+gpt_5.2_4runs,over 4 hours,human 0.3,0.3,50.0,43.00806109997232,2,,,,,,,,
+gpt_5.2_4runs,over 4 hours,human 0.3,0.3,75.0,64.51209164995848,2,,,,,,,,
+gpt_5.2_4runs,over 4 hours,human 0.3,0.3,100.0,86.01612219994465,2,,,,,,,,
+gpt_5.2_4runs,over 4 hours,human 0.3,0.3,150.0,129.02418329991696,2,,,,,,,,
+gpt_5.2_4runs,over 4 hours,human 0.3,0.3,200.0,172.0322443998893,2,,,,,,,,
+gpt_5.2_4runs,over 4 hours,human 0.3,0.3,300.0,258.0483665998339,2,,,,,,,,
+gpt_5.2_4runs,over 4 hours,human 0.5,0.5,5.0,4.300806109997232,2,,,,,,,,
+gpt_5.2_4runs,over 4 hours,human 0.5,0.5,10.0,8.601612219994465,2,,,,,,,,
+gpt_5.2_4runs,over 4 hours,human 0.5,0.5,25.0,21.50403054998616,2,,,,,,,,
+gpt_5.2_4runs,over 4 hours,human 0.5,0.5,50.0,43.00806109997232,2,,,,,,,,
+gpt_5.2_4runs,over 4 hours,human 0.5,0.5,75.0,64.51209164995848,2,,,,,,,,
+gpt_5.2_4runs,over 4 hours,human 0.5,0.5,100.0,86.01612219994465,2,,,,,,,,
+gpt_5.2_4runs,over 4 hours,human 0.5,0.5,150.0,129.02418329991696,2,,,,,,,,
+gpt_5.2_4runs,over 4 hours,human 0.5,0.5,200.0,172.0322443998893,2,,,,,,,,
+gpt_5.2_4runs,over 4 hours,human 0.5,0.5,300.0,258.0483665998339,2,,,,,,,,
 gpt_5.2_4runs,1 hour or more,automated,0.0,5.0,4.300806109997232,32,9.827795383593749,9.7666015765625,0.061193807031248326,-1.0862614446022727,0.2636685266069525,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 90 cutoff|iii: 1 attempts at 95 cutoff
 gpt_5.2_4runs,1 hour or more,automated,0.0,10.0,8.601612219994465,32,18.42154538359375,18.642122373046874,-0.2205769894531251,-1.8139404898161797,0.3254549345921936,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 90 cutoff|iii: 1 attempts at 95 cutoff|iii: 2 attempts at 95 cutoff
 gpt_5.2_4runs,1 hour or more,automated,0.0,25.0,21.50403054998616,32,44.653811350390626,46.59552097734375,-1.941709626953127,-5.8407226851418095,0.7600180023711751,1000,"ii: 1 attempts, no cutoff|ii: 2 attempts, no cutoff",iii: 1 attempts at 90 cutoff|iii: 2 attempts at 95 cutoff|iii: 4 attempts at 60 cutoff
@@ -971,6 +1331,78 @@ kimi-k2_4runs,15 minutes to 1 hour,human 0.5,0.5,100.0,72.30469789143447,215,48.
 kimi-k2_4runs,15 minutes to 1 hour,human 0.5,0.5,150.0,108.45704683715172,215,72.53287714238371,71.89617390372092,0.6367032386627898,-1.914231054752372,4.503540261566269,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 100 cutoff|iii: 1 attempts at 125 cutoff|iii: 1 attempts at 65 cutoff
 kimi-k2_4runs,15 minutes to 1 hour,human 0.5,0.5,200.0,144.60939578286894,215,96.34101667726745,95.63163902,0.7093776572674528,-2.728870457302132,5.765435789457816,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 100 cutoff|iii: 1 attempts at 125 cutoff|iii: 1 attempts at 65 cutoff
 kimi-k2_4runs,15 minutes to 1 hour,human 0.5,0.5,300.0,216.91409367430344,215,143.9572957470349,143.10256925255814,0.8547264944767505,-4.305903522380996,8.296671347729518,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 100 cutoff|iii: 1 attempts at 125 cutoff|iii: 1 attempts at 65 cutoff
+kimi-k2_4runs,1 to 4 hours,automated,0.0,5.0,3.6152348945717243,33,9.085506121969697,9.04621405151515,0.039292070454546746,-1.581247266355069,0.4369354488871519,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 125 cutoff|iii: 1 attempts at 200 cutoff
+kimi-k2_4runs,1 to 4 hours,automated,0.0,10.0,7.230469789143449,33,16.763811577398986,16.48251595441919,0.2812956229797976,-2.2629020411610115,0.9765854198534213,1000,"ii: 1 attempts, no cutoff|ii: 2 attempts, no cutoff",iii: 2 attempts at 125 cutoff|iii: 2 attempts at 175 cutoff|iii: 2 attempts at 250 cutoff
+kimi-k2_4runs,1 to 4 hours,automated,0.0,25.0,18.076174472858618,33,36.27857057954545,36.69816943901515,-0.4195988594697013,-5.486385403582867,2.172016340565261,1000,"ii: 3 attempts, no cutoff|ii: 4 attempts, no cutoff",iii: 3 attempts at 250 cutoff|iii: 4 attempts at 125 cutoff|iii: 4 attempts at 250 cutoff
+kimi-k2_4runs,1 to 4 hours,automated,0.0,50.0,36.152348945717236,33,66.1387674659091,68.31783246590908,-2.17906499999998,-10.990766948619115,2.9359240835974556,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 125 cutoff|iii: 4 attempts at 250 cutoff
+kimi-k2_4runs,1 to 4 hours,automated,0.0,75.0,54.22852341857586,33,96.44179776893938,100.13601428409089,-3.69421651515151,-17.9648513651781,2.626892740956373,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 125 cutoff|iii: 4 attempts at 250 cutoff
+kimi-k2_4runs,1 to 4 hours,automated,0.0,100.0,72.30469789143447,33,126.74482807196968,131.9541961022727,-5.209368030303025,-25.25101501120859,2.0184706285391396,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 125 cutoff|iii: 4 attempts at 250 cutoff
+kimi-k2_4runs,1 to 4 hours,automated,0.0,150.0,108.45704683715172,33,187.3508886780303,195.59055973863636,-8.23967106060607,-39.043365434061904,1.8096836041379931,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 125 cutoff|iii: 4 attempts at 250 cutoff
+kimi-k2_4runs,1 to 4 hours,automated,0.0,200.0,144.60939578286894,33,247.9569492840909,259.226923375,-11.269974090909102,-52.350024893782255,1.8096836041379931,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 125 cutoff|iii: 4 attempts at 250 cutoff
+kimi-k2_4runs,1 to 4 hours,automated,0.0,300.0,216.91409367430344,33,369.16907049621204,386.49965064772726,-17.33058015151522,-78.6823095308426,1.809683604138049,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 125 cutoff|iii: 4 attempts at 250 cutoff
+kimi-k2_4runs,1 to 4 hours,human 0.1,0.1,5.0,3.6152348945717243,33,10.07793036439394,9.783847500757574,0.2940828636363655,-1.3684561918061326,1.4259419947062495,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 70 cutoff|iii: 1 attempts at 80 cutoff|iii: 1 attempts at 85 cutoff
+kimi-k2_4runs,1 to 4 hours,human 0.1,0.1,10.0,7.230469789143449,33,18.494597031060604,18.97523709343434,-0.48064006237373746,-3.0284665663804886,0.9755023039128484,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 125 cutoff|iii: 1 attempts at 75 cutoff|iii: 2 attempts at 85 cutoff
+kimi-k2_4runs,1 to 4 hours,human 0.1,0.1,25.0,18.076174472858618,33,43.74459703106061,46.82778566527778,-3.083188634217173,-7.296436270766542,2.1564330210156197,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 250 cutoff|iii: 3 attempts at 85 cutoff|iii: 4 attempts at 60 cutoff
+kimi-k2_4runs,1 to 4 hours,human 0.1,0.1,50.0,36.152348945717236,33,87.32737225075758,94.80270744532827,-7.47533519457069,-14.996511805940454,4.675513129969913,1000,"ii: 1 attempts, no cutoff|ii: 2 attempts, no cutoff",iii: 1 attempts at 250 cutoff|iii: 2 attempts at 250 cutoff|iii: 3 attempts at 85 cutoff|iii: 4 attempts at 60 cutoff|iii: 4 attempts at 85 cutoff
+kimi-k2_4runs,1 to 4 hours,human 0.1,0.1,75.0,54.22852341857586,33,131.45382842323235,140.93907108169194,-9.485242658459583,-22.234375445055225,8.305457881214615,1000,"ii: 1 attempts, no cutoff|ii: 2 attempts, no cutoff",iii: 1 attempts at 250 cutoff|iii: 2 attempts at 250 cutoff|iii: 3 attempts at 85 cutoff|iii: 4 attempts at 60 cutoff|iii: 4 attempts at 85 cutoff
+kimi-k2_4runs,1 to 4 hours,human 0.1,0.1,100.0,72.30469789143447,33,174.4462526656566,186.93765581489896,-12.491403149242359,-29.730903222832993,11.638093291572988,1000,"ii: 1 attempts, no cutoff|ii: 2 attempts, no cutoff",iii: 2 attempts at 250 cutoff|iii: 3 attempts at 85 cutoff|iii: 4 attempts at 60 cutoff|iii: 4 attempts at 85 cutoff
+kimi-k2_4runs,1 to 4 hours,human 0.1,0.1,150.0,108.45704683715172,33,261.3717886660353,279.0336154108585,-17.661826744823202,-45.1952862377874,17.448341816724966,1000,"ii: 1 attempts, no cutoff|ii: 2 attempts, no cutoff",iii: 2 attempts at 250 cutoff|iii: 3 attempts at 85 cutoff|iii: 4 attempts at 60 cutoff|iii: 4 attempts at 85 cutoff
+kimi-k2_4runs,1 to 4 hours,human 0.1,0.1,200.0,144.60939578286894,33,347.6596674539141,371.12957500681813,-23.469907552904033,-59.23884947926332,23.67085751037173,1000,"ii: 1 attempts, no cutoff|ii: 2 attempts, no cutoff",iii: 2 attempts at 250 cutoff|iii: 3 attempts at 85 cutoff|iii: 4 attempts at 60 cutoff|iii: 4 attempts at 85 cutoff
+kimi-k2_4runs,1 to 4 hours,human 0.1,0.1,300.0,216.91409367430344,33,520.2354250296718,555.3214941987372,-35.08606916906547,-88.65511612788723,36.06037408728433,1000,"ii: 1 attempts, no cutoff|ii: 2 attempts, no cutoff",iii: 2 attempts at 250 cutoff|iii: 3 attempts at 85 cutoff|iii: 4 attempts at 60 cutoff|iii: 4 attempts at 85 cutoff
+kimi-k2_4runs,1 to 4 hours,human 0.3,0.3,5.0,3.6152348945717243,33,12.062778849242424,10.017670342045454,2.0451085071969697,0.16494404841922616,3.469812269238781,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+kimi-k2_4runs,1 to 4 hours,human 0.3,0.3,10.0,7.230469789143449,33,22.464294000757576,20.717680390530305,1.7466136102272714,-1.3789484502444185,5.016407575336531,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff|iii: 1 attempts at 70 cutoff
+kimi-k2_4runs,1 to 4 hours,human 0.3,0.3,25.0,18.076174472858618,33,53.668839455303036,50.96732058901515,2.701518866287884,-5.931134640937852,9.447506661324017,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 55 cutoff|iii: 1 attempts at 70 cutoff|iii: 1 attempts at 80 cutoff|iii: 3 attempts at 55 cutoff
+kimi-k2_4runs,1 to 4 hours,human 0.3,0.3,50.0,36.152348945717236,33,105.6764152128788,101.70239012386364,3.974025089015157,-11.94613159836616,17.89205265425758,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 55 cutoff|iii: 1 attempts at 70 cutoff|iii: 1 attempts at 80 cutoff|iii: 3 attempts at 60 cutoff
+kimi-k2_4runs,1 to 4 hours,human 0.3,0.3,75.0,54.22852341857586,33,157.68399097045454,152.59575921792927,5.0882317525252745,-17.34464678923586,26.435751775591328,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 70 cutoff|iii: 1 attempts at 80 cutoff|iii: 2 attempts at 50 cutoff|iii: 3 attempts at 60 cutoff
+kimi-k2_4runs,1 to 4 hours,human 0.3,0.3,100.0,72.30469789143447,33,209.6915667280303,205.82733600732323,3.86423072070707,-23.893904943334523,35.028846727777776,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 70 cutoff|iii: 1 attempts at 80 cutoff|iii: 2 attempts at 50 cutoff|iii: 4 attempts at 60 cutoff
+kimi-k2_4runs,1 to 4 hours,human 0.3,0.3,150.0,108.45704683715172,33,313.70671824318185,308.1000632800505,5.606654963131348,-35.84590637314095,50.64759000092125,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 70 cutoff|iii: 1 attempts at 80 cutoff|iii: 2 attempts at 50 cutoff|iii: 4 attempts at 60 cutoff
+kimi-k2_4runs,1 to 4 hours,human 0.3,0.3,200.0,144.60939578286894,33,417.7218697583333,410.3727905527779,7.349079205555427,-47.79579376052829,67.87408734866852,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 70 cutoff|iii: 1 attempts at 80 cutoff|iii: 2 attempts at 50 cutoff|iii: 4 attempts at 60 cutoff
+kimi-k2_4runs,1 to 4 hours,human 0.3,0.3,300.0,216.91409367430344,33,625.7521727886364,621.3886664829545,4.363506305681881,-72.83164548685532,101.29354218987805,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 70 cutoff|iii: 1 attempts at 80 cutoff|iii: 4 attempts at 40 cutoff|iii: 4 attempts at 60 cutoff
+kimi-k2_4runs,1 to 4 hours,human 0.5,0.5,5.0,3.6152348945717243,33,14.047627334090908,10.017670342045454,4.029956992045454,2.0641961103036217,5.4658103952683135,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+kimi-k2_4runs,1 to 4 hours,human 0.5,0.5,10.0,7.230469789143449,33,26.433990970454545,20.017670342045456,6.416320628409089,2.203953213321076,9.098637564297618,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+kimi-k2_4runs,1 to 4 hours,human 0.5,0.5,25.0,18.076174472858618,33,63.593081879545466,52.60281027449494,10.990271605050523,3.186714672242655,19.702435507064376,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff|iii: 2 attempts at 55 cutoff
+kimi-k2_4runs,1 to 4 hours,human 0.5,0.5,50.0,36.152348945717236,33,125.52490006136362,108.40003103863636,17.124869022727268,4.139074018681637,37.39107517239727,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff|iii: 4 attempts at 40 cutoff|iii: 4 attempts at 50 cutoff
+kimi-k2_4runs,1 to 4 hours,human 0.5,0.5,75.0,54.22852341857586,33,187.45671824318183,162.18790982651515,25.268808416666673,5.503846497054012,55.34417721980464,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff|iii: 4 attempts at 40 cutoff|iii: 4 attempts at 50 cutoff
+kimi-k2_4runs,1 to 4 hours,human 0.5,0.5,100.0,72.30469789143447,33,249.38853642500004,215.97578861439393,33.412747810606106,7.012282879697694,73.1224975323046,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff|iii: 4 attempts at 40 cutoff|iii: 4 attempts at 50 cutoff
+kimi-k2_4runs,1 to 4 hours,human 0.5,0.5,150.0,108.45704683715172,33,373.25217278863636,323.5515461901515,49.70062659848486,10.132074546364422,108.77163522506939,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff|iii: 4 attempts at 40 cutoff|iii: 4 attempts at 50 cutoff
+kimi-k2_4runs,1 to 4 hours,human 0.5,0.5,200.0,144.60939578286894,33,497.1158091522727,431.1273037659091,65.98850538636356,13.420209101853503,144.71248343935505,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff|iii: 4 attempts at 40 cutoff|iii: 4 attempts at 50 cutoff
+kimi-k2_4runs,1 to 4 hours,human 0.5,0.5,300.0,216.91409367430344,33,744.8430818795454,646.2788189174242,98.56426296212112,19.67020910185361,216.59243280227523,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff|iii: 4 attempts at 40 cutoff|iii: 4 attempts at 50 cutoff
+kimi-k2_4runs,over 4 hours,automated,0.0,5.0,3.6152348945717243,3,,,,,,,,
+kimi-k2_4runs,over 4 hours,automated,0.0,10.0,7.230469789143449,3,,,,,,,,
+kimi-k2_4runs,over 4 hours,automated,0.0,25.0,18.076174472858618,3,,,,,,,,
+kimi-k2_4runs,over 4 hours,automated,0.0,50.0,36.152348945717236,3,,,,,,,,
+kimi-k2_4runs,over 4 hours,automated,0.0,75.0,54.22852341857586,3,,,,,,,,
+kimi-k2_4runs,over 4 hours,automated,0.0,100.0,72.30469789143447,3,,,,,,,,
+kimi-k2_4runs,over 4 hours,automated,0.0,150.0,108.45704683715172,3,,,,,,,,
+kimi-k2_4runs,over 4 hours,automated,0.0,200.0,144.60939578286894,3,,,,,,,,
+kimi-k2_4runs,over 4 hours,automated,0.0,300.0,216.91409367430344,3,,,,,,,,
+kimi-k2_4runs,over 4 hours,human 0.1,0.1,5.0,3.6152348945717243,3,,,,,,,,
+kimi-k2_4runs,over 4 hours,human 0.1,0.1,10.0,7.230469789143449,3,,,,,,,,
+kimi-k2_4runs,over 4 hours,human 0.1,0.1,25.0,18.076174472858618,3,,,,,,,,
+kimi-k2_4runs,over 4 hours,human 0.1,0.1,50.0,36.152348945717236,3,,,,,,,,
+kimi-k2_4runs,over 4 hours,human 0.1,0.1,75.0,54.22852341857586,3,,,,,,,,
+kimi-k2_4runs,over 4 hours,human 0.1,0.1,100.0,72.30469789143447,3,,,,,,,,
+kimi-k2_4runs,over 4 hours,human 0.1,0.1,150.0,108.45704683715172,3,,,,,,,,
+kimi-k2_4runs,over 4 hours,human 0.1,0.1,200.0,144.60939578286894,3,,,,,,,,
+kimi-k2_4runs,over 4 hours,human 0.1,0.1,300.0,216.91409367430344,3,,,,,,,,
+kimi-k2_4runs,over 4 hours,human 0.3,0.3,5.0,3.6152348945717243,3,,,,,,,,
+kimi-k2_4runs,over 4 hours,human 0.3,0.3,10.0,7.230469789143449,3,,,,,,,,
+kimi-k2_4runs,over 4 hours,human 0.3,0.3,25.0,18.076174472858618,3,,,,,,,,
+kimi-k2_4runs,over 4 hours,human 0.3,0.3,50.0,36.152348945717236,3,,,,,,,,
+kimi-k2_4runs,over 4 hours,human 0.3,0.3,75.0,54.22852341857586,3,,,,,,,,
+kimi-k2_4runs,over 4 hours,human 0.3,0.3,100.0,72.30469789143447,3,,,,,,,,
+kimi-k2_4runs,over 4 hours,human 0.3,0.3,150.0,108.45704683715172,3,,,,,,,,
+kimi-k2_4runs,over 4 hours,human 0.3,0.3,200.0,144.60939578286894,3,,,,,,,,
+kimi-k2_4runs,over 4 hours,human 0.3,0.3,300.0,216.91409367430344,3,,,,,,,,
+kimi-k2_4runs,over 4 hours,human 0.5,0.5,5.0,3.6152348945717243,3,,,,,,,,
+kimi-k2_4runs,over 4 hours,human 0.5,0.5,10.0,7.230469789143449,3,,,,,,,,
+kimi-k2_4runs,over 4 hours,human 0.5,0.5,25.0,18.076174472858618,3,,,,,,,,
+kimi-k2_4runs,over 4 hours,human 0.5,0.5,50.0,36.152348945717236,3,,,,,,,,
+kimi-k2_4runs,over 4 hours,human 0.5,0.5,75.0,54.22852341857586,3,,,,,,,,
+kimi-k2_4runs,over 4 hours,human 0.5,0.5,100.0,72.30469789143447,3,,,,,,,,
+kimi-k2_4runs,over 4 hours,human 0.5,0.5,150.0,108.45704683715172,3,,,,,,,,
+kimi-k2_4runs,over 4 hours,human 0.5,0.5,200.0,144.60939578286894,3,,,,,,,,
+kimi-k2_4runs,over 4 hours,human 0.5,0.5,300.0,216.91409367430344,3,,,,,,,,
 kimi-k2_4runs,1 hour or more,automated,0.0,5.0,3.6152348945717243,36,10.65672111909722,11.038073250347221,-0.3813521312500008,-3.2596736444970618,0.30688473694444307,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 125 cutoff|iii: 1 attempts at 150 cutoff|iii: 1 attempts at 175 cutoff|iii: 1 attempts at 200 cutoff|iii: 1 attempts at 250 cutoff
 kimi-k2_4runs,1 hour or more,automated,0.0,10.0,7.230469789143449,36,20.058417161574074,19.590551876041665,0.46786528553240814,-5.639836592624555,0.8961983587823296,1000,"ii: 1 attempts, no cutoff|ii: 2 attempts, no cutoff",iii: 2 attempts at 125 cutoff|iii: 2 attempts at 250 cutoff
 kimi-k2_4runs,1 hour or more,automated,0.0,25.0,18.076174472858618,36,44.61967065034722,44.97533938229167,-0.3556687319444549,-13.744409289396215,2.0984021164557274,1000,"ii: 3 attempts, no cutoff|ii: 4 attempts, no cutoff",iii: 3 attempts at 250 cutoff|iii: 4 attempts at 125 cutoff|iii: 4 attempts at 250 cutoff
@@ -1151,6 +1583,78 @@ qwen3-coder-480b-a35b-instruct-4runs,15 minutes to 1 hour,human 0.5,0.5,100.0,46
 qwen3-coder-480b-a35b-instruct-4runs,15 minutes to 1 hour,human 0.5,0.5,150.0,69.41657402738149,261,68.35030555099617,67.56554771996169,0.7847578310344829,-1.6802136774604788,2.946470749442196,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 75 cutoff|iii: 1 attempts at 80 cutoff|iii: 1 attempts at 85 cutoff
 qwen3-coder-480b-a35b-instruct-4runs,15 minutes to 1 hour,human 0.5,0.5,200.0,92.55543203650865,261,90.57252777321838,89.68001132149426,0.89251645172412,-2.333526078617279,3.7122870337964695,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 75 cutoff|iii: 1 attempts at 80 cutoff|iii: 1 attempts at 85 cutoff
 qwen3-coder-480b-a35b-instruct-4runs,15 minutes to 1 hour,human 0.5,0.5,300.0,138.83314805476297,261,135.01697221766284,133.90893852455937,1.1080336931034651,-3.6485530856361152,5.09041567011398,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 75 cutoff|iii: 1 attempts at 80 cutoff|iii: 1 attempts at 85 cutoff
+qwen3-coder-480b-a35b-instruct-4runs,1 to 4 hours,automated,0.0,5.0,2.313885800912716,42,9.532653393095238,9.284839748809524,0.2478136442857135,-1.1933464282103619,0.8179440476618084,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 95 cutoff
+qwen3-coder-480b-a35b-instruct-4runs,1 to 4 hours,automated,0.0,10.0,4.627771601825432,42,16.615986726428567,17.018078023571427,-0.40209129714286007,-2.222901291112501,0.7318453451059513,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 225 cutoff|iii: 1 attempts at 95 cutoff
+qwen3-coder-480b-a35b-instruct-4runs,1 to 4 hours,automated,0.0,25.0,11.569429004563581,42,37.54828376206349,39.38350552126984,-1.8352217592063482,-5.435439800097151,2.4199968940816636,1000,"ii: 2 attempts, no cutoff|ii: 4 attempts, no cutoff",iii: 2 attempts at 225 cutoff|iii: 4 attempts at 225 cutoff|iii: 4 attempts at 95 cutoff
+qwen3-coder-480b-a35b-instruct-4runs,1 to 4 hours,automated,0.0,50.0,23.138858009127162,42,64.70876518484127,68.924939325,-4.216174140158728,-10.524504197628064,2.453948604945653,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 225 cutoff|iii: 4 attempts at 95 cutoff
+qwen3-coder-480b-a35b-instruct-4runs,1 to 4 hours,automated,0.0,75.0,34.70828701369074,42,93.28019375626984,99.87732027738096,-6.597126521111122,-16.72309434345714,2.0146805647172514,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 225 cutoff|iii: 4 attempts at 95 cutoff
+qwen3-coder-480b-a35b-instruct-4runs,1 to 4 hours,automated,0.0,100.0,46.277716018254324,42,121.85162232769842,130.8297012297619,-8.978078902063473,-22.909597624679584,2.1996394842799085,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 225 cutoff|iii: 4 attempts at 95 cutoff
+qwen3-coder-480b-a35b-instruct-4runs,1 to 4 hours,automated,0.0,150.0,69.41657402738149,42,178.99447947055555,192.7344631345238,-13.739983663968246,-35.277904981907945,1.7369860367442336,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 225 cutoff|iii: 4 attempts at 95 cutoff
+qwen3-coder-480b-a35b-instruct-4runs,1 to 4 hours,automated,0.0,200.0,92.55543203650865,42,236.1373366134127,254.63922503928575,-18.501888425873034,-47.060993217201975,1.6531622642509463,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 225 cutoff|iii: 4 attempts at 95 cutoff
+qwen3-coder-480b-a35b-instruct-4runs,1 to 4 hours,automated,0.0,300.0,138.83314805476297,42,350.423050899127,378.44874884880954,-28.025697949682524,-70.80920103990789,1.6531622642509172,1000,"ii: 4 attempts, no cutoff",iii: 4 attempts at 225 cutoff|iii: 4 attempts at 95 cutoff
+qwen3-coder-480b-a35b-instruct-4runs,1 to 4 hours,human 0.1,0.1,5.0,2.313885800912716,42,10.532653393095238,10.467385019761904,0.06526837333333368,-1.1155843929653733,1.8249856375594142,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff|iii: 1 attempts at 95 cutoff
+qwen3-coder-480b-a35b-instruct-4runs,1 to 4 hours,human 0.1,0.1,10.0,4.627771601825432,42,18.615986726428567,18.55450162595238,0.061485100476186716,-2.296436635551959,0.9897297644689937,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 90 cutoff|iii: 1 attempts at 95 cutoff
+qwen3-coder-480b-a35b-instruct-4runs,1 to 4 hours,human 0.1,0.1,25.0,11.569429004563581,42,42.865986726428574,43.80379230928571,-0.9378055828571377,-5.918169940826061,1.5654838166180292,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 225 cutoff|iii: 1 attempts at 95 cutoff
+qwen3-coder-480b-a35b-instruct-4runs,1 to 4 hours,human 0.1,0.1,50.0,23.138858009127162,42,83.28265339309526,84.83821278309524,-1.5555593899999849,-12.124516604364143,3.4929310066220185,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 225 cutoff|iii: 1 attempts at 95 cutoff
+qwen3-coder-480b-a35b-instruct-4runs,1 to 4 hours,human 0.1,0.1,75.0,34.70828701369074,42,126.2415967768254,128.66022053777775,-2.418623760952343,-17.139820254480906,4.997060424460302,1000,"ii: 1 attempts, no cutoff|ii: 2 attempts, no cutoff",iii: 1 attempts at 225 cutoff|iii: 2 attempts at 225 cutoff|iii: 2 attempts at 95 cutoff
+qwen3-coder-480b-a35b-instruct-4runs,1 to 4 hours,human 0.1,0.1,100.0,46.277716018254324,42,167.34278725301587,170.5153792679365,-3.172592014920639,-22.370402407763503,6.002038601553135,1000,"ii: 1 attempts, no cutoff|ii: 2 attempts, no cutoff",iii: 1 attempts at 225 cutoff|iii: 2 attempts at 225 cutoff|iii: 2 attempts at 95 cutoff
+qwen3-coder-480b-a35b-instruct-4runs,1 to 4 hours,human 0.1,0.1,150.0,69.41657402738149,42,249.5451682053968,254.22569672825398,-4.680528522857173,-33.01226344392832,11.300882985635381,1000,"ii: 1 attempts, no cutoff|ii: 2 attempts, no cutoff",iii: 1 attempts at 225 cutoff|iii: 2 attempts at 225 cutoff|iii: 2 attempts at 95 cutoff
+qwen3-coder-480b-a35b-instruct-4runs,1 to 4 hours,human 0.1,0.1,200.0,92.55543203650865,42,331.74754915777777,337.9360141885714,-6.188465030793623,-44.46869142248715,14.558272063139398,1000,"ii: 1 attempts, no cutoff|ii: 2 attempts, no cutoff",iii: 1 attempts at 225 cutoff|iii: 2 attempts at 225 cutoff|iii: 2 attempts at 95 cutoff
+qwen3-coder-480b-a35b-instruct-4runs,1 to 4 hours,human 0.1,0.1,300.0,138.83314805476297,42,498.8696561171429,508.0739941638095,-9.204338046666635,-66.71634273508953,22.936285841946574,1000,"ii: 1 attempts, no cutoff|ii: 2 attempts, no cutoff",iii: 1 attempts at 225 cutoff|iii: 2 attempts at 225 cutoff|iii: 2 attempts at 95 cutoff
+qwen3-coder-480b-a35b-instruct-4runs,1 to 4 hours,human 0.3,0.3,5.0,2.313885800912716,42,12.532653393095236,10.021680295238095,2.510973097857141,0.2736418481779288,3.825488040786584,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+qwen3-coder-480b-a35b-instruct-4runs,1 to 4 hours,human 0.3,0.3,10.0,4.627771601825432,42,22.615986726428567,20.021680295238095,2.5943064311904713,-1.3007229029623708,5.089624467032585,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+qwen3-coder-480b-a35b-instruct-4runs,1 to 4 hours,human 0.3,0.3,25.0,11.569429004563581,42,52.865986726428574,52.45032842523809,0.41565830119048286,-4.996420800561224,8.712826337980056,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff|iii: 1 attempts at 65 cutoff|iii: 1 attempts at 95 cutoff
+qwen3-coder-480b-a35b-instruct-4runs,1 to 4 hours,human 0.3,0.3,50.0,23.138858009127162,42,103.28265339309523,104.28074951547619,-0.9980961223809572,-11.843511419584889,13.972664873834937,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 65 cutoff|iii: 1 attempts at 75 cutoff|iii: 1 attempts at 95 cutoff|iii: 2 attempts at 65 cutoff
+qwen3-coder-480b-a35b-instruct-4runs,1 to 4 hours,human 0.3,0.3,75.0,34.70828701369074,42,153.6993200597619,155.5605114202381,-1.861191360476198,-18.739498701098597,19.18393712819522,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 65 cutoff|iii: 1 attempts at 75 cutoff|iii: 1 attempts at 95 cutoff|iii: 2 attempts at 65 cutoff
+qwen3-coder-480b-a35b-instruct-4runs,1 to 4 hours,human 0.3,0.3,100.0,46.277716018254324,42,204.1159867264286,206.84027332499997,-2.724286598571382,-24.954036562107962,24.59028609570022,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 65 cutoff|iii: 1 attempts at 75 cutoff|iii: 1 attempts at 95 cutoff|iii: 2 attempts at 65 cutoff
+qwen3-coder-480b-a35b-instruct-4runs,1 to 4 hours,human 0.3,0.3,150.0,69.41657402738149,42,304.94932005976193,309.3997971345238,-4.450477074761864,-38.06909101135169,35.412461331027295,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 65 cutoff|iii: 1 attempts at 75 cutoff|iii: 1 attempts at 95 cutoff|iii: 2 attempts at 65 cutoff
+qwen3-coder-480b-a35b-instruct-4runs,1 to 4 hours,human 0.3,0.3,200.0,92.55543203650865,42,405.78265339309525,411.95932094404765,-6.176667550952402,-51.568304114655334,46.988374280493076,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 65 cutoff|iii: 1 attempts at 75 cutoff|iii: 1 attempts at 95 cutoff|iii: 2 attempts at 65 cutoff
+qwen3-coder-480b-a35b-instruct-4runs,1 to 4 hours,human 0.3,0.3,300.0,138.83314805476297,42,607.4493200597618,617.0783685630953,-9.629048503333479,-80.91116937976511,69.31014716008467,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 65 cutoff|iii: 1 attempts at 75 cutoff|iii: 1 attempts at 95 cutoff|iii: 2 attempts at 65 cutoff
+qwen3-coder-480b-a35b-instruct-4runs,1 to 4 hours,human 0.5,0.5,5.0,2.313885800912716,42,14.532653393095234,10.021680295238095,4.510973097857139,3.0685252666409104,5.825488040786584,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+qwen3-coder-480b-a35b-instruct-4runs,1 to 4 hours,human 0.5,0.5,10.0,4.627771601825432,42,26.61598672642857,20.021680295238095,6.594306431190475,3.5518811144400693,9.089624467032584,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+qwen3-coder-480b-a35b-instruct-4runs,1 to 4 hours,human 0.5,0.5,25.0,11.569429004563581,42,62.865986726428574,50.0216802952381,12.844306431190475,2.741739522822924,18.903753516146924,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+qwen3-coder-480b-a35b-instruct-4runs,1 to 4 hours,human 0.5,0.5,50.0,23.138858009127162,42,123.28265339309523,100.02168029523807,23.26097309785716,1.4689241317499715,35.25080856443863,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+qwen3-coder-480b-a35b-instruct-4runs,1 to 4 hours,human 0.5,0.5,75.0,34.70828701369074,42,183.6993200597619,150.02168029523807,33.67763976452383,0.47566325821825534,51.45501757616912,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+qwen3-coder-480b-a35b-instruct-4runs,1 to 4 hours,human 0.5,0.5,100.0,46.277716018254324,42,244.1159867264286,200.0216802952381,44.09430643119049,-1.358320536026378,67.55008037054645,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+qwen3-coder-480b-a35b-instruct-4runs,1 to 4 hours,human 0.5,0.5,150.0,69.41657402738149,42,364.94932005976193,300.02168029523807,64.92763976452386,-3.38857475255523,99.0407592004621,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+qwen3-coder-480b-a35b-instruct-4runs,1 to 4 hours,human 0.5,0.5,200.0,92.55543203650865,42,485.7826533930952,400.02168029523807,85.76097309785712,-6.295572277897635,131.3390876888342,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+qwen3-coder-480b-a35b-instruct-4runs,1 to 4 hours,human 0.5,0.5,300.0,138.83314805476297,42,727.4493200597618,600.0216802952381,127.42763976452375,-9.874937357262748,195.93574466557854,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 5 cutoff
+qwen3-coder-480b-a35b-instruct-4runs,over 4 hours,automated,0.0,5.0,2.313885800912716,3,,,,,,,,
+qwen3-coder-480b-a35b-instruct-4runs,over 4 hours,automated,0.0,10.0,4.627771601825432,3,,,,,,,,
+qwen3-coder-480b-a35b-instruct-4runs,over 4 hours,automated,0.0,25.0,11.569429004563581,3,,,,,,,,
+qwen3-coder-480b-a35b-instruct-4runs,over 4 hours,automated,0.0,50.0,23.138858009127162,3,,,,,,,,
+qwen3-coder-480b-a35b-instruct-4runs,over 4 hours,automated,0.0,75.0,34.70828701369074,3,,,,,,,,
+qwen3-coder-480b-a35b-instruct-4runs,over 4 hours,automated,0.0,100.0,46.277716018254324,3,,,,,,,,
+qwen3-coder-480b-a35b-instruct-4runs,over 4 hours,automated,0.0,150.0,69.41657402738149,3,,,,,,,,
+qwen3-coder-480b-a35b-instruct-4runs,over 4 hours,automated,0.0,200.0,92.55543203650865,3,,,,,,,,
+qwen3-coder-480b-a35b-instruct-4runs,over 4 hours,automated,0.0,300.0,138.83314805476297,3,,,,,,,,
+qwen3-coder-480b-a35b-instruct-4runs,over 4 hours,human 0.1,0.1,5.0,2.313885800912716,3,,,,,,,,
+qwen3-coder-480b-a35b-instruct-4runs,over 4 hours,human 0.1,0.1,10.0,4.627771601825432,3,,,,,,,,
+qwen3-coder-480b-a35b-instruct-4runs,over 4 hours,human 0.1,0.1,25.0,11.569429004563581,3,,,,,,,,
+qwen3-coder-480b-a35b-instruct-4runs,over 4 hours,human 0.1,0.1,50.0,23.138858009127162,3,,,,,,,,
+qwen3-coder-480b-a35b-instruct-4runs,over 4 hours,human 0.1,0.1,75.0,34.70828701369074,3,,,,,,,,
+qwen3-coder-480b-a35b-instruct-4runs,over 4 hours,human 0.1,0.1,100.0,46.277716018254324,3,,,,,,,,
+qwen3-coder-480b-a35b-instruct-4runs,over 4 hours,human 0.1,0.1,150.0,69.41657402738149,3,,,,,,,,
+qwen3-coder-480b-a35b-instruct-4runs,over 4 hours,human 0.1,0.1,200.0,92.55543203650865,3,,,,,,,,
+qwen3-coder-480b-a35b-instruct-4runs,over 4 hours,human 0.1,0.1,300.0,138.83314805476297,3,,,,,,,,
+qwen3-coder-480b-a35b-instruct-4runs,over 4 hours,human 0.3,0.3,5.0,2.313885800912716,3,,,,,,,,
+qwen3-coder-480b-a35b-instruct-4runs,over 4 hours,human 0.3,0.3,10.0,4.627771601825432,3,,,,,,,,
+qwen3-coder-480b-a35b-instruct-4runs,over 4 hours,human 0.3,0.3,25.0,11.569429004563581,3,,,,,,,,
+qwen3-coder-480b-a35b-instruct-4runs,over 4 hours,human 0.3,0.3,50.0,23.138858009127162,3,,,,,,,,
+qwen3-coder-480b-a35b-instruct-4runs,over 4 hours,human 0.3,0.3,75.0,34.70828701369074,3,,,,,,,,
+qwen3-coder-480b-a35b-instruct-4runs,over 4 hours,human 0.3,0.3,100.0,46.277716018254324,3,,,,,,,,
+qwen3-coder-480b-a35b-instruct-4runs,over 4 hours,human 0.3,0.3,150.0,69.41657402738149,3,,,,,,,,
+qwen3-coder-480b-a35b-instruct-4runs,over 4 hours,human 0.3,0.3,200.0,92.55543203650865,3,,,,,,,,
+qwen3-coder-480b-a35b-instruct-4runs,over 4 hours,human 0.3,0.3,300.0,138.83314805476297,3,,,,,,,,
+qwen3-coder-480b-a35b-instruct-4runs,over 4 hours,human 0.5,0.5,5.0,2.313885800912716,3,,,,,,,,
+qwen3-coder-480b-a35b-instruct-4runs,over 4 hours,human 0.5,0.5,10.0,4.627771601825432,3,,,,,,,,
+qwen3-coder-480b-a35b-instruct-4runs,over 4 hours,human 0.5,0.5,25.0,11.569429004563581,3,,,,,,,,
+qwen3-coder-480b-a35b-instruct-4runs,over 4 hours,human 0.5,0.5,50.0,23.138858009127162,3,,,,,,,,
+qwen3-coder-480b-a35b-instruct-4runs,over 4 hours,human 0.5,0.5,75.0,34.70828701369074,3,,,,,,,,
+qwen3-coder-480b-a35b-instruct-4runs,over 4 hours,human 0.5,0.5,100.0,46.277716018254324,3,,,,,,,,
+qwen3-coder-480b-a35b-instruct-4runs,over 4 hours,human 0.5,0.5,150.0,69.41657402738149,3,,,,,,,,
+qwen3-coder-480b-a35b-instruct-4runs,over 4 hours,human 0.5,0.5,200.0,92.55543203650865,3,,,,,,,,
+qwen3-coder-480b-a35b-instruct-4runs,over 4 hours,human 0.5,0.5,300.0,138.83314805476297,3,,,,,,,,
 qwen3-coder-480b-a35b-instruct-4runs,1 hour or more,automated,0.0,5.0,2.313885800912716,45,11.02728342111111,11.59605489,-0.5687714688888903,-2.168669861844459,0.4498507194696411,1000,"ii: 1 attempts, no cutoff",iii: 1 attempts at 175 cutoff|iii: 1 attempts at 95 cutoff
 qwen3-coder-480b-a35b-instruct-4runs,1 hour or more,automated,0.0,10.0,4.627771601825432,45,20.094025,20.14655687911111,-0.052531879111111124,-4.851055491725488,0.29214328758884583,1000,"ii: 1 attempts, no cutoff|ii: 2 attempts, no cutoff",iii: 1 attempts at 175 cutoff|iii: 1 attempts at 225 cutoff|iii: 2 attempts at 225 cutoff
 qwen3-coder-480b-a35b-instruct-4runs,1 hour or more,automated,0.0,25.0,11.569429004563581,45,44.25324139244444,46.17386064318518,-1.9206192507407422,-12.750028163456506,1.0833723475208294,1000,"ii: 2 attempts, no cutoff|ii: 4 attempts, no cutoff",iii: 2 attempts at 225 cutoff|iii: 4 attempts at 125 cutoff|iii: 4 attempts at 225 cutoff

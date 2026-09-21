@@ -68,7 +68,15 @@ def _style():
     })
 
 
+BARE = False     # --bare: the manuscript's figures, whose titles and notes are in its captions
+
+
 def _save(fig, out: str, name: str) -> List[str]:
+    if BARE:
+        if fig._suptitle is not None:
+            fig._suptitle.set_visible(False)
+        for t in fig.texts:
+            t.set_visible(False)
     paths = []
     for ext in ("pdf", "png"):
         p = os.path.join(out, f"{name}.{ext}")
@@ -259,11 +267,16 @@ def fig_transfer(d: pd.DataFrame, out: str, regime: str = "automated", name: str
     what = "primary transfer" if regime == "automated" else "not the registered regime"
     fig.suptitle(f"The state rule against the best schedule, {REGIME_LABEL[regime]} ({what})",
                  x=0.01, ha="left", fontsize=10, color=INK)
-    fig.text(0.01, -0.09, "Positive: the rule is cheaper than step iii-b. Points: 95% intervals "
-             "for the transferred rule at $25, $100 and $300 an hour (100 replicates, refitting "
-             "inside each), scaled by the point value of step ii. Below about two attempts the "
-             "dotted line leaves the frame: there, not capping at all costs far more than the "
-             "schedule. " + IMPUTED, fontsize=7, color=INK_2, ha="left", wrap=True)
+    if regime == "automated":
+        note = ("Points: 95% intervals for the transferred rule at $25, $100 and $300 an hour "
+                "(100 replicates, refitting inside each), scaled by the point value of step ii. "
+                "Below about two attempts the dotted line leaves the frame: there, not capping at "
+                "all costs far more than the schedule. ")
+    else:
+        note = ("No intervals are computed in this regime. Where the dotted line leaves the "
+                "frame, not capping at all costs far more than the schedule. ")
+    fig.text(0.01, -0.09, "Positive: the rule is cheaper than step iii-b. " + note + IMPUTED,
+             fontsize=7, color=INK_2, ha="left", wrap=True)
     fig.tight_layout(rect=(0.01, 0.08, 1, 0.97))
     return _save(fig, out, name)
 
@@ -558,23 +571,24 @@ def table_sensitivity_margins(d: pd.DataFrame, sd: pd.DataFrame, c: pd.DataFrame
     for variant in dict.fromkeys(both.variant):
         here = both[both.variant == variant]
         row = {"sensitivity": variant}
-        for regime, short in (("automated", "automated"), ("human 0.5", "review 0.5 H")):
+        for regime, short in (("automated", "A"), ("human 0.5", "R")):
             for rate in TABLE_RATES:
                 x = here[(here.regime_name == regime) & (here.rate == rate)].cap_margin
-                row[f"cap, {short}, ${rate:.0f}"] = _fmt(x.median())
+                row[f"cap {short} ${rate:.0f}"] = _fmt(x.median())
         for rate in TABLE_RATES:
             x = here[(here.regime_name == "automated") & (here.rate == rate)].transfer_margin
-            row[f"transfer, ${rate:.0f}"] = _fmt(pd.to_numeric(x, errors="coerce").median())
+            row[f"transfer ${rate:.0f}"] = _fmt(pd.to_numeric(x, errors="coerce").median())
         if casc is not None:
             k = casc[(casc.variant == variant) & (casc.regime_name == "automated")
                      & (casc.rate == 100.0)]
-            row["switching, $100"] = _fmt(k.switch_margin.iloc[0]) if len(k) else ""
+            row["switching $100"] = _fmt(k.switch_margin.iloc[0]) if len(k) else ""
         rows.append(row)
     t = pd.DataFrame(rows)
     return _write_table(t, out, "tableA2_sensitivity_margins",
                         caption="The primary margins under each registered sensitivity, medians "
                         "across configurations, in dollars per task; positive is what the richer "
-                        "policy saves. Cap: step ii minus step iii. Transfer: step iii-b minus the "
+                        "policy saves. Cap: step ii minus step iii, with an automated verifier (A) "
+                        "and under review at 0.5 H (R). Transfer: step iii-b minus the "
                         "state rule fitted on the other configurations, automated verifier. "
                         "Switching: the best single configuration minus the cascade, automated "
                         "verifier. " + IMPUTED)
@@ -706,18 +720,20 @@ def table_difficulty(dd: pd.DataFrame, out: str) -> List[str]:
         for config in order_of(dd.config):
             here = dd[(dd.config == config) & (dd.regime_name == regime) & (dd.rate == 100.0)]
             for _, r in here.iterrows():
+                saving = ("too few to choose on" if pd.isna(r.cap_margin) else
+                          _interval(r.cap_margin, r.cap_margin_low, r.cap_margin_high))
                 rows.append({"regime": REGIME_LABEL[regime], "configuration": label_of(config),
                              "difficulty": r.bucket, "tasks": int(r.tasks),
-                             "cap's saving at $100 [95%]": _interval(r.cap_margin,
-                                                                      r.cap_margin_low,
-                                                                      r.cap_margin_high)})
+                             "cap's saving at $100 [95%]": saving})
     t = pd.DataFrame(rows)
     return _write_table(t, out, "tableA6_difficulty",
                         caption="The cap's marginal value by the benchmark's difficulty annotation, "
                         "every policy chosen within the bucket, at $100 an hour. The two longest "
-                        "buckets are pooled: the longest holds about five tasks. 'All, chosen within "
-                        "bucket' pools those choices; 'all, chosen blind' is the primary. "
-                        "Intervals: 1,000 replicates. " + IMPUTED)
+                        "buckets are also shown together, because the longest is too small for a "
+                        "training fold to choose on. 'All, chosen within bucket' pools the choices "
+                        "made under 15 minutes, from 15 minutes to 1 hour and at 1 hour or more; "
+                        "'all, chosen blind' is the primary. Intervals: 1,000 replicates. "
+                        + IMPUTED)
 
 
 def table_distribution(ds: pd.DataFrame, out: str) -> List[str]:
@@ -795,6 +811,9 @@ def fig_tail(tc: pd.DataFrame, out: str):
                 label="share of spend beyond it by attempts that resolve")
         ax.plot(s.cutoff, s.resolve_if_running, color=SERIES_2, linestyle="--", zorder=4,
                 label="chance a running attempt resolves")
+        if "over_outside_25" in s:
+            ax.plot(s.cutoff, s.over_outside_25, color=INK_2, linestyle="-.", linewidth=1.0,
+                    zorder=3, label="running attempts past their outside option at $25/h")
         ax.set_title(label_of(config), loc="left", color=INK)
         ax.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:.0%}"))
     for ax in axes.flat[len(order):]:
@@ -803,7 +822,7 @@ def fig_tail(tc: pd.DataFrame, out: str):
         _log_x(ax, ticks=(5, 10, 25, 50, 100, 250))
     fig.supxlabel("cutoff, calls", fontsize=8.5, color=INK_2, y=0.07)
     handles, labels = axes.flat[0].get_legend_handles_labels()
-    fig.legend(handles, labels, loc="lower center", ncol=3, bbox_to_anchor=(0.5, -0.03))
+    fig.legend(handles, labels, loc="lower center", ncol=2, bbox_to_anchor=(0.5, -0.06))
     fig.suptitle("Tail composition: what a cutoff at each point would cut", x=0.01, ha="left",
                  fontsize=10, color=INK)
     fig.tight_layout(rect=(0.01, 0.08, 1, 0.97))
@@ -860,7 +879,12 @@ def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--results", default="results")
     ap.add_argument("--out", default=os.path.join("exhibits", "out"))
+    ap.add_argument("--bare", action="store_true",
+                    help="figures without their titles and notes, for the manuscript, which "
+                         "carries them in its captions")
     a = ap.parse_args(argv)
+    global BARE
+    BARE = a.bare
     os.makedirs(a.out, exist_ok=True)
     _style()
     got = load(a.results)

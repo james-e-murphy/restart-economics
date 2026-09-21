@@ -1,4 +1,4 @@
-| sensitivity | cap, automated, $25 | cap, automated, $100 | cap, automated, $300 | cap, review 0.5 H, $25 | cap, review 0.5 H, $100 | cap, review 0.5 H, $300 | transfer, $25 | transfer, $100 | transfer, $300 | switching, $100 |
+| sensitivity | cap A $25 | cap A $100 | cap A $300 | cap R $25 | cap R $100 | cap R $300 | transfer $25 | transfer $100 | transfer $300 | switching $100 |
 |---|---|---|---|---|---|---|---|---|---|---|
 | primary | -0.01 | -0.24 | -0.64 | 1.31 | 1.85 | 4.22 | 0.01 | 0.12 | 0.36 | 2.03 |
 | phi 0.34 | -0.01 | -0.07 | -0.43 | 3.23 | 10.20 | 28.50 | 0.00 | 0.08 | 0.24 | 1.66 |
@@ -11,4 +11,4 @@
 | Qwen lowest price | -0.01 | -0.24 | -0.64 | 1.00 | 1.85 | 4.22 | 0.01 | 0.12 | 0.36 | 1.93 |
 | METR minutes | -0.06 | -0.39 | -1.27 | 0.31 | 0.37 | 0.88 | 0.07 | 0.30 | 0.91 | 5.48 |
 
-The primary margins under each registered sensitivity, medians across configurations, in dollars per task; positive is what the richer policy saves. Cap: step ii minus step iii. Transfer: step iii-b minus the state rule fitted on the other configurations, automated verifier. Switching: the best single configuration minus the cascade, automated verifier. † Qwen3 Coder's dollar figures rest on an imputed price (PLAN.md Section 10).
+The primary margins under each registered sensitivity, medians across configurations, in dollars per task; positive is what the richer policy saves. Cap: step ii minus step iii, with an automated verifier (A) and under review at 0.5 H (R). Transfer: step iii-b minus the state rule fitted on the other configurations, automated verifier. Switching: the best single configuration minus the cascade, automated verifier. † Qwen3 Coder's dollar figures rest on an imputed price (PLAN.md Section 10).

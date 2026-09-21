@@ -172,6 +172,16 @@ def test_every_exhibit_is_written_from_the_results_files(results, tmp_path):
     assert set(a3.margin) == {"cap, automated verifier", "cap, review at 0.5 H",
                               "transfer, automated verifier"}
     assert a3["two-stage [95%]"].str.startswith("[").all()
+    bare = tmp_path / "bare"
+    make.main(["--results", str(results), "--out", str(bare), "--bare"])
+    assert (bare / "fig1_cap_margin.pdf").stat().st_size > 0
+    make.BARE = False
+    a6 = pd.read_csv(out / "tableA6_difficulty.csv")
+    assert list(dict.fromkeys(a6.difficulty)) == [
+        "under 15 minutes", "15 minutes to 1 hour", "1 to 4 hours", "over 4 hours",
+        "1 hour or more", "all, chosen within bucket", "all, chosen blind"]
+    small = a6[a6.tasks < 10]
+    assert (small["cap's saving at $100 [95%]"] == "too few to choose on").all()
 
 
 def test_the_point_where_retrying_first_beats_escalating(results):
@@ -186,3 +196,17 @@ def test_the_point_where_retrying_first_beats_escalating(results):
             # below it, retrying without a cap costs more than escalating; just past it, less
             assert (below.value_ii > below.value_escalate).all()
             assert beyond.empty or beyond.iloc[0].value_ii <= beyond.iloc[0].value_escalate
+
+
+def test_the_facts_sheet_is_written_from_the_same_files(results, tmp_path):
+    spec = importlib.util.spec_from_file_location(
+        "facts", os.path.join(os.path.dirname(MAKE), os.pardir, "paper", "facts.py"))
+    facts = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(facts)
+    out = tmp_path / "facts.md"
+    facts.main(["--results", str(results), "--out", str(out)])
+    text = out.read_text()
+    for title in ("## Configurations", "## Comparators", "## Sample oracle", "## Difficulty at $100",
+                  "## Distribution of cost at $100", "## Spread", "## Diagnostics"):
+        assert title in text, title
+

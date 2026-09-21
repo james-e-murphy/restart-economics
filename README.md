@@ -42,7 +42,7 @@ argument, and every prespecified comparison.
     results/             policy values, margins, break-evens and cascades, each file written by
                          one command listed in results/README.md
     exhibits/            make.py, which regenerates every figure and table from results/
-    paper/               manuscript and build
+    paper/               the manuscript's parts, its assembly and facts sheet, and the build
     LICENSE              MIT, for src/ and tests/; the written work is CC BY 4.0
 
 ## Working rules
@@ -80,6 +80,8 @@ argument, and every prespecified comparison.
     python -m restart.coverage                           # the interval's coverage, on synthetic data
     python -m restart.dynamic                            # the state rule against the exact optimum, synthetic
     python exhibits/make.py                              # every figure and table, from results/
+    python paper/facts.py                                # every number the manuscript quotes
+    bash paper/build/build.sh                            # the manuscript and its PDF (paper/README.md)
 
 ## Data
 
@@ -103,4 +105,5 @@ record what was known about the data before the freeze, and what was not.
 The audit is complete and PLAN.md Section 10 records what it found, including the state rule's class
 and φ. The plan is frozen at the `plan-frozen` tag and registered. The primary results, the
 cascade, the registered sensitivities, the appendix and the exhibits are computed from it by the
-commands above; the manuscript is in progress.
+commands above. The manuscript is drafted, version 0.1, in `paper/`; its appendix tables fill
+in from their results files as the build finds them.

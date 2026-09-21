@@ -1,0 +1,16 @@
+\usepackage{etoolbox}
+\usepackage{array}
+\AtBeginEnvironment{longtable}{%
+  \footnotesize
+  \setlength{\tabcolsep}{5pt}%
+  \setlength{\extrarowheight}{3pt}%
+  \renewcommand{\arraystretch}{1.32}%
+}
+\setlength{\LTpre}{10pt}
+\setlength{\LTpost}{12pt}
+\setlength{\aboverulesep}{2.5pt}
+\setlength{\belowrulesep}{3.5pt}
+\usepackage{needspace}
+\usepackage{caption}
+\captionsetup[table]{labelformat=empty,font=small,justification=raggedright,singlelinecheck=false}
+\setlength{\LTcapwidth}{\textwidth}

@@ -1,0 +1,28 @@
+\usepackage{graphicx}
+\usepackage[absolute,overlay]{textpos}
+\definecolor{housegreen}{RGB}{11,110,79}
+\setlength{\TPHorizModule}{1in}\setlength{\TPVertModule}{1in}
+\renewcommand{\maketitle}{%
+  \thispagestyle{empty}%
+  \begin{textblock}{6}(1.25,2.64)
+    {\color{housegreen}\rule{2in}{2.2pt}}
+  \end{textblock}
+  \begin{textblock}{5.6}(1.25,3.28)
+    \begin{flushleft}
+    {\sffamily\bfseries\fontsize{25}{30}\selectfont Restart Economics for AI Agents\par}
+    \vspace{10pt}
+    {\sffamily\color{housegreen}\fontsize{14}{18}\selectfont Cutoffs, Retries, and the Cost\\of a Resolved Task\par}
+    \end{flushleft}
+  \end{textblock}
+  \begin{textblock}{5.8}(1.25,8.28)
+    \begin{flushleft}
+    {\sffamily\fontsize{10.5}{13}\selectfont James E. Murphy\par}
+    \vspace{2pt}
+    {\sffamily\fontsize{8.5}{11}\selectfont ORCID 0009-0001-2217-4306\par}
+    \vspace{15pt}
+    {\sffamily\fontsize{10}{13}\selectfont Working paper for discussion $\cdot$ v0.1 $\cdot$ 21 September 2026\par}
+    \vspace{2pt}
+    {\sffamily\fontsize{8.5}{11}\selectfont jamesemurphy.com/ai-economics/restart-economics\par}
+    \end{flushleft}
+  \end{textblock}
+  \mbox{}\clearpage}

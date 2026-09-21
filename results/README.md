@@ -201,11 +201,14 @@ of what knowing the task in advance would be worth.
 ## difficulty.csv, distribution.csv, spread.csv
 
 `difficulty.csv` is the cap's marginal value within each bucket of the benchmark's difficulty
-annotation, every policy chosen within the bucket, with a 1,000-replicate interval. The two
-longest buckets are pooled as `1 hour or more`, because the longest holds about five tasks, too
-few for a training fold to choose on. The rows `all, chosen within bucket` pool those choices,
-and `all, chosen blind` is the primary comparison, so their difference is what admitting the
-annotation to every policy is worth. `multiple` is on the configuration's whole scored set.
+annotation, every policy chosen within the bucket, with a 1,000-replicate interval. Each of the
+four annotated buckets has its rows, and the two longest are also shown together as `1 hour or
+more`, because the longest holds a handful of tasks. A bucket with fewer than two scored tasks
+per fold is too small for a training fold to choose on, and its rows carry the count of tasks and
+no value. The rows `all, chosen within bucket` pool the choices made under 15 minutes, from 15
+minutes to 1 hour and at 1 hour or more, and `all, chosen blind` is the primary comparison, so
+their difference is what admitting the annotation to every policy is worth. `multiple` is on the
+configuration's whole scored set.
 
 `distribution.csv` gives, for steps i to iii-b as chosen on mean cost, the mean (`value_*`),
 median and 95th percentile of cost per incoming task, taken over tasks and the orderings of their
@@ -242,9 +245,9 @@ The other verification PLAN.md Section 8 asks of the synthetic dry run: which wa
 the receding-horizon rule departs from the exact dynamic program, where that is computable. The
 attempts are simulated from a law whose state is the rule's own, so the optimum over the rule's
 state and actions is a backward induction and exact, and its own policy, replayed by the
-evaluator on the simulated attempts, reproduces its value (`replayed`). On the held-out half of
-the simulated tasks the log sets beside it the state rule fitted on the other half, the best
-constant cutoff and retrying without a cap, and says what share of first attempts the optimum
+evaluator on the simulated attempts, reproduces its value (`replayed`). On 8,000 held-out
+simulated tasks the log sets beside it the state rule fitted on another 2,000, the best constant
+cutoff and retrying without a cap, and says what share of first attempts the optimum
 and the rule each stop before their end, and at how many calls on average. Tasks are alike in
 this population, so the rule's restart values being averages over tasks is not tested here.
 
