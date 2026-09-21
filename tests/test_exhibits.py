@@ -19,6 +19,10 @@ from restart import cascade as cs            # noqa: E402
 from restart import evaluate as ev           # noqa: E402
 from restart import ladder as ld             # noqa: E402
 from restart import sensitivity as se        # noqa: E402
+from restart import appendix as ap           # noqa: E402
+from restart import comparators as cp        # noqa: E402
+from restart import diagnostics as dg        # noqa: E402
+from restart import oracle as orc            # noqa: E402
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 MAKE = os.path.join(HERE, os.pardir, "exhibits", "make.py")
@@ -93,7 +97,28 @@ def results(tmp_path_factory):
         for c, r in zip(names, corr):
             w.writerow([c] + list(r))
     _sensitivities(pools, root)
+    _appendix(pools, root)
     return root
+
+
+def _appendix(pools, root):
+    """What the appendix runners write, on the same pools."""
+    rates = (25.0, 100.0, 300.0)
+    rows, diff, dist, diag, tails = [], [], [], [], []
+    for pool in pools.values():
+        rows += cp.rows_for(pool, rates=rates, multiples=(), replicates=2)
+        diff += ap.difficulty_rows(pool, rates=(100.0,), replicates=10)
+        dist += ap.distribution_rows(pool, rates=(100.0,))
+        diag.append(dg.summary(pool))
+        tails += dg.tail(pool)
+    cp.write(rows, str(root / "comparators.csv"))
+    ap.write(diff, str(root / "difficulty.csv"), ap.DIFFICULTY_FIELDS)
+    ap.write(dist, str(root / "distribution.csv"), ap.DISTRIBUTION_FIELDS)
+    ap.write(ap.spread_rows(pools, rates=rates), str(root / "spread.csv"),
+             ap.spread_fields(tuple(pools)))
+    orc.write(orc.rows_for(pools, rates=rates), str(root / "oracle.csv"))
+    dg.write(diag, str(root / "diagnostics.csv"), dg.SUMMARY_FIELDS)
+    dg.write(tails, str(root / "tail_composition.csv"), dg.TAIL_FIELDS)
 
 
 def _sensitivities(pools, root):
@@ -124,12 +149,15 @@ def test_every_exhibit_is_written_from_the_results_files(results, tmp_path):
     out = tmp_path / "out"
     make.main(["--results", str(results), "--out", str(out)])
     for stem in ("fig1_cap_margin", "fig2_transfer", "figA2_transfer_review_05", "fig3_cascade",
-                 "fig4_break_even_in_attempts", "figA1_outcome_correlation"):
+                 "fig4_break_even_in_attempts", "figA1_outcome_correlation",
+                 "figA3_tail_composition"):
         for ext in ("pdf", "png"):
             assert (out / f"{stem}.{ext}").stat().st_size > 0, stem
     for stem in ("table1_ladder", "table2_breakeven", "table3_transfer",
                  "tableA1_sensitivity_breakeven", "tableA2_sensitivity_margins",
-                 "tableA3_two_stage"):
+                 "tableA3_two_stage", "tableA4_comparators", "tableA5_oracle",
+                 "tableA6_difficulty", "tableA7_distribution", "tableA8_spread",
+                 "tableA9_diagnostics"):
         for ext in ("csv", "md", "tex"):
             assert (out / f"{stem}.{ext}").stat().st_size > 0, stem
     t1 = pd.read_csv(out / "table1_ladder.csv")

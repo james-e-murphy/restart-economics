@@ -129,23 +129,28 @@ def predict(pool: ev.Pool, models: Models) -> Tuple[np.ndarray, np.ndarray]:
 
 
 def stop_index(pool: ev.Pool, models: Models, verify: float, continuation: float,
-               prediction: Optional[Tuple[np.ndarray, np.ndarray]] = None) -> np.ndarray:
+               prediction: Optional[Tuple[np.ndarray, np.ndarray]] = None,
+               allowed: Optional[np.ndarray] = None) -> np.ndarray:
     """[task, draw]: the first decision point at which the rule stops a running attempt, or -1 if
     it never does, in which case the attempt runs to its own stop.
 
     ``prediction`` is what the two models say at every decision point. It depends on the models and
     the pool and not on the rate, the regime or the attempt budget, so the caller computes it once
-    and the recursion over attempts reuses it.
+    and the recursion over attempts reuses it. ``allowed`` marks the decision points at which the
+    rule may act, all of them by default; the appendix restricts it to the first.
     """
     q, s = predict(pool, models) if prediction is None else prediction
     stop = pool.alive & (s + verify > q * continuation)
+    if allowed is not None:
+        stop = stop & np.asarray(allowed, bool)[None, None, :]
     first = np.argmax(stop, axis=2)
     return np.where(stop.any(axis=2), first, -1)
 
 
 def restart_values(pool: ev.Pool, models: Models, k: int, outside: np.ndarray,
                    verify: np.ndarray, phi: float, train: np.ndarray,
-                   prediction: Optional[Tuple[np.ndarray, np.ndarray]] = None):
+                   prediction: Optional[Tuple[np.ndarray, np.ndarray]] = None,
+                   allowed: Optional[np.ndarray] = None):
     """Backward over attempts on the training tasks: the value of restarting with *j* to *K*
     attempts left, and the slot each of them replays. ``V[K+1]`` is the population mean outside
     option, which is what the rule falls back to when the last attempt is stopped."""
@@ -156,7 +161,7 @@ def restart_values(pool: ev.Pool, models: Models, k: int, outside: np.ndarray,
     slots = {}
     prediction = predict(pool, models) if prediction is None else prediction
     for j in range(k, 0, -1):
-        stop = stop_index(pool, models, v_bar, values[j + 1] - phi * h_bar, prediction)
+        stop = stop_index(pool, models, v_bar, values[j + 1] - phi * h_bar, prediction, allowed)
         slots[j] = ev.stopped_slot(pool, stop)
         policy = Policy(tuple(Slot(pool.config) for _ in range(k - j + 1)))
         got = ev.value({pool.config: pool}, policy, outside, verify, phi, mask=train,
@@ -167,9 +172,10 @@ def restart_values(pool: ev.Pool, models: Models, k: int, outside: np.ndarray,
 
 def rule_result(pool: ev.Pool, models: Models, k: int, outside: np.ndarray, verify: np.ndarray,
                 phi: float, train: np.ndarray, mask: Optional[np.ndarray] = None,
-                prediction: Optional[Tuple[np.ndarray, np.ndarray]] = None) -> ev.Result:
+                prediction: Optional[Tuple[np.ndarray, np.ndarray]] = None,
+                allowed: Optional[np.ndarray] = None) -> ev.Result:
     """The rule's value on every task, with its restart values set on the training tasks."""
-    _, slots = restart_values(pool, models, k, outside, verify, phi, train, prediction)
+    _, slots = restart_values(pool, models, k, outside, verify, phi, train, prediction, allowed)
     policy = Policy(tuple(Slot(pool.config) for _ in range(k)), f"iv: state rule, {k} attempts")
     return ev.value({pool.config: pool}, policy, outside, verify, phi, mask=mask,
                     arrays=[slots[j] for j in range(1, k + 1)])
@@ -181,7 +187,8 @@ def family(pool: ev.Pool, outside: np.ndarray, verify: np.ndarray, phi: float = 
            source_configs: Optional[Sequence[str]] = None,
            mask: Optional[np.ndarray] = None,
            notes: Optional[list] = None,
-           cache: Optional[dict] = None, cache_size: int = 16) -> inf.Family:
+           cache: Optional[dict] = None, cache_size: int = 16,
+           allowed: Optional[np.ndarray] = None) -> inf.Family:
     """The state rule as a family to cross-fit: one candidate per attempt budget, refitted on each
     training set. ``source`` fits the two models on other configurations instead of this one, which
     is the transfer design; the restart values and the budget still come from this configuration's
@@ -191,7 +198,8 @@ def family(pool: ev.Pool, outside: np.ndarray, verify: np.ndarray, phi: float = 
     Neither model depends on the rate or the regime, so a ``cache`` keyed by the training set is
     shared across the sweep and the models are fitted once per fold, as the registration states.
     It is bounded, because a bootstrap draws a new training set in every replicate, and a hit is
-    an exact match on the training mask.
+    an exact match on the training mask. ``allowed`` restricts the decision points at which the
+    rule may act; the models are the same whatever it allows, so a cache can be shared.
     """
     ks = tuple(ks)
     labels = tuple(f"iv: state rule, {k} attempts" for k in ks)
@@ -212,8 +220,8 @@ def family(pool: ev.Pool, outside: np.ndarray, verify: np.ndarray, phi: float = 
         if notes is not None:
             notes.extend(models.notes)
         prediction = predict(pool, models)
-        results = [rule_result(pool, models, k, outside, verify, phi, train, mask, prediction)
-                   for k in ks]
+        results = [rule_result(pool, models, k, outside, verify, phi, train, mask, prediction,
+                               allowed) for k in ks]
         return (np.vstack([r.per_task for r in results]),
                 np.vstack([r.used for r in results]))
 

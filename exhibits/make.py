@@ -105,7 +105,9 @@ def _zero(ax):
 def load(results: str) -> Dict[str, pd.DataFrame]:
     got = {}
     for name in ("ladder", "breakeven", "cascade", "outcome_correlation", "sensitivity_ladder",
-                 "sensitivity_breakeven", "sensitivity_cascade", "sensitivity_two_stage"):
+                 "sensitivity_breakeven", "sensitivity_cascade", "sensitivity_two_stage",
+                 "comparators", "oracle", "difficulty", "distribution", "spread", "diagnostics",
+                 "tail_composition"):
         p = os.path.join(results, f"{name}.csv")
         if os.path.exists(p):
             got[name] = pd.read_csv(p)
@@ -624,6 +626,190 @@ def table_two_stage(two: pd.DataFrame, d: pd.DataFrame, out: str) -> List[str]:
                         "results/ladder.csv. " + IMPUTED)
 
 
+# ----------------------------------------------------------------------------- appendix: comparators
+
+def _ci(r, key) -> str:
+    lo, hi = r.get(f"{key}_low"), r.get(f"{key}_high")
+    return _interval(r[key], lo, hi) if lo is not None else _fmt(r[key])
+
+
+def table_comparators(cmp: pd.DataFrame, out: str) -> List[str]:
+    """Appendix: the registered comparators at the three table rates, automated verifier, with the
+    intervals the ladder's fitted steps also carry, and the medians across configurations."""
+    rows = []
+    here = cmp[(cmp.regime_name == "automated") & (cmp.axis == "rate")]
+    for config in order_of(here.config):
+        for rate in TABLE_RATES:
+            r = here[(here.config == config) & (here.rate == rate)]
+            if not len(r):
+                continue
+            r = r.iloc[0]
+            rows.append({
+                "configuration": label_of(config), "$/h": f"{rate:.0f}",
+                "cap in calls": _fmt(r.value_ii - r.value_iii),
+                "cap in dollars [95%]": _ci(r, "dollar_cap_margin"),
+                "rule over threshold [95%]": _ci(r, "rule_vs_threshold"),
+                "searched over universal [95%]": _ci(r, "schedule_vs_universal"),
+                "first look [95%]": _ci(r, "first_look_margin"),
+                "rule, any point": _fmt(r.state_margin),
+            })
+    for rate in TABLE_RATES:
+        r = here[here.rate == rate]
+        rows.append({"configuration": "median", "$/h": f"{rate:.0f}",
+                     "cap in calls": _fmt((r.value_ii - r.value_iii).median()),
+                     "cap in dollars [95%]": _fmt(r.dollar_cap_margin.median()),
+                     "rule over threshold [95%]": _fmt(r.rule_vs_threshold.median()),
+                     "searched over universal [95%]": _fmt(r.schedule_vs_universal.median()),
+                     "first look [95%]": _fmt(r.first_look_margin.median()),
+                     "rule, any point": _fmt(r.state_margin.median())})
+    t = pd.DataFrame(rows).fillna("")
+    return _write_table(t, out, "tableA4_comparators",
+                        caption="The registered comparators, automated verifier, dollars per task; "
+                        "positive is what the richer or registered policy saves. Cap in calls: step "
+                        "ii minus step iii. Cap in dollars: step ii minus K attempts at a dollar "
+                        "cutoff, the prespecified sensitivity family. Rule over threshold: the "
+                        "two-parameter threshold comparator minus the state rule. Searched over "
+                        "universal: the universal restart schedule minus step iii-b. First look: step "
+                        "iii-b minus the state rule allowed to act only at the first decision point, "
+                        "beside the same margin for the unrestricted rule. Intervals: 100 replicates, "
+                        "every family refitted inside each. " + IMPUTED)
+
+
+def table_oracle(o: pd.DataFrame, out: str) -> List[str]:
+    rows = []
+    for regime, _ in REGIMES:
+        for rate in TABLE_RATES:
+            r = o[(o.regime_name == regime) & (o.rate == rate)]
+            if not len(r):
+                continue
+            r = r.iloc[0]
+            rows.append({"regime": REGIME_LABEL[regime], "$/h": f"{rate:.0f}",
+                         "sample oracle": _fmt(r.value_oracle), "cascade": _fmt(r.value_cascade),
+                         "best single": _fmt(r.value_best_single),
+                         "escalate all*": _fmt(r.value_escalate),
+                         "cascade minus oracle": _fmt(r.oracle_gap),
+                         "share of the cascade": f"{r.oracle_gap / r.value_cascade:.0%}"})
+    t = pd.DataFrame(rows)
+    n = int(o.tasks.iloc[0])
+    return _write_table(t, out, "tableA5_oracle",
+                        caption=f"The sample oracle on the cascade's {n} common tasks: for each task "
+                        "the cheapest schedule of one to four (configuration, cutoff) attempts on "
+                        "that task's own draws, averaged. It bounds the class but is biased "
+                        "downward by taking a minimum over configurations on four draws, so the gap "
+                        "is an upper estimate of the value of knowing the task in advance. * Not "
+                        "registered: every task sent straight to the outside option. " + IMPUTED)
+
+
+def table_difficulty(dd: pd.DataFrame, out: str) -> List[str]:
+    rows = []
+    for regime in ("automated", "human 0.5"):
+        for config in order_of(dd.config):
+            here = dd[(dd.config == config) & (dd.regime_name == regime) & (dd.rate == 100.0)]
+            for _, r in here.iterrows():
+                rows.append({"regime": REGIME_LABEL[regime], "configuration": label_of(config),
+                             "difficulty": r.bucket, "tasks": int(r.tasks),
+                             "cap's saving at $100 [95%]": _interval(r.cap_margin,
+                                                                      r.cap_margin_low,
+                                                                      r.cap_margin_high)})
+    t = pd.DataFrame(rows)
+    return _write_table(t, out, "tableA6_difficulty",
+                        caption="The cap's marginal value by the benchmark's difficulty annotation, "
+                        "every policy chosen within the bucket, at $100 an hour. The two longest "
+                        "buckets are pooled: the longest holds about five tasks. 'All, chosen within "
+                        "bucket' pools those choices; 'all, chosen blind' is the primary. "
+                        "Intervals: 1,000 replicates. " + IMPUTED)
+
+
+def table_distribution(ds: pd.DataFrame, out: str) -> List[str]:
+    rows = []
+    for regime in ("automated", "human 0.5"):
+        for config in order_of(ds.config):
+            r = ds[(ds.config == config) & (ds.regime_name == regime) & (ds.rate == 100.0)]
+            if not len(r):
+                continue
+            r = r.iloc[0]
+            rows.append({"regime": REGIME_LABEL[regime], "configuration": label_of(config),
+                         "ii mean": _fmt(r.value_ii), "ii median": _fmt(r.median_ii),
+                         "ii p95": _fmt(r.p95_ii), "iii mean": _fmt(r.value_iii),
+                         "iii median": _fmt(r.median_iii), "iii p95": _fmt(r.p95_iii),
+                         "cap's saving at p95": _fmt(r.cap_margin_p95),
+                         "median version": _fmt(r.cap_margin_median)})
+    t = pd.DataFrame(rows)
+    return _write_table(t, out, "tableA7_distribution",
+                        caption="Cost per incoming task at $100 an hour under steps ii and iii as "
+                        "chosen on mean cost: its mean, median and 95th percentile over tasks and "
+                        "the orderings of their draws. The median version is the primary comparison "
+                        "with both families chosen and scored on median cost. " + IMPUTED)
+
+
+def table_spread(sp: pd.DataFrame, out: str) -> List[str]:
+    rows = []
+    for regime, _ in REGIMES:
+        for rate in TABLE_RATES:
+            r = sp[(sp.regime_name == regime) & (sp.rate == rate)]
+            if not len(r):
+                continue
+            r = r.iloc[0]
+            rows.append({"regime": REGIME_LABEL[regime], "$/h": f"{rate:.0f}",
+                         "across configurations, best policy": _fmt(r.across_best),
+                         "across configurations, one attempt": _fmt(r.across_one),
+                         "within a configuration, median": _fmt(r.within_median),
+                         "within a configuration, largest": _fmt(r.within_max),
+                         "cheapest": label_of(r.cheapest), "dearest": label_of(r.dearest)})
+    t = pd.DataFrame(rows)
+    n = int(sp.tasks.iloc[0])
+    return _write_table(t, out, "tableA8_spread",
+                        caption=f"On the cascade's {n} common tasks, dollars per task: the range of "
+                        "policy value across the seven configurations, holding the policy at each "
+                        "one's best or at a single attempt, against the range across steps i to "
+                        "iii-b within a configuration. " + IMPUTED)
+
+
+def table_diagnostics(dg_: pd.DataFrame, out: str) -> List[str]:
+    rows = []
+    for config in order_of(dg_.config):
+        r = dg_[dg_.config == config].iloc[0]
+        rows.append({"configuration": label_of(config), "tasks": int(r.tasks),
+                     "within-task share of log-spend variance": f"{r.within_task_share:.0%}",
+                     "mixed outcomes": f"{r.mixed_share:.0%}",
+                     "all four fail": f"{r.all_fail_share:.0%}",
+                     "all four resolve": f"{r.all_resolve_share:.0%}",
+                     "median attempt, $": _fmt(r.median_attempt_cost, 3),
+                     "attempts past their outside option at $25/h": f"{r.over_outside_25:.1%}"})
+    t = pd.DataFrame(rows)
+    return _write_table(t, out, "tableA9_diagnostics",
+                        caption="Per configuration, on its tasks with four usable draws. Both shares "
+                        "motivate restarts and neither bounds their value. " + IMPUTED)
+
+
+def fig_tail(tc: pd.DataFrame, out: str):
+    """Tail composition: for each cutoff, the share of the spend beyond it incurred by attempts that
+    go on to resolve, and the chance an attempt still running there resolves."""
+    order = order_of(tc.config)
+    fig, axes = plt.subplots(2, 4, figsize=(9.6, 4.6), sharex=True, sharey=True)
+    for ax, config in zip(axes.flat, order):
+        s = tc[tc.config == config].sort_values("cutoff")
+        ax.plot(s.cutoff, s.running, color=MUTED, linestyle=":", linewidth=1.2, zorder=2,
+                label="still running")
+        ax.plot(s.cutoff, s.resolving_beyond, color=SERIES_1, zorder=3,
+                label="share of spend beyond it by attempts that resolve")
+        ax.plot(s.cutoff, s.resolve_if_running, color=SERIES_2, linestyle="--", zorder=4,
+                label="chance a running attempt resolves")
+        ax.set_title(label_of(config), loc="left", color=INK)
+        ax.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:.0%}"))
+    for ax in axes.flat[len(order):]:
+        ax.axis("off")
+    for ax in axes.flat[:len(order)]:
+        _log_x(ax, ticks=(5, 10, 25, 50, 100, 250))
+    fig.supxlabel("cutoff, calls", fontsize=8.5, color=INK_2, y=0.07)
+    handles, labels = axes.flat[0].get_legend_handles_labels()
+    fig.legend(handles, labels, loc="lower center", ncol=3, bbox_to_anchor=(0.5, -0.03))
+    fig.suptitle("Tail composition: what a cutoff at each point would cut", x=0.01, ha="left",
+                 fontsize=10, color=INK)
+    fig.tight_layout(rect=(0.01, 0.08, 1, 0.97))
+    return _save(fig, out, "figA3_tail_composition")
+
+
 def _write_table(t: pd.DataFrame, out: str, name: str, caption: str) -> List[str]:
     paths = []
     p = os.path.join(out, f"{name}.csv")
@@ -701,6 +887,12 @@ def main(argv=None):
                                              got.get("sensitivity_cascade"), a.out)
     if "sensitivity_two_stage" in got:
         written += table_two_stage(got["sensitivity_two_stage"], d, a.out)
+    for name, draw in (("comparators", table_comparators), ("oracle", table_oracle),
+                       ("difficulty", table_difficulty), ("distribution", table_distribution),
+                       ("spread", table_spread), ("diagnostics", table_diagnostics),
+                       ("tail_composition", fig_tail)):
+        if name in got:
+            written += draw(got[name], a.out)
     for p in written:
         print(p)
 

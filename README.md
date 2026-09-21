@@ -35,8 +35,8 @@ argument, and every prespecified comparison.
     archives/SHA256SUMS  checksums of the raw archives; archives themselves are not committed
     src/restart/         extraction, cost reconstruction, policies, evaluator, bootstrap,
                          the schedule search, the state rule, the ladder, the break-even,
-                         the cascade, the registered sensitivities, and the coverage check of
-                         the intervals
+                         the cascade, the registered sensitivities, the appendix comparators,
+                         the oracle, the diagnostics, and the coverage check of the intervals
     tests/               hand-walked edge cases and the synthetic dry run
     data/derived/        execution and prefix tables, rebuilt locally and not committed
     results/             policy values, margins, break-evens and cascades, each file written by
@@ -73,7 +73,12 @@ argument, and every prespecified comparison.
     python -m restart.breakeven --derived data/derived   # the break-even of the primary result
     python -m restart.cascade --derived data/derived     # step v and the outcome correlation
     python -m restart.sensitivity --derived data/derived # every registered sensitivity
+    python -m restart.comparators --derived data/derived # dollar cutoffs, threshold, universal, first look
+    python -m restart.oracle --derived data/derived      # the sample oracle benchmark
+    python -m restart.appendix --derived data/derived    # difficulty, cost distribution, spread
+    python -m restart.diagnostics --derived data/derived # variance share, mixed outcomes, tail
     python -m restart.coverage                           # the interval's coverage, on synthetic data
+    python -m restart.dynamic                            # the state rule against the exact optimum, synthetic
     python exhibits/make.py                              # every figure and table, from results/
 
 ## Data
@@ -97,5 +102,5 @@ record what was known about the data before the freeze, and what was not.
 
 The audit is complete and PLAN.md Section 10 records what it found, including the state rule's class
 and φ. The plan is frozen at the `plan-frozen` tag and registered. The primary results, the
-cascade, the registered sensitivities and the exhibits are computed from it by the commands above;
-the appendix comparators and the manuscript are in progress.
+cascade, the registered sensitivities, the appendix and the exhibits are computed from it by the
+commands above; the manuscript is in progress.

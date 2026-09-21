@@ -1,0 +1,27 @@
+\begin{table}[t]
+\centering
+\small
+\caption{On the cascade's 275 common tasks, dollars per task: the range of policy value across the seven configurations, holding the policy at each one's best or at a single attempt, against the range across steps i to iii-b within a configuration. $^\dagger$ Qwen3 Coder's dollar figures rest on an imputed price (PLAN.md Section 10).}
+\label{tab:tableA8_spread}
+\begin{tabular}{llrrrrrr}
+\toprule
+regime & \$/h & across configurations, best policy & across configurations, one attempt & within a configuration, median & within a configuration, largest & cheapest & dearest \\
+\midrule
+automated verifier & 25 & 1.76 & 1.47 & 0.24 & 0.78 & GPT-5 & Sonnet 4.5 \\
+automated verifier & 100 & 4.94 & 5.15 & 3.83 & 4.44 & Sonnet 4 & Kimi K2 \\
+automated verifier & 300 & 13.72 & 14.96 & 14.22 & 15.08 & Sonnet 4 & Kimi K2 \\
+\midrule
+review at 0.1 H & 25 & 1.47 & 1.47 & 0.01 & 0.09 & GPT-5.2 & Kimi K2 \\
+review at 0.1 H & 100 & 5.14 & 5.14 & 0.41 & 1.01 & GPT-5.2 & Kimi K2 \\
+review at 0.1 H & 300 & 14.96 & 14.93 & 1.64 & 2.86 & Sonnet 4 & Kimi K2 \\
+\midrule
+review at 0.3 H & 25 & 1.53 & 1.46 & 0.10 & 0.35 & GPT-5.2 & Sonnet 4.5 \\
+review at 0.3 H & 100 & 5.40 & 5.12 & 0.15 & 0.31 & GPT-5.2 & Kimi K2 \\
+review at 0.3 H & 300 & 15.76 & 14.88 & 0.58 & 1.07 & GPT-5.2 & Kimi K2 \\
+\midrule
+review at 0.5 H & 25 & 0.34 & 1.46 & 1.13 & 1.77 & Qwen3 Coder$^\dagger$ & Sonnet 4 \\
+review at 0.5 H & 100 & 2.69 & 5.10 & 1.10 & 3.98 & GPT-5.2 & GPT-5 \\
+review at 0.5 H & 300 & 8.37 & 14.83 & 3.09 & 11.44 & GPT-5.2 & GPT-5 \\
+\bottomrule
+\end{tabular}
+\end{table}

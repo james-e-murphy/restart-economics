@@ -166,3 +166,23 @@ def test_the_coverage_study_runs_and_its_point_estimate_is_centred_on_its_target
                          truth_draws=60)
     assert 0.0 <= got["coverage"] <= 1.0 and got["width"] > 0
     assert abs(got["bias"]) < 4 * got["bias_se"] + 0.05
+
+
+def test_the_bootstrap_of_several_statistics_is_each_one_s_own_bootstrap():
+    rng = np.random.default_rng(8)
+    x = rng.lognormal(0, 1, 120)
+    y = rng.normal(3, 1, 120)
+    many = inf.bootstrap_many(120, lambda idx: [x[idx].mean(), y[idx].mean() - x[idx].mean()],
+                              replicates=50, seed=11)
+    one = inf.bootstrap(120, lambda idx: x[idx].mean(), replicates=50, seed=11)
+    two = inf.bootstrap(120, lambda idx: y[idx].mean() - x[idx].mean(), replicates=50, seed=11)
+    for got, ref in zip(many, (one, two)):
+        assert got["low"] == pytest.approx(ref["low"]) and got["high"] == pytest.approx(ref["high"])
+        assert got["replicates"] == ref["replicates"] == 50
+
+
+def test_a_component_that_is_not_finite_is_dropped_for_that_component_only():
+    got = inf.bootstrap_many(30, lambda idx: [1.0, float("nan") if idx[0] % 2 else 2.0],
+                             replicates=20, seed=2)
+    assert got[0]["replicates"] == 20 and got[0]["dropped"] == 0
+    assert got[1]["replicates"] + got[1]["dropped"] == 20 and got[1]["dropped"] > 0

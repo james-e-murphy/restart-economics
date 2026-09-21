@@ -456,6 +456,23 @@ def value(pools: Dict[str, Pool], policy: Policy, outside: np.ndarray, verify: n
     orderings is the same whatever decided the stop.
     """
     tasks = _aligned(pools, policy.configs)
+    cost, valid = replay(pools, policy, outside, verify, phi, arrays)
+    counted = valid.sum(axis=0)
+    total = np.where(valid, cost, 0.0).sum(axis=0)
+    used = counted > 0
+    if mask is not None:
+        used &= np.asarray(mask, bool)
+    per_task = np.where(counted > 0, total / np.maximum(counted, 1), np.nan)
+    return Result(policy=policy, tasks=tasks, per_task=per_task, used=used, orderings=counted)
+
+
+def replay(pools: Dict[str, Pool], policy: Policy, outside: np.ndarray, verify: np.ndarray,
+           phi: float = 0.0,
+           arrays: Optional[Sequence[Tuple[np.ndarray, np.ndarray, np.ndarray]]] = None):
+    """[combination, task]: what the policy costs under every combination of draws, and whether
+    that combination is usable on that task. ``value`` is its mean over the usable combinations;
+    the appendix reads its quantiles."""
+    tasks = _aligned(pools, policy.configs)
     n_t = len(tasks)
     outside = np.asarray(outside, float)
     verify = np.asarray(verify, float)
@@ -500,14 +517,7 @@ def value(pools: Dict[str, Pool], policy: Policy, outside: np.ndarray, verify: n
                            + phi * outside * resolves[:, d].T)
         running &= ~resolves[:, d].T
     cost += running * outside
-
-    counted = valid.sum(axis=0)
-    total = np.where(valid, cost, 0.0).sum(axis=0)
-    used = counted > 0
-    if mask is not None:
-        used &= np.asarray(mask, bool)
-    per_task = np.where(counted > 0, total / np.maximum(counted, 1), np.nan)
-    return Result(policy=policy, tasks=tasks, per_task=per_task, used=used, orderings=counted)
+    return cost, valid
 
 
 def stopped_slot(pool: Pool, stop: np.ndarray) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:

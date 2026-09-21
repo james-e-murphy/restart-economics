@@ -172,6 +172,36 @@ def bootstrap(n_tasks: int, statistic: Callable[[np.ndarray], float],
                 draws=draws)
 
 
+def bootstrap_many(n_tasks: int, statistic: Callable[[np.ndarray], Sequence[float]],
+                   replicates: int = REPLICATES, seed: int = SEED,
+                   level: float = LEVEL) -> list:
+    """``bootstrap`` for a statistic with several components, computed together in each replicate.
+
+    The task resamples are ``bootstrap``'s own, from the same generator and seed, so each
+    component's interval is the one ``bootstrap`` would give it alone. Computing them together
+    lets a replicate fit a family once and read it at every rate. A replicate that raises is
+    dropped for every component; a component that is not finite is dropped for that component."""
+    rng = np.random.default_rng(seed)
+    got, failures = [], 0
+    for _ in range(replicates):
+        idx = rng.integers(0, n_tasks, n_tasks)
+        try:
+            got.append(np.asarray(statistic(idx), float))
+        except Exception:                      # a replicate that cannot be scored is not an answer
+            failures += 1
+    lo, hi = (1 - level) / 2 * 100, (1 + level) / 2 * 100
+    width = len(got[0]) if got else 0
+    table = np.asarray(got, float).reshape(len(got), width)
+    out = []
+    for j in range(width):
+        d = table[:, j][np.isfinite(table[:, j])]
+        out.append(dict(replicates=len(d), dropped=failures + (len(got) - len(d)), level=level,
+                        low=float(np.percentile(d, lo)) if d.size else float("nan"),
+                        high=float(np.percentile(d, hi)) if d.size else float("nan"),
+                        mean=float(d.mean()) if d.size else float("nan"), draws=d))
+    return out
+
+
 def resampled(family: Family, idx: np.ndarray) -> Family:
     """The family as seen on a bootstrap resample of the tasks."""
     return Family(values=family.values[:, idx], used=family.used[:, idx], labels=family.labels,

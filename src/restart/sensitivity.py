@@ -221,15 +221,17 @@ def attach(rows: Sequence[dict], bands: Sequence[dict], pool: ev.Pool, phi: floa
            mask: np.ndarray, replicates: int) -> int:
     """Put each interval on its ladder row.
 
-    The fast path is the ladder's arithmetic rearranged, so it must reproduce the ladder's point
-    estimate. Where it does not, which only a near-tie between two candidates on the training
-    folds, broken one way by one rounding and the other way by the other, could cause, the row's
-    interval is computed by the ladder's own bootstrap instead. Returns how many rows that was."""
+    The fast path is the ladder's arithmetic rearranged, so run on the sample itself it must
+    reproduce the ladder's point estimate, and every row is checked. Where it does not, which a
+    near-tie between two candidates on the training folds, broken one way by one rounding and the
+    other way by the other, could cause, and so could a matrix library returning wrong products,
+    the row's interval is computed by the ladder's own bootstrap instead. Returns how many rows
+    that was."""
     at = {(b["regime_name"], b["axis"], b["rate"]): b for b in bands}
     slow = 0
     for r in rows:
         b = at[(r["regime_name"], r["axis"], r["rate"])]
-        if np.isclose(b["estimate"], r["cap_margin"], rtol=1e-9, atol=1e-9):
+        if np.isclose(b["fast_estimate"], r["cap_margin"], rtol=1e-9, atol=1e-9):
             r.update(cap_margin_low=b["one_stage_low"], cap_margin_high=b["one_stage_high"],
                      replicates=b["one_stage_replicates"], dropped=b["one_stage_dropped"])
             continue
@@ -404,8 +406,14 @@ def _cross_fitted(fx: Fixed, rows: Sequence[int], hours: np.ndarray, label: np.n
     for f in range(k):
         sides[:, f] = (label != f) & eligible
         sides[:, k + f] = (label == f) & eligible
-    sums = parts @ sides                                            # [4, candidate, 2k]
-    counts = used.astype(float) @ sides                             # [candidate, 2k]
+    # Apple's Accelerate library sets floating-point flags on ordinary matrix products, so the
+    # products are taken quietly and their result is checked instead; a product that is not finite
+    # makes every point of this replicate unscorable, which the caller counts as dropped
+    with np.errstate(all="ignore"):
+        sums = parts @ sides                                        # [4, candidate, 2k]
+        counts = used.astype(float) @ sides                         # [candidate, 2k]
+    if not (np.isfinite(sums).all() and np.isfinite(counts).all()):
+        return np.full(len(np.atleast_1d(rates)), np.nan)
     rates = np.asarray(rates, float)[:, None, None]
     slope = (np.asarray(fractions, float)[:, None, None] * sums[1] + phi * sums[2] + sums[3])
     total = sums[0] + rates * slope                                 # [point, candidate, 2k]
@@ -483,6 +491,8 @@ def cap_intervals(pool: ev.Pool, replicates: int = TWO_STAGE_REPLICATES, seed: i
     estimate = [cap_margin(fx, ev.outside_option(pool, rate),
                            ev.verification(ev.outside_option(pool, rate), fraction), phi,
                            label, mask) for _, fraction, _, rate in cells]
+    # the fast route on the sample itself, which every run holds to the ladder's point estimate
+    fast = cap_margins(fx, hours, label, mask, at, frac, phi)
     one, two = [], []
     first = np.random.default_rng(seed)
     second = np.random.default_rng([seed, 2])
@@ -501,7 +511,8 @@ def cap_intervals(pool: ev.Pool, replicates: int = TWO_STAGE_REPLICATES, seed: i
         lo1, hi1 = _interval(one[:, j])
         row = dict(config=pool.config, margin="cap", regime_name=name, regime=fraction,
                    axis=axis, rate=rate, multiple=ev.multiple_for_rate(pool, rate, mask),
-                   phi=phi, estimate=estimate[j], one_stage_low=lo1, one_stage_high=hi1,
+                   phi=phi, estimate=estimate[j], fast_estimate=float(fast[j]),
+                   one_stage_low=lo1, one_stage_high=hi1,
                    one_stage_mean=_centre(one[:, j]),
                    one_stage_replicates=int(np.isfinite(one[:, j]).sum()),
                    one_stage_dropped=int((~np.isfinite(one[:, j])).sum()),
@@ -657,8 +668,14 @@ def _main(argv=None):
             if a.only and name not in a.only:
                 continue
             t0 = time.time()
-            rows += cap_intervals(pool, a.two_stage_replicates, rates=a.rates,
-                                  multiples=a.multiples)
+            got = cap_intervals(pool, a.two_stage_replicates, rates=a.rates,
+                                multiples=a.multiples)
+            off = sum(not np.isclose(g["fast_estimate"], g["estimate"], rtol=1e-9, atol=1e-9)
+                      for g in got)
+            if off:
+                say(f"  {name}: at {off} points the fast route does not reproduce the point"
+                    " estimate; read those rows' intervals with that in mind")
+            rows += got
             others = [c for c in pools if c != name]
             if others and a.transfer_replicates:
                 source = {c: ev.reindex(pools[c], pool.tasks) for c in others}

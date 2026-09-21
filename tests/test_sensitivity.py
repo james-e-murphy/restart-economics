@@ -92,6 +92,24 @@ def test_the_fast_interval_is_the_ladder_s_interval():
         assert row["two_stage_low"] == ""
 
 
+def test_every_row_carries_the_fast_route_s_own_point_estimate():
+    pool = _pool()
+    got = se.cap_intervals(pool, replicates=5, rates=(5.0, 100.0), multiples=(3.0,))
+    for row in got:
+        assert row["fast_estimate"] == pytest.approx(row["estimate"], abs=1e-10)
+
+
+def test_a_product_that_is_not_finite_drops_the_replicate_instead_of_scoring_it():
+    pool = _pool()
+    fx = se.fixed(pool)
+    broken = dataclasses.replace(fx, spend=np.where(np.arange(fx.spend.shape[1]) == 7, np.inf,
+                                                    fx.spend))
+    mask = ev.full_draw_tasks({pool.config: pool})
+    got = se.cap_margins(broken, pool.minutes / 60.0, inf.folds(pool.n_tasks), mask,
+                         [5.0, 100.0], [0.0, 0.5], 0.0)
+    assert np.isnan(got).all()
+
+
 def test_a_second_stage_that_keeps_every_draw_is_the_first_stage():
     pool = _pool()
     fx = se.fixed(pool)
@@ -250,7 +268,7 @@ def test_a_row_the_fast_path_does_not_reproduce_takes_the_ladder_s_bootstrap():
                      replicates=0, steps=(), fitted_replicates=0)
     bands = se.cap_intervals(pool, 20, rates=(50.0,), multiples=(),
                              regimes=(("automated", 0.0),), stage_two=False)
-    bands[0]["estimate"] += 1.0
+    bands[0]["fast_estimate"] += 1.0
     assert se.attach(rows, bands, pool, 0.0, mask, 20) == 1
     ref = ld.rung(pool, 50.0, 0.0, replicates=20, steps=())
     assert rows[0]["cap_margin_low"] == pytest.approx(ref["cap_margin_low"])

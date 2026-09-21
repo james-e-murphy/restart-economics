@@ -29,9 +29,16 @@ Markdown, LaTeX and CSV.
 | `tableA1_sensitivity_breakeven` | the break-even under each registered sensitivity beside the primary: per regime, how many configurations cross in the sweep, and the first crossing's median and range |
 | `tableA2_sensitivity_margins` | the primary margins under each registered sensitivity, as medians across configurations: the cap's saving in both headline regimes, the primary transfer, and switching |
 | `tableA3_two_stage` | the two-stage bootstrap interval beside the primary task-level one, for the cap's saving and the primary transfer |
+| `tableA4_comparators` | the dollar cutoff, the threshold comparator, the universal schedule and the first-look rule, automated verifier, with intervals |
+| `tableA5_oracle` | the sample oracle benchmark against the best cascade and single configuration |
+| `tableA6_difficulty` | the cap's saving by difficulty bucket, every policy choosing within the bucket |
+| `tableA7_distribution` | the median and 95th percentile of cost per task, and the median-cost version of the primary comparison |
+| `tableA8_spread` | the spread across configurations against the spread across policies |
+| `tableA9_diagnostics` | within-task share of log-spend variance, mixed outcomes, attempts past their outside option |
+| `figA3_tail_composition` | what a cutoff at each decision point would cut from attempts that go on to resolve |
 
-The three appendix tables are written when `results/` holds the files
-`python -m restart.sensitivity` writes, and skipped otherwise.
+Each appendix exhibit is written when `results/` holds the file its command writes, and skipped
+otherwise.
 
 ## Not registered
 

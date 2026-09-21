@@ -1,0 +1,43 @@
+\begin{table}[t]
+\centering
+\small
+\caption{The registered comparators, automated verifier, dollars per task; positive is what the richer or registered policy saves. Cap in calls: step ii minus step iii. Cap in dollars: step ii minus K attempts at a dollar cutoff, the prespecified sensitivity family. Rule over threshold: the two-parameter threshold comparator minus the state rule. Searched over universal: the universal restart schedule minus step iii-b. First look: step iii-b minus the state rule allowed to act only at the first decision point, beside the same margin for the unrestricted rule. Intervals: 100 replicates, every family refitted inside each. $^\dagger$ Qwen3 Coder's dollar figures rest on an imputed price (PLAN.md Section 10).}
+\label{tab:tableA4_comparators}
+\begin{tabular}{llrrrrrr}
+\toprule
+configuration & \$/h & cap in calls & cap in dollars [95\%] & rule over threshold [95\%] & searched over universal [95\%] & first look [95\%] & rule, any point \\
+\midrule
+GPT-5 & 25 & -0.10 & 0.01 [-0.30, 0.05] & 0.18 [-0.02, 0.89] & -0.02 [-0.17, 0.11] & 0.09 [-0.00, 0.25] & 0.09 \\
+GPT-5 & 100 & -0.41 & 0.01 [-1.21, 0.02] & 0.78 [-0.02, 2.60] & -0.08 [-0.84, 0.06] & 0.38 [0.07, 1.61] & 0.38 \\
+GPT-5 & 300 & -1.21 & 0.01 [-3.63, 0.02] & 2.40 [-0.02, 7.86] & -0.23 [-2.53, 0.16] & 1.13 [0.22, 4.82] & 1.13 \\
+\midrule
+GPT-5.2 & 25 & -0.01 & -0.01 [-0.07, 0.03] & 0.15 [-0.07, 0.59] & 0.00 [-0.07, 0.07] & 0.01 [-0.05, 0.10] & 0.01 \\
+GPT-5.2 & 100 & 0.01 & 0.18 [-0.43, 0.27] & 0.48 [-0.05, 2.12] & 0.00 [-0.27, 0.04] & -0.01 [-0.05, 0.45] & -0.01 \\
+GPT-5.2 & 300 & 0.02 & 0.04 [-1.49, 0.21] & 2.59 [0.03, 7.11] & 0.01 [-0.70, 0.02] & -0.02 [-0.10, 1.52] & -0.02 \\
+\midrule
+Sonnet 4 & 25 & -0.00 & -0.00 [-0.07, 0.00] & 0.08 [-0.12, 0.32] & 0.00 [-0.06, 0.11] & 0.00 [-0.11, 0.07] & 0.00 \\
+Sonnet 4 & 100 & -0.01 & -0.01 [-0.37, 0.00] & 0.42 [-0.03, 1.69] & -0.10 [-0.24, 0.03] & 0.11 [-0.00, 0.32] & 0.11 \\
+Sonnet 4 & 300 & -0.01 & -0.01 [-0.89, 0.00] & 1.25 [-0.02, 5.00] & -0.08 [-0.53, 0.01] & 0.08 [0.01, 0.73] & 0.08 \\
+\midrule
+Sonnet 4.5 & 25 & -0.00 & -0.06 [-0.10, 0.02] & 0.03 [-0.15, 0.19] & -0.00 [-0.14, 0.12] & 0.00 [-0.12, 0.15] & 0.00 \\
+Sonnet 4.5 & 100 & -0.24 & -0.41 [-1.22, 0.03] & 0.47 [-0.30, 1.17] & 0.03 [-0.65, 0.07] & 0.05 [-0.02, 0.66] & 0.05 \\
+Sonnet 4.5 & 300 & -0.64 & -1.21 [-3.62, 0.03] & 1.47 [-0.08, 3.57] & 0.03 [-2.48, 0.05] & 0.15 [-0.02, 2.49] & 0.15 \\
+\midrule
+Gemini 3 Pro & 25 & -0.00 & -0.02 [-0.22, 0.00] & 0.37 [0.06, 0.62] & 0.00 [-0.03, 0.13] & 0.00 [-0.10, 0.08] & 0.00 \\
+Gemini 3 Pro & 100 & -0.11 & -0.12 [-1.76, 0.00] & 1.17 [0.08, 2.69] & -0.03 [-0.37, 0.02] & 0.12 [-0.04, 0.60] & 0.12 \\
+Gemini 3 Pro & 300 & -0.36 & -0.37 [-5.84, 0.00] & 3.91 [1.19, 8.51] & -0.09 [-1.12, 0.02] & 0.36 [-0.03, 2.68] & 0.36 \\
+\midrule
+Kimi K2 & 25 & -0.03 & -0.05 [-0.28, 0.06] & 0.05 [-0.04, 0.44] & 0.00 [-0.08, 0.11] & 0.03 [-0.10, 0.14] & 0.04 \\
+Kimi K2 & 100 & -0.44 & -0.58 [-1.40, 0.30] & 0.59 [-0.32, 2.72] & -0.13 [-0.36, 0.12] & 0.45 [-0.27, 1.39] & 0.45 \\
+Kimi K2 & 300 & -1.44 & -1.83 [-4.25, 0.10] & 2.05 [-0.01, 6.91] & -0.36 [-1.07, 0.15] & 1.44 [-0.11, 4.32] & 1.44 \\
+\midrule
+Qwen3 Coder$^\dagger$ & 25 & -0.04 & -0.02 [-0.33, 0.13] & 0.02 [-0.19, 0.28] & 0.00 [-0.25, 0.14] & 0.04 [-0.07, 0.53] & 0.05 \\
+Qwen3 Coder$^\dagger$ & 100 & -0.74 & -0.31 [-1.32, 0.43] & 0.25 [-0.28, 1.36] & -0.39 [-0.91, 0.11] & 0.74 [-0.26, 1.74] & 0.74 \\
+Qwen3 Coder$^\dagger$ & 300 & -2.34 & -1.11 [-4.17, 0.23] & -0.12 [-0.23, 3.43] & -0.59 [-2.56, 0.06] & 1.74 [-0.23, 4.76] & 1.74 \\
+\midrule
+median & 25 & -0.01 & -0.02 & 0.08 & 0.00 & 0.01 & 0.01 \\
+median & 100 & -0.24 & -0.12 & 0.48 & -0.08 & 0.12 & 0.12 \\
+median & 300 & -0.64 & -0.37 & 2.05 & -0.09 & 0.36 & 0.36 \\
+\bottomrule
+\end{tabular}
+\end{table}

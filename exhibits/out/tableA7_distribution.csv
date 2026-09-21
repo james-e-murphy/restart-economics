@@ -1,0 +1,15 @@
+regime,configuration,ii mean,ii median,ii p95,iii mean,iii median,iii p95,cap's saving at p95,median version
+automated verifier,GPT-5,23.23,0.50,201.30,23.64,0.50,201.44,-0.14,-0.00
+automated verifier,GPT-5.2,22.65,0.72,200.85,22.64,0.72,200.85,0.00,-0.00
+automated verifier,Sonnet 4,21.76,1.26,203.06,21.77,1.26,203.06,0.00,0.00
+automated verifier,Sonnet 4.5,23.89,2.06,66.87,24.12,2.06,64.81,2.06,0.00
+automated verifier,Gemini 3 Pro,24.03,1.23,202.47,24.14,1.23,202.47,0.00,0.00
+automated verifier,Kimi K2,25.26,1.21,202.85,25.69,1.21,203.00,-0.15,-0.00
+automated verifier,Qwen3 Coder†,23.55,1.39,203.31,24.30,1.39,204.82,-1.52,0.00
+review at 0.5 H,GPT-5,53.14,25.29,300.41,50.97,50.15,200.29,100.11,0.00
+review at 0.5 H,GPT-5.2,47.45,25.44,300.40,46.70,25.44,200.76,99.65,0.00
+review at 0.5 H,Sonnet 4,50.62,25.85,301.08,49.18,25.85,201.08,100.00,-0.00
+review at 0.5 H,Sonnet 4.5,52.69,26.48,301.77,50.85,50.06,201.29,100.48,-0.00
+review at 0.5 H,Gemini 3 Pro,51.69,25.69,300.71,50.05,50.07,200.08,100.63,-0.01
+review at 0.5 H,Kimi K2,54.56,25.56,300.83,51.25,50.25,200.46,100.37,0.00
+review at 0.5 H,Qwen3 Coder†,52.75,25.84,301.49,49.19,25.84,201.12,100.37,-0.00
