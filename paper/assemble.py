@@ -56,11 +56,22 @@ def exhibit_table(path: str) -> str:
     return minus("\n".join([head, rule] + ["| " + " | ".join(r) + " |" for r in rows]))
 
 
+def choices(s: str) -> str:
+    """The folds' distinct choices for step iii, grouped by budget: '4x@80, 4x@85, 4x@none'
+    becomes '4×80/85/none'."""
+    groups = {}
+    for item in (x.strip() for x in s.split(",") if x.strip()):
+        k, _, cut = item.partition("x@")
+        groups.setdefault(k, []).append(cut)
+    return ", ".join(f"{k}×{'/'.join(v)}" for k, v in groups.items())
+
+
 def ladder(path: str) -> str:
-    """Table 3: steps i to iii-b with the cap's saving and the folds' choices, in two panels."""
+    """Table 3: steps i to iii-b with the cap's saving and the folds' choices, in two panels,
+    set so that no cell wraps (a nowrap div, which blocks.lua sets at natural widths)."""
     rows = list(csv.DictReader(open(path)))
     head = ("| Configuration | $/h | i | ii | iii | iii-b | Cap's saving [95%] | Step iii chose "
-            "| Escalate all\\* |\n|---|---|---|---|---|---|---|---|---|")
+            "| Escalate all\\* |\n|:---|---:|---:|---:|---:|---:|---:|:---|---:|")
     out, regime, config = [head], None, None
     for r in rows:
         if r["regime"] != regime:
@@ -70,7 +81,7 @@ def ladder(path: str) -> str:
             config = None
         name = r["configuration"] if r["configuration"] != config else ""
         config = r["configuration"]
-        chose = r["iii chose"].replace("x@", "×").replace("none", "no cutoff")
+        chose = choices(r["iii chose"])
         saving = r["cap's saving [95%]"]
         out.append(f"| {name} | {r['$/h']} | {r['i']} | {r['ii']} | {r['iii']} | {r['iii-b']} "
                    f"| {saving} | {chose} | {r['escalate all*']} |")
@@ -101,7 +112,10 @@ def widths(text: str) -> str:
             w = [max([max((len(x) for x in h.split()), default=1)] +
                      [len(r[k]) for r in body if k < len(r)]) for k, h in enumerate(head)]
             w = [min(max(x, 4), 36) for x in w]
-            lines[i + 1] = "|" + "|".join("-" * x for x in w) + "|"
+            rule = _cells(lines[i + 1])
+            lines[i + 1] = "|" + "|".join(
+                (":" if c.startswith(":") else "") + "-" * x + (":" if c.endswith(":") else "")
+                for c, x in zip(rule, w)) + "|"
             assert all(len(r) == n for r in body), f"ragged table at: {lines[i]}"
             i = j
         else:
@@ -117,7 +131,7 @@ def render(text: str, exhibits: str, missing: list) -> str:
             if not os.path.exists(path):
                 missing.append("table1_ladder")
                 return f"> Pending: {caption}"
-            return f"Table: {caption}\n\n{ladder(path)}"
+            return f"::: nowrap\n\nTable: {caption}\n\n{ladder(path)}\n\n:::"
         if kind == "table":
             path = os.path.join(exhibits, f"{name}.md")
             if not os.path.exists(path):

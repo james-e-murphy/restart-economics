@@ -15,6 +15,7 @@ which the manuscript carries in its captions; the paper's build uses that (`pape
 | file | what it shows |
 |---|---|
 | `fig1_cap_margin` | the primary result: the cap's marginal value given retry, step ii minus step iii, across the sweep in every regime, per configuration and as the median |
+| `fig_ladder` | the ladder drawn: steps i to iv and the transferred rule, each as a share of one attempt's cost, per configuration and as the median, at $25, $100 and $300 an hour, automated verifier and review at 0.5 H; the table of policy values in a picture |
 | `fig2_transfer` | the primary transfer: the state rule's margin over the best schedule, fitted on the other six configurations and on the configuration itself, automated verifier |
 | `fig3_cascade` | the best cross-configuration schedule against each configuration's own, and against the best single configuration chosen from the same data |
 | `table1_ladder` | policy value by configuration for steps i to iii-b at $25, $100 and $300 an hour, with the cap's margin, its interval, what the folds chose and the first break-even |

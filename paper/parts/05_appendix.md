@@ -96,7 +96,7 @@ The four runs of a task differ widely in what they cost, and 24 to 64 percent of
 
 ![Figure A2](figures/figA2_transfer_review_05.pdf)
 
-> **Figure A2. The state rule against the best schedule under review at 0.5 of the outside option.** As Figure 2, not the registered regime for the transfer and without intervals: the rule fitted on the other six configurations (solid), on the configuration itself (dashed), and not capping at all (dotted), as a share of what retrying without a cap costs. Where the dotted line leaves the frame, not capping costs far more than the schedule. † Imputed price.
+> **Figure A2. The state rule against the best schedule under review at 0.5 of the outside option.** As Figure 3, not the registered regime for the transfer and without intervals: the rule fitted on the other six configurations (solid), on the configuration itself (dashed), and not capping at all (dotted), as a share of what retrying without a cap costs. Where the dotted line leaves the frame, not capping costs far more than the schedule. † Imputed price.
 
 # Appendix E. Verification
 
@@ -151,6 +151,7 @@ Where the plan left a detail open, the choice made is stated here.
 - **The two-stage bootstrap** uses the same task resamples as the primary and reports both centres without correcting either (Appendix A).
 - **Break-evens** are located by a scan in the logarithm of the rate refined by bisection, and every crossing is reported, as the plan requires.
 - **The tail composition** marks the annotated outside option on the decision grid by the share of running attempts whose spend has already passed it at $25 an hour, since the outside option differs by task.
-- **The first figure.** The plan asks that the abstract and the first figure be built from the primary result and the primary transfer; the paper gives each its own figure, Figures 1 and 2.
+- **Figure 2** draws the registered values of Table 3 with the state rule's, each as a share of step i; it adds a display, not a quantity.
+- **The first figure.** The plan asks that the abstract and the first figure be built from the primary result and the primary transfer; the paper gives each its own figure, Figures 1 and 3.
 
-Several exhibits were added after the registered results were in, and each is marked as exploratory where it appears: escalating every task without running the agent as a reference line (Tables 3 and 6, Figures 1 and 3); the outside option at which retrying first beats escalating (Figure 1 and Section 8.2); and the break-even in full attempts (Figure 4). The argument that the break-even in multiples does not depend on the level of token prices (Section 8.1) is arithmetic on the estimand rather than a result.
+Several exhibits were added after the registered results were in, and each is marked as exploratory where it appears: escalating every task without running the agent as a reference line (Tables 3 and 6, Figures 1 and 4); the outside option at which retrying first beats escalating (Figure 1 and Section 8.2); and the break-even in full attempts (Figure 5). The argument that the break-even in multiples does not depend on the level of token prices (Section 8.1) is arithmetic on the estimand rather than a result.

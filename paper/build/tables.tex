@@ -1,10 +1,15 @@
 \usepackage{etoolbox}
 \usepackage{array}
+% the font and column gap are macros so that a nowrap table (blocks.lua) can set its own
+\newcommand{\LTfont}{\footnotesize}
+\newlength{\LTsep}\setlength{\LTsep}{5pt}
+\newlength{\LTextra}\setlength{\LTextra}{3pt}
+\newcommand{\LTstretch}{1.32}
 \AtBeginEnvironment{longtable}{%
-  \footnotesize
-  \setlength{\tabcolsep}{5pt}%
-  \setlength{\extrarowheight}{3pt}%
-  \renewcommand{\arraystretch}{1.32}%
+  \LTfont
+  \setlength{\tabcolsep}{\LTsep}%
+  \setlength{\extrarowheight}{\LTextra}%
+  \renewcommand{\arraystretch}{\LTstretch}%
 }
 \setlength{\LTpre}{10pt}
 \setlength{\LTpost}{12pt}

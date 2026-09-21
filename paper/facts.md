@@ -42,6 +42,17 @@ Written by `paper/facts.py` from `results/`. Do not edit by hand.
 | Qwen3 Coder† | 100 | 27.64 | 23.55 | 4.09 | 14.8 | 4  |
 | Qwen3 Coder† | 300 | 79.88 | 64.1 | 15.78 | 19.8 | 4  |
 
+## The ladder in Figure 2: median across configurations, % of step i
+
+| regime | $/h | i | ii | iii | iiib | iv | iv_transfer |
+|---|---|---|---|---|---|---|---|
+| automated | 25 | 100.0 | 97.2 | 97.3 | 97.2 | 97.2 | 97.2 |
+| automated | 100 | 100.0 | 85.8 | 87.3 | 87.3 | 85.8 | 85.8 |
+| automated | 300 | 100.0 | 81.6 | 83.2 | 82.4 | 81.6 | 81.6 |
+| human 0.5 | 25 | 100.0 | 100.0 | 90.4 | 90.4 | 94.4 | 94.2 |
+| human 0.5 | 100 | 100.0 | 100.0 | 96.5 | 96.5 | 98.7 | 100.0 |
+| human 0.5 | 300 | 100.0 | 100.0 | 97.3 | 97.3 | 99.4 | 100.0 |
+
 ## Retry under review: rows where retrying saves anything
 
 regime_name

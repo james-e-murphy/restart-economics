@@ -69,6 +69,17 @@ def sections(results: str):
                          "saving %": f"{100 * x.retry_value / x.value_i:.1f}",
                          "K chosen": mk._choice(x.choice_ii).replace("attempts, none", "")})
     out.append(("Retry, automated verifier", _md(pd.DataFrame(rows)), ""))
+    steps = [c for c in ("value_i", "value_ii", "value_iii", "value_iiib", "value_iv",
+                         "value_iv_transfer") if c in rate]
+    rows = []
+    for regime in ("automated", "human 0.5"):
+        for r in RATES:
+            x = rate[(rate.regime_name == regime) & (rate.rate == r)]
+            med = (x[steps].div(x.value_i, axis=0) * 100).median()
+            rows.append({"regime": regime, "$/h": int(r),
+                         **{c.replace("value_", ""): round(float(med[c]), 1) for c in steps}})
+    out.append(("The ladder in Figure 2: median across configurations, % of step i",
+                _md(pd.DataFrame(rows)), ""))
     rv = rate[(rate.regime_name != "automated")]
     retry_any = rv.groupby("regime_name").retry_value.apply(lambda s: int((s > 1e-9).sum()))
     out.append(("Retry under review: rows where retrying saves anything",

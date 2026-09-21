@@ -148,7 +148,7 @@ def test_every_exhibit_is_written_from_the_results_files(results, tmp_path):
     make = _module()
     out = tmp_path / "out"
     make.main(["--results", str(results), "--out", str(out)])
-    for stem in ("fig1_cap_margin", "fig2_transfer", "figA2_transfer_review_05", "fig3_cascade",
+    for stem in ("fig1_cap_margin", "fig_ladder", "fig2_transfer", "figA2_transfer_review_05", "fig3_cascade",
                  "fig4_break_even_in_attempts", "figA1_outcome_correlation",
                  "figA3_tail_composition"):
         for ext in ("pdf", "png"):

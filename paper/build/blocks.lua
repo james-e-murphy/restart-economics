@@ -76,6 +76,24 @@ end
 -- A fenced ::: box ::: div is set as a framed callout, used for the stylized
 -- example in 5.8. Previously the manuscript described a box that was never drawn.
 function Div(el)
+  -- A ::: nowrap ::: div sets its tables at their natural column widths, so that no cell
+  -- wraps, with a narrower column gap; assemble.py uses it for the ladder table.
+  if el.classes:includes('nowrap') then
+    local body = pandoc.walk_block(el, {
+      Table = function(t)
+        for i, spec in ipairs(t.colspecs) do
+          t.colspecs[i] = {spec[1], pandoc.ColWidthDefault}
+        end
+        return t
+      end
+    })
+    local out = {pandoc.RawBlock('latex',
+      '\\begingroup\\renewcommand{\\LTfont}{\\footnotesize}\\setlength{\\LTsep}{3.5pt}'
+      .. '\\setlength{\\LTextra}{0.5pt}\\renewcommand{\\LTstretch}{1.06}')}
+    for _, b in ipairs(body.content) do table.insert(out, b) end
+    table.insert(out, pandoc.RawBlock('latex', '\\endgroup'))
+    return out
+  end
   if el.classes:includes('box') then
     local out = {pandoc.RawBlock('latex','\\begin{examplebox}')}
     for _,b in ipairs(el.content) do table.insert(out, b) end

@@ -281,6 +281,60 @@ def fig_transfer(d: pd.DataFrame, out: str, regime: str = "automated", name: str
     return _save(fig, out, name)
 
 
+# ----------------------------------------------------------------------------- the ladder
+
+LADDER_STEPS = (("value_i", "i"), ("value_ii", "ii"), ("value_iii", "iii"), ("value_iiib", "iii-b"),
+                ("value_iv", "iv"), ("value_iv_transfer", "iv-t"))
+
+
+def fig_ladder(d: pd.DataFrame, out: str, regimes=("automated", "human 0.5")):
+    """The ladder drawn: each step's policy value as a share of one attempt's (step i), for every
+    configuration and their median, at the three table rates, in the two headline regimes. Step
+    iv is the state rule fitted on the configuration itself and iv-t the rule fitted on the other
+    six. Each step is chosen on training folds and scored on held-out ones, so a line can rise."""
+    rate = d[(d.axis == "rate") & (d.rate.isin(TABLE_RATES))]
+    order = order_of(rate.config)
+    cols = [c for c, _ in LADDER_STEPS if c in rate]
+    x = np.arange(len(cols))
+    fig, axes = plt.subplots(len(regimes), len(TABLE_RATES), figsize=(7.6, 2.3 * len(regimes)),
+                             sharex=True, sharey="row", squeeze=False)
+    for i, regime in enumerate(regimes):
+        for j, r in enumerate(TABLE_RATES):
+            ax = axes[i, j]
+            here = rate[(rate.regime_name == regime) & (rate.rate == r)].set_index("config")
+            shares = np.array([_share(here.loc[c, cols].values.astype(float), here.loc[c, "value_i"])
+                               for c in order if c in here.index])
+            ax.axhline(100.0, color=AXIS, linewidth=0.9, zorder=1)
+            for k, row in enumerate(shares):
+                ax.plot(x, row, color=MUTED, linewidth=0.8, alpha=0.55, marker="o",
+                        markersize=2.5, zorder=2, label="each configuration" if k == 0 else None)
+            med = np.median(shares, axis=0)
+            ax.plot(x, med, color=SERIES_1, linewidth=2.0, marker="o", markersize=5,
+                    markeredgecolor=SURFACE, markeredgewidth=1.0, zorder=3,
+                    label="median of the configurations")
+            ax.annotate(f"{med[-1]:.0f}%", (x[-1], med[-1]), xytext=(5, 0),
+                        textcoords="offset points", va="center", fontsize=7, color=INK_2)
+            if i == 0:
+                ax.set_title(f"${r:.0f} an hour", loc="left", color=INK)
+            ax.set_xticks(x)
+            ax.set_xticklabels([lab for c, lab in LADDER_STEPS if c in cols])
+            ax.set_xlim(-0.3, len(cols) - 0.5)
+            ax.grid(axis="x", visible=False)
+            ax.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:.0f}%"))
+        axes[i, 0].set_ylabel(f"{REGIME_LABEL[regime]}\ncost, % of one attempt", fontsize=8)
+    fig.supxlabel("step of the ladder", fontsize=8.5, color=INK_2, y=0.07)
+    handles, labels = axes[0, 0].get_legend_handles_labels()
+    fig.legend(handles, labels, loc="lower center", ncol=2, bbox_to_anchor=(0.5, -0.01))
+    fig.suptitle("The policy ladder: expected cost at each step as a share of one attempt",
+                 x=0.01, ha="left", fontsize=10, color=INK)
+    fig.text(0.01, -0.05, "Below 100%: cheaper than a single attempt followed by the outside "
+             "option. iv: the state rule fitted on the configuration itself; iv-t: fitted on the "
+             "other six. Every step is chosen on training folds and scored on held-out folds. "
+             + IMPUTED, fontsize=7, color=INK_2, ha="left", wrap=True)
+    fig.tight_layout(rect=(0.0, 0.07, 1, 0.97))
+    return _save(fig, out, "fig_ladder")
+
+
 # ----------------------------------------------------------------------------- figure 3
 
 def fig_cascade(c: pd.DataFrame, out: str):
@@ -891,6 +945,7 @@ def main(argv=None):
     d = got["ladder"]
     written = []
     written += fig_cap_margin(d, a.out)
+    written += fig_ladder(d, a.out)
     written += fig_transfer(d, a.out)
     written += fig_transfer(d, a.out, regime="human 0.5", name="figA2_transfer_review_05")
     if "breakeven" in got:
