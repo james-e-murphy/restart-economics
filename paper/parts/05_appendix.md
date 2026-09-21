@@ -144,7 +144,7 @@ The optimum's own policy, replayed by the evaluator on the held-out tasks, repro
 
 # Appendix F. The Plan and the Choices It Left Open
 
-The analysis plan was frozen at the `plan-frozen` tag of the repository after the data audit and before any policy was evaluated, and registered on OSF Registries (osf.io/pdmw9) on 20 September 2026 under the Secondary Data Preregistration template. Everything the audit found that the plan had not anticipated was recorded in the plan before the freeze: the configurations admitted and excluded, the attempt pool, each configuration's own iteration cap, the unequal numbers of usable draws, the price schedules, the state rule's class, and the value of \(\phi\). No departure from the frozen plan has been recorded as a deviation.
+The analysis plan was frozen at the `plan-frozen` tag of the repository after the data audit and registered on OSF Registries (osf.io/pdmw9) on 20 September 2026 under the Secondary Data Preregistration template, both before any policy was evaluated. Everything the audit found that the plan had not anticipated was recorded in the plan before the freeze: the configurations admitted and excluded, the attempt pool, each configuration's own iteration cap, the unequal numbers of usable draws, the price schedules, the state rule's class, and the value of \(\phi\). No departure from the frozen plan has been recorded as a deviation.
 
 Where the plan left a detail open, the choice made is stated here.
 

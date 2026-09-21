@@ -56,7 +56,7 @@ Whitfill, Parker, Cheryl Wu, Joel Becker, and Nate Rush. 2026. "Many SWE-bench-P
 
 # Declaration of generative AI and AI-assisted technologies in the writing process
 
-During the preparation of this work the author used Anthropic's Claude for writing and testing the analysis code, drafting support, source-verification support, critical review, and editorial iteration under the author's direction. After using this tool, the author reviewed and edited all content, independently verified the sources and the claims they support, and takes full responsibility for the content of this publication.
+During the preparation of this work the author used large language model assistants, including Anthropic's Claude and OpenAI's ChatGPT, for writing and testing the analysis code, drafting support, source-verification support, critical review, and editorial iteration under the author's direction. After using these tools, the author reviewed and edited all content, independently verified the sources and the claims they support, and takes full responsibility for the content of this publication.
 
 Comments are invited; this is an explicitly provisional working draft.
 
