@@ -73,7 +73,7 @@ columns are empty and only the point estimates are given. The ladder computes th
 from 100 replicates; `restart.fitted` recomputes them at the primary's 1,000, on the same task
 resamples (the first 100 of which are the ladder's), from one bootstrap that fits every family
 once per replicate, and writes them into this file in place after checking that its point
-estimates equal the ladder's.
+estimates equal the ladder's. The committed file carries the 1,000-replicate intervals.
 
 Every row carries both axes of the sweep. `rate` is dollars an hour and `multiple` is the same
 outside option in multiples of that configuration's `median_attempt_cost`, so that configurations

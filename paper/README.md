@@ -11,7 +11,8 @@ build script that runs regression checks after typesetting.
 
     parts/          the manuscript's source, one file per group of sections; edit these
     assemble.py     joins the parts and sets each {{table ...}} and {{figure ...}} block from the
-                    exhibits, so a table in the paper is the table exhibits/make.py wrote
+                    exhibits, and {{ladder ...}} and {{transfer ...}} from the ladder's own files,
+                    so a table in the paper is the table exhibits/make.py or results/ hold
     Restart_Economics_Manuscript_v0_1_2026_09_21.md
                     the assembled manuscript, written by the build; do not edit by hand
     facts.py        selects, rounds and summarizes results/ into facts.md, the sheet the text is

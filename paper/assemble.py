@@ -24,7 +24,12 @@ import re
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 NAME = "Restart_Economics_Manuscript_v0_1_2026_09_21.md"
-BLOCK = re.compile(r"\{\{(table|figure|ladder)( [A-Za-z0-9_]+)?\n(.*?)\n\}\}", re.S)
+BLOCK = re.compile(r"\{\{(table|figure|ladder|transfer)( [A-Za-z0-9_]+)?\n(.*?)\n\}\}", re.S)
+ORDER = ("gpt-5_4runs", "gpt_5.2_4runs", "claude-sonnet-4_4runs", "claude-sonnet-4.5_4runs",
+         "gemini-3-pro-preview_4runs", "kimi-k2_4runs", "qwen3-coder-480b-a35b-instruct-4runs")
+LABEL = {"gpt-5_4runs": "GPT-5", "gpt_5.2_4runs": "GPT-5.2", "claude-sonnet-4_4runs": "Sonnet 4",
+         "claude-sonnet-4.5_4runs": "Sonnet 4.5", "gemini-3-pro-preview_4runs": "Gemini 3 Pro",
+         "kimi-k2_4runs": "Kimi K2", "qwen3-coder-480b-a35b-instruct-4runs": "Qwen3 Coder\u2020"}
 MINUS = re.compile(r"(?<![\w.])-(?=\d)")
 
 
@@ -123,7 +128,42 @@ def widths(text: str) -> str:
     return "\n".join(lines)
 
 
-def render(text: str, exhibits: str, missing: list) -> str:
+def _band(v, lo, hi) -> str:
+    """An estimate with its interval, the endpoint nearest zero to three places when two would
+    round it to zero."""
+    def end(x):
+        return f"{x:.3f}" if 0 < abs(x) < 0.005 else f"{x:.2f}"
+    return f"{v:.2f} [{end(lo)}, {end(hi)}]"
+
+
+def transfer(path: str) -> str:
+    """Table 5, from results/ladder.csv: the primary transfer with its intervals at the three
+    fitted rates, the within-configuration rule's margin at $100, and how far the transferred rule
+    sits from retrying without a cap."""
+    rows = [r for r in csv.DictReader(open(path))
+            if r["regime_name"] == "automated" and r["axis"] == "rate"
+            and r["transfer_margin_low"] != ""]
+    by = {(r["config"], float(r["rate"])): r for r in rows}
+    configs = [c for c in ORDER if any(k[0] == c for k in by)]
+    head = ("| Configuration | $25 | $100 | $300 | Within, $100 | Transferred minus ii |\n"
+            "|:---|---:|---:|---:|---:|---:|")
+    out = [head]
+    for c in configs:
+        cells = []
+        for rate in (25.0, 100.0, 300.0):
+            r = by[(c, rate)]
+            cells.append(_band(float(r["transfer_margin"]), float(r["transfer_margin_low"]),
+                               float(r["transfer_margin_high"])))
+        r = by[(c, 100.0)]
+        cells.append(f"{float(r['state_margin']):.2f}")
+        cells.append(f"{float(r['value_iv_transfer']) - float(r['value_ii']):.3f}")
+        out.append(f"| {LABEL.get(c, c)} | " + " | ".join(cells) + " |")
+    counts = {r["fitted_replicates"] for r in rows}
+    assert len(counts) == 1, f"mixed replicate counts in the fitted intervals: {counts}"
+    return minus("\n".join(out))
+
+
+def render(text: str, exhibits: str, missing: list, results: str = "") -> str:
     def one(m):
         kind, name, caption = m.group(1), (m.group(2) or "").strip(), m.group(3).strip()
         if kind == "ladder":
@@ -132,6 +172,12 @@ def render(text: str, exhibits: str, missing: list) -> str:
                 missing.append("table1_ladder")
                 return f"> Pending: {caption}"
             return f"::: nowrap\n\nTable: {caption}\n\n{ladder(path)}\n\n:::"
+        if kind == "transfer":
+            path = os.path.join(results, "ladder.csv")
+            if not os.path.exists(path):
+                missing.append("ladder")
+                return f"> Pending: {caption}"
+            return f"Table: {caption}\n\n{transfer(path)}"
         if kind == "table":
             path = os.path.join(exhibits, f"{name}.md")
             if not os.path.exists(path):
@@ -152,12 +198,13 @@ def render(text: str, exhibits: str, missing: list) -> str:
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--exhibits", default=os.path.join(HERE, "build", "figures"))
+    ap.add_argument("--results", default=os.path.join(HERE, os.pardir, "results"))
     ap.add_argument("--out", default=os.path.join(HERE, NAME))
     a = ap.parse_args(argv)
     parts = sorted(glob.glob(os.path.join(HERE, "parts", "*.md")))
     text = "\n\n".join(open(p).read().strip("\n") for p in parts) + "\n"
     missing: list = []
-    text = widths(render(text, a.exhibits, missing))
+    text = widths(render(text, a.exhibits, missing, a.results))
     left = re.findall(r"\{\{\w+", text)
     assert not left, f"unrendered blocks: {left}"
     with open(a.out, "w") as fh:

@@ -13,7 +13,7 @@ cd "$ROOT/paper/build"
 "$PY" "$ROOT/exhibits/make.py" --results "$RESULTS" --out figures --bare > /dev/null
 
 # 2. the manuscript: parts, tables and figures assembled into one markdown file
-"$PY" "$ROOT/paper/assemble.py" --exhibits figures
+"$PY" "$ROOT/paper/assemble.py" --exhibits figures --results "$RESULTS"
 
 # 3. body: strip the internal front matter above the abstract
 "$PY" - <<'PY'

@@ -121,7 +121,7 @@ A cascade draws a task's attempts from several configurations, and is evaluated 
 
 ## 5.3 Cross-fitting and the full-pipeline bootstrap
 
-Every quantity chosen from data (the attempt budget, the cutoff, the schedule, the state rule, the cascade) is chosen on four of five task-grouped folds and scored once on the fifth. The split is fixed before any policy is scored. What a cross-fitted comparison estimates is therefore the value of the policy this procedure picks from about 400 training tasks, not the value of the best policy in the class: a class that contains a slightly better policy than the baseline can still lose out of sample, when the cost of picking from it exceeds what the best policy would save. Every margin below is that deployable value. Cross-fitting removes the optimism of scoring a choice on the tasks that made it but does not carry the variability of the choice into an interval, so intervals come from a bootstrap that resamples tasks and repeats the split, the choice and the scoring inside every replicate. Copies of a task drawn more than once in a replicate are kept in the same fold, so that a replicate never scores a choice on a task that made it. Intervals are 95 percent percentile intervals from 1,000 replicates for the primary result, and from 100 replicates for the fitted steps, whose models and choices are refitted inside each replicate, which is far more expensive; those are computed with an automated verifier at $25, $100 and $300 an hour. No significance test is run. A margin is called distinct from zero only when its 95 percent interval excludes zero; a saving or cost whose interval straddles zero is reported as a point estimate and read as such. With 100 replicates the ends of an interval rest on a few draws each, so an endpoint within a few cents of zero is not a sharp boundary.
+Every quantity chosen from data (the attempt budget, the cutoff, the schedule, the state rule, the cascade) is chosen on four of five task-grouped folds and scored once on the fifth. The split is fixed before any policy is scored. What a cross-fitted comparison estimates is therefore the value of the policy this procedure picks from about 400 training tasks, not the value of the best policy in the class: a class that contains a slightly better policy than the baseline can still lose out of sample, when the cost of picking from it exceeds what the best policy would save. Every margin below is that deployable value. Cross-fitting removes the optimism of scoring a choice on the tasks that made it but does not carry the variability of the choice into an interval, so intervals come from a bootstrap that resamples tasks and repeats the split, the choice and the scoring inside every replicate. Copies of a task drawn more than once in a replicate are kept in the same fold, so that a replicate never scores a choice on a task that made it. Intervals are 95 percent percentile intervals from 1,000 replicates for the primary result, and, for the fitted steps, whose models and choices are refitted inside each replicate at far greater cost, from 1,000 replicates with an automated verifier at $25, $100 and $300 an hour, where the plan reads them; elsewhere the fitted steps are point estimates, and the comparators of Appendix B, the cascade's switching margin and the two-stage transfer have intervals from 100 replicates. No significance test is run. A margin is called distinct from zero only when its 95 percent interval excludes zero; a saving or cost whose interval straddles zero is reported as a point estimate and read as such. Where an interval comes from 100 replicates, its ends rest on a few draws each, and an endpoint within a few cents of zero is not a sharp boundary.
 
 A synthetic population with a known answer checks the interval before it is trusted. At four settings of the outside option and the verifier, the registered interval covers the population value of the policy its procedure chooses in 93 to 99 percent of 120 samples of 500 tasks (Appendix E). The same check shows the distinction above at work: at a large outside option the best cap in the population saves four cents per task, while the cap the procedure picks costs three, because picking it from 500 tasks costs seven cents, more than the best cap saves.
 
@@ -267,21 +267,21 @@ The primary transfer is the state rule's margin over the best schedule, step iii
 
 ![Figure 3](figures/fig3_transfer.pdf)
 
-> **Figure 3. The state rule against the best schedule, automated verifier.** Step iii-b minus the state rule, as a share of what retrying without a cap costs, for the rule fitted on the other six configurations (solid) and on the configuration itself (dashed), and for not capping at all (dotted). Points are 95 percent intervals for the transferred rule at $25, $100 and $300 an hour, from 100 replicates that refit every model. Where the lines coincide the rule is not stopping attempts. † Imputed price.
+> **Figure 3. The state rule against the best schedule, automated verifier.** Step iii-b minus the state rule, as a share of what retrying without a cap costs, for the rule fitted on the other six configurations (solid) and on the configuration itself (dashed), and for not capping at all (dotted). Points are 95 percent intervals for the transferred rule at $25, $100 and $300 an hour, from 1,000 replicates that refit every model. Where the lines coincide the rule is not stopping attempts. † Imputed price.
 
-Table: **Table 5. The primary transfer.** Step iii-b minus the state rule fitted on the other six configurations, automated verifier, dollars per task, with 95 percent intervals from 100 replicates that refit the rule's models and the schedule inside each. The last two columns, at $100 an hour, give the same margin for the rule fitted on the configuration itself, and how far the transferred rule sits from retrying without a cap. † Imputed price.
+Table: **Table 5. The primary transfer.** Step iii-b minus the state rule fitted on the other six configurations, automated verifier, dollars per task, with 95 percent intervals from 1,000 replicates that refit the rule's models and the schedule inside each. The last two columns, at $100 an hour, give the same margin for the rule fitted on the configuration itself, and how far the transferred rule sits from retrying without a cap. † Imputed price.
 
 | Configuration | $25 | $100 | $300 | Within, $100 | Transferred minus ii |
-|-------------|-------------------|-------------------|-------------------|-------|-----------|
-| GPT-5 | 0.09 [−0.005, 0.25] | 0.38 [0.07, 1.61] | 1.13 [0.22, 4.82] | 0.38 | 0.000 |
-| GPT-5.2 | 0.01 [−0.05, 0.11] | −0.01 [−0.05, 0.45] | −0.02 [−0.10, 1.52] | −0.01 | 0.000 |
-| Sonnet 4 | 0.00 [−0.11, 0.07] | 0.11 [−0.003, 0.32] | 0.08 [0.01, 0.73] | 0.11 | 0.000 |
-| Sonnet 4.5 | 0.00 [−0.11, 0.15] | 0.05 [−0.02, 0.66] | 0.15 [−0.02, 2.49] | 0.05 | 0.000 |
-| Gemini 3 Pro | 0.00 [−0.09, 0.08] | 0.12 [−0.04, 0.60] | 0.36 [−0.03, 2.68] | 0.12 | 0.000 |
-| Kimi K2 | 0.03 [−0.11, 0.14] | 0.45 [−0.27, 1.39] | 1.44 [−0.11, 4.32] | 0.45 | 0.000 |
-| Qwen3 Coder† | 0.06 [−0.09, 0.53] | 0.74 [−0.26, 1.74] | 1.74 [−0.23, 4.76] | 0.74 | 0.000 |
+|:-------------|------------------:|-------------------:|-------------------:|-------:|-----------:|
+| GPT-5 | 0.09 [−0.01, 0.33] | 0.38 [0.05, 1.44] | 1.13 [0.18, 4.32] | 0.38 | 0.000 |
+| GPT-5.2 | 0.01 [−0.05, 0.10] | −0.01 [−0.10, 0.47] | −0.02 [−0.06, 1.50] | −0.01 | 0.000 |
+| Sonnet 4 | 0.00 [−0.13, 0.08] | 0.11 [−0.004, 0.33] | 0.08 [0.01, 0.76] | 0.11 | 0.000 |
+| Sonnet 4.5 | 0.00 [−0.07, 0.15] | 0.05 [−0.04, 0.65] | 0.15 [−0.03, 2.54] | 0.05 | 0.000 |
+| Gemini 3 Pro | 0.00 [−0.11, 0.09] | 0.12 [−0.05, 0.51] | 0.36 [−0.04, 1.88] | 0.12 | 0.000 |
+| Kimi K2 | 0.03 [−0.16, 0.21] | 0.45 [−0.18, 1.52] | 1.44 [−0.14, 5.43] | 0.45 | 0.000 |
+| Qwen3 Coder† | 0.06 [−0.08, 0.54] | 0.74 [−0.34, 1.59] | 1.74 [−0.23, 4.78] | 0.74 | 0.000 |
 
-At the three wages with intervals, the transferred rule never loses to the schedule by more than two cents, and its margin is distinct from zero in three cells: GPT-5 at $100 and $300 an hour, and Sonnet 4 at $300, whose lower endpoint is a cent. Those intervals come from 100 replicates, so an endpoint a few cents from zero is not sharp, and the count of cells should be read as two or three rather than exactly three. The median margin is $0.01, $0.12 and $0.36 per task at the three wages. The last column says why. At $100 and $300 the transferred rule costs exactly what retrying without a cap costs, to three decimals, for every configuration: it does not stop attempts. Its margin over the schedule is therefore step ii minus step iii-b, the cost the schedule pays out of sample for having been chosen from data. The rule fitted on the configuration itself behaves the same way with an automated verifier. With the outside option worth tens of dollars and an attempt costing one, the fitted chance of success would have to fall to a few percent before stopping paid, and the models rarely predict that.
+At the three wages with intervals, the transferred rule never loses to the schedule by more than two cents, and its margin is distinct from zero in three cells: GPT-5 at $100 and $300 an hour, and Sonnet 4 at $300, whose lower endpoint is a cent. The same three cells were distinct from zero at 100 replicates, and Sonnet 4 at $100, whose lower endpoint was three tenths of a cent below zero at 100, sits four tenths below at 1,000. The median margin is $0.01, $0.12 and $0.36 per task at the three wages. The last column says why. At $100 and $300 the transferred rule costs exactly what retrying without a cap costs, to three decimals, for every configuration: it does not stop attempts. Its margin over the schedule is therefore step ii minus step iii-b, the cost the schedule pays out of sample for having been chosen from data. The rule fitted on the configuration itself behaves the same way with an automated verifier. With the outside option worth tens of dollars and an attempt costing one, the fitted chance of success would have to fall to a few percent before stopping paid, and the models rarely predict that.
 
 Under review the rule does stop attempts, and there the two fits part (Figure A1). Fitted on the configuration itself, the rule beats the best schedule at $100 an hour for GPT-5.2, by $1.01, and Kimi K2, by $1.20, and loses for the other five, by $0.33 to $2.87. Fitted on the other six configurations, it loses for all seven, by $0.75 to $3.33. What an execution's state says about its chances carries across configurations only as far as saying that it will probably finish, which with an automated verifier is all the rule needs to know. When the decision turns on which attempts to submit for an expensive review, the models fitted elsewhere do not carry what is needed.
 
@@ -318,7 +318,7 @@ Under review at 0.5 the cap still saves across the whole sweep for every configu
 
 Switching keeps its sign: with an automated verifier at $100 an hour it saves between $1.00 and $5.48 per task under every sensitivity, most under the annotation correction and the common horizon. The two-stage bootstrap, which resamples each task's attempts as well as the tasks, gives intervals for the cap's margin of about the same width as the task-level bootstrap, a median ratio of 1.02, and centred in the same place at the median, though individual cells shift. GPT-5's transfer margin stays distinct from zero at $100 and $300 an hour under it; Sonnet 4's at $300 does not.
 
-The medians across configurations quoted throughout summarize seven estimates, each on its own configuration's tasks with four usable draws, 405 to 500 of them; they are not estimates on one common task set. Appendix A adds a check, not registered, that scores every configuration on the 275 tasks common to all seven.
+The medians across configurations quoted throughout summarize seven estimates, each on its own configuration's tasks with four usable draws, 405 to 500 of them; they are not estimates on one common task set. Appendix A adds a check, not registered, that scores every configuration on the 275 tasks common to all seven. On those tasks the medians move a little and the pattern does not: with an automated verifier retrying saves a median of 13 percent at $100 an hour against 14 on each configuration's own tasks, the cap's median margin is −$0.41 against −$0.24, and the first break-even runs from 2.0 to 5.2 median attempts, a median of 2.3.
 
 # 8. Interpretation
 
@@ -374,7 +374,7 @@ On the 275 tasks that all seven configurations cover, with an automated verifier
 
 **The state rule.** The state-aware class is an eight-coefficient rule registered in advance, and its commit-to-termination approximation biases it toward restarting. A rule showing no margin over the best schedule cannot be distinguished from an approximation that lost the margin. The exact dynamic program is computed only for synthetic attempts whose state is the rule's own, where it shows the direction of the bias, not for the logged attempts.
 
-**Inference.** Intervals are percentile intervals from a task-level bootstrap, 1,000 replicates for the primary result and 100 for the fitted steps, whose endpoints are correspondingly coarse. A margin is called distinct from zero when its interval excludes zero, cell by cell, without adjustment for the number of cells, and the cells of a sweep are highly dependent, so a count of cells on one side of zero describes the sweep and tests nothing. What the primary result rests on is not that count but the size of the point estimates, the intervals that straddle zero at every human wage, the nine perturbations that leave the pattern in place, and the share of long-running attempts that go on to succeed. A synthetic population checks that the primary interval covers at close to its nominal rate (Appendix E).
+**Inference.** Intervals are percentile intervals from a task-level bootstrap, 1,000 replicates for the primary result and for the fitted steps at the three wages where the plan reads them, and 100 for the comparators, the cascade's switching margin and the two-stage transfer, whose endpoints are correspondingly coarse. A margin is called distinct from zero when its interval excludes zero, cell by cell, without adjustment for the number of cells, and the cells of a sweep are highly dependent, so a count of cells on one side of zero describes the sweep and tests nothing. What the primary result rests on is not that count but the size of the point estimates, the intervals that straddle zero at every human wage, the nine perturbations that leave the pattern in place, and the share of long-running attempts that go on to succeed. A synthetic population checks that the primary interval covers at close to its nominal rate (Appendix E).
 
 # 10. Conclusion
 
@@ -395,9 +395,7 @@ Each sensitivity changes one input and reruns the ladder, the break-even and the
 
 Table A1 gives the break-even under each, Table A2 the primary margins, and Table A3 the two-stage bootstrap. Section 7.6 summarizes them.
 
-One check that the plan did not register is to run beside the nine, marked as such in the tables: every configuration scored on the 275 tasks with four usable draws in all seven, the cascade's tasks, so that a median across configurations summarizes one task set rather than seven. The primary ladder scores each configuration on its own tasks with four usable draws, 405 to 500 of them.
-
-> Pending the rerun of the sensitivities, which adds this check's rows to Tables A1 and A2.
+One check that the plan did not register runs beside the nine and is marked as such in the tables: every configuration scored on the 275 tasks with four usable draws in all seven, the cascade's tasks, so that a median across configurations summarizes one task set rather than seven. The primary ladder scores each configuration on its own tasks with four usable draws, 405 to 500 of them. On the common tasks the automated break-evens run from 2.0 to 5.2 median attempts, a median of 2.3 against the primary's 2.5, and the cap's margin at $100 an hour is −$0.73 to −$0.00, a median of −$0.41 against −$0.24, with every interval straddling zero. Under review at 0.5 the cap still saves for six configurations at every wage, from $0.50 to $3.98 per task at $100; for GPT-5 it turns to a cost of $0.09 to $0.61 per task from $75 an hour up, with an interval that straddles zero by several dollars either side. The transfer's median margin is $0.18 at $100 against $0.12. The common tasks are the ones every configuration completed four times, which leaves out the tasks on which the three configurations that suffered outages lost draws, so they are not a random subset; the check is that the medians quoted in the text do not depend on which task set they summarize.
 
 Table: **Table A1. The break-even under each sensitivity.** The median and, in brackets, the range across configurations of the first rate at which the cap's margin changes sign, among the configurations whose margin changes sign in the sweep, in dollars an hour and in multiples of the median attempt cost. A crossing is supported when the interval excludes zero on both sides of it. Every crossing is in `results/sensitivity_breakeven.csv`. \* Not registered: a check added after the results were in.
 
@@ -443,6 +441,10 @@ Table: **Table A1. The break-even under each sensitivity.** The median and, in b
 |  | review at 0.1 H | 7 of 7 | 0 | 2.13 [0.80, 4.41] | 2.55 [2.22, 6.99] |
 |  | review at 0.3 H | 7 of 7 | 0 | 3.66 [1.42, 10.59] | 4.53 [3.62, 12.74] |
 |  | review at 0.5 H | 3 of 7 | 0 | 26.27 [17.47, 46.34] | 35.11 [11.60, 49.22] |
+| common tasks* | automated verifier | 7 of 7 | 0 | 4.26 [1.56, 6.84] | 2.31 [1.99, 5.18] |
+|  | review at 0.1 H | 7 of 7 | 0 | 6.15 [1.95, 15.91] | 2.95 [2.49, 12.04] |
+|  | review at 0.3 H | 7 of 7 | 0 | 9.73 [3.98, 107.98] | 5.79 [4.71, 81.71] |
+|  | review at 0.5 H | 1 of 7 | 0 | 70.37 | 106.27 |
 
 Table: **Table A2. The primary margins under each sensitivity.** Medians across configurations, dollars per task; positive is what the richer policy saves. Cap: step ii minus step iii, with an automated verifier (A) and under review at 0.5 of the outside option (R), at $25, $100 and $300 an hour. Transfer: step iii-b minus the state rule fitted on the other configurations, automated verifier. Switching: the best single configuration minus the cascade, automated verifier. \* Not registered: a check added after the results were in.
 
@@ -458,10 +460,11 @@ Table: **Table A2. The primary margins under each sensitivity.** Medians across 
 | re-runs dropped | −0.01 | −0.25 | −0.67 | 1.07 | 1.87 | 4.53 | 0.00 | 0.16 | 0.45 | 1.00 |
 | Qwen lowest price | −0.01 | −0.24 | −0.64 | 1.00 | 1.85 | 4.22 | 0.01 | 0.12 | 0.36 | 1.93 |
 | METR minutes | −0.06 | −0.39 | −1.27 | 0.31 | 0.37 | 0.88 | 0.07 | 0.30 | 0.91 | 5.48 |
+| common tasks* | −0.02 | −0.41 | −1.14 | 1.13 | 1.10 | 3.09 | 0.02 | 0.18 | 0.54 | 2.03 |
 
-The two-stage bootstrap resamples each task's usable draws as well as the tasks, on the same task resamples as the primary interval, so the two differ only by the second stage. For a mean over tasks the second stage would count within-task variation twice and widen the interval. Policy value is not such a mean: a retry draws a task's attempts without replacement, so a replicate that holds one draw twice prices a retry that can meet the same attempt again. The two bootstraps therefore need not be centred alike, and Table A3 gives each one's mean beside its interval. For the cap's margin the two intervals have about the same width, a median ratio of 1.02 over the 532 cells of the sweep, and the same centre at the median, though in individual cells the centres differ by as much as $2. For the transfer the two-stage intervals are narrower in 19 of the 21 cells; GPT-5's margin stays distinct from zero at $100 and $300 an hour and Sonnet 4's at $300 does not.
+The two-stage bootstrap resamples each task's usable draws as well as the tasks, on the same task resamples as the primary interval, so the two differ only by the second stage. For a mean over tasks the second stage would count within-task variation twice and widen the interval. Policy value is not such a mean: a retry draws a task's attempts without replacement, so a replicate that holds one draw twice prices a retry that can meet the same attempt again. The two bootstraps therefore need not be centred alike, and Table A3 gives each one's mean beside its interval. For the cap's margin the two intervals have about the same width, a median ratio of 1.02 over the 532 cells of the sweep, and the same centre at the median, though in individual cells the centres differ by as much as $2. For the transfer the two-stage intervals, from 100 replicates, are narrower than the task-level ones from 1,000 in 20 of the 21 cells; GPT-5's margin stays distinct from zero at $100 and $300 an hour and Sonnet 4's at $300 does not.
 
-Table: **Table A3. The two-stage bootstrap.** For the cap's margin in both regimes and the primary transfer at the three wages with fitted intervals: the point estimate, the task-level interval and the two-stage interval, each with the mean of its replicates. The transfer's task-level interval is the one in Table 5. † Imputed price.
+Table: **Table A3. The two-stage bootstrap.** For the cap's margin in both regimes and the primary transfer at the three wages with fitted intervals: the point estimate, the task-level interval and the two-stage interval, each with the mean of its replicates. The transfer's task-level interval is the one in Table 5, from 1,000 replicates; its two-stage interval is from 100. † Imputed price.
 
 | margin | configuration | $/h | estimate | one-stage [95%] | one-stage mean | two-stage [95%] | two-stage mean |
 |----------------------------|-------------|----|--------|---------------|---------|--------------|---------|
@@ -507,27 +510,27 @@ Table: **Table A3. The two-stage bootstrap.** For the cap's margin in both regim
 |  | Qwen3 Coder† | 25 | 1.75 | [0.66, 2.70] | 1.66 | [0.63, 2.77] | 1.65 |
 |  |  | 100 | 3.56 | [−0.36, 6.03] | 3.05 | [−0.75, 6.21] | 3.00 |
 |  |  | 300 | 10.15 | [−2.16, 16.88] | 7.88 | [−3.38, 17.72] | 7.76 |
-| transfer, automated verifier | GPT-5 | 25 | 0.09 | [−0.00, 0.25] |  | [−0.00, 0.21] | 0.06 |
-|  |  | 100 | 0.38 | [0.07, 1.61] |  | [0.01, 0.91] | 0.30 |
-|  |  | 300 | 1.13 | [0.22, 4.82] |  | [0.04, 2.72] | 0.90 |
-|  | GPT-5.2 | 25 | 0.01 | [−0.05, 0.11] |  | [−0.02, 0.07] | 0.02 |
-|  |  | 100 | −0.01 | [−0.05, 0.45] |  | [−0.05, 0.37] | 0.10 |
-|  |  | 300 | −0.02 | [−0.10, 1.52] |  | [−0.05, 1.30] | 0.35 |
-|  | Sonnet 4 | 25 | 0.00 | [−0.11, 0.07] |  | [−0.01, 0.08] | 0.02 |
-|  |  | 100 | 0.11 | [−0.00, 0.32] |  | [−0.02, 0.26] | 0.09 |
-|  |  | 300 | 0.08 | [0.01, 0.73] |  | [−0.00, 0.58] | 0.20 |
-|  | Sonnet 4.5 | 25 | 0.00 | [−0.11, 0.15] |  | [−0.00, 0.06] | 0.01 |
-|  |  | 100 | 0.05 | [−0.02, 0.66] |  | [−0.02, 0.58] | 0.09 |
-|  |  | 300 | 0.15 | [−0.02, 2.49] |  | [−0.02, 1.27] | 0.32 |
-|  | Gemini 3 Pro | 25 | 0.00 | [−0.09, 0.08] |  | [−0.02, 0.10] | 0.02 |
-|  |  | 100 | 0.12 | [−0.04, 0.60] |  | [−0.04, 0.49] | 0.12 |
-|  |  | 300 | 0.36 | [−0.03, 2.68] |  | [−0.04, 1.47] | 0.41 |
-|  | Kimi K2 | 25 | 0.03 | [−0.11, 0.14] |  | [−0.18, 0.25] | 0.03 |
-|  |  | 100 | 0.45 | [−0.27, 1.39] |  | [−0.24, 0.99] | 0.29 |
-|  |  | 300 | 1.44 | [−0.11, 4.32] |  | [−0.13, 2.96] | 0.97 |
-|  | Qwen3 Coder† | 25 | 0.06 | [−0.09, 0.53] |  | [−0.08, 0.46] | 0.08 |
-|  |  | 100 | 0.74 | [−0.26, 1.74] |  | [−0.18, 1.65] | 0.41 |
-|  |  | 300 | 1.74 | [−0.23, 4.76] |  | [−0.15, 4.85] | 1.11 |
+| transfer, automated verifier | GPT-5 | 25 | 0.09 | [−0.01, 0.33] |  | [−0.00, 0.21] | 0.06 |
+|  |  | 100 | 0.38 | [0.05, 1.44] |  | [0.01, 0.91] | 0.30 |
+|  |  | 300 | 1.13 | [0.18, 4.32] |  | [0.04, 2.72] | 0.90 |
+|  | GPT-5.2 | 25 | 0.01 | [−0.05, 0.10] |  | [−0.02, 0.07] | 0.02 |
+|  |  | 100 | −0.01 | [−0.10, 0.47] |  | [−0.05, 0.37] | 0.10 |
+|  |  | 300 | −0.02 | [−0.06, 1.50] |  | [−0.05, 1.30] | 0.35 |
+|  | Sonnet 4 | 25 | 0.00 | [−0.13, 0.08] |  | [−0.01, 0.08] | 0.02 |
+|  |  | 100 | 0.11 | [−0.00, 0.33] |  | [−0.02, 0.26] | 0.09 |
+|  |  | 300 | 0.08 | [0.01, 0.76] |  | [−0.00, 0.58] | 0.20 |
+|  | Sonnet 4.5 | 25 | 0.00 | [−0.07, 0.15] |  | [−0.00, 0.06] | 0.01 |
+|  |  | 100 | 0.05 | [−0.04, 0.65] |  | [−0.02, 0.58] | 0.09 |
+|  |  | 300 | 0.15 | [−0.03, 2.54] |  | [−0.02, 1.27] | 0.32 |
+|  | Gemini 3 Pro | 25 | 0.00 | [−0.11, 0.09] |  | [−0.02, 0.10] | 0.02 |
+|  |  | 100 | 0.12 | [−0.05, 0.51] |  | [−0.04, 0.49] | 0.12 |
+|  |  | 300 | 0.36 | [−0.04, 1.88] |  | [−0.04, 1.47] | 0.41 |
+|  | Kimi K2 | 25 | 0.03 | [−0.16, 0.21] |  | [−0.18, 0.25] | 0.03 |
+|  |  | 100 | 0.45 | [−0.18, 1.52] |  | [−0.24, 0.99] | 0.29 |
+|  |  | 300 | 1.44 | [−0.14, 5.43] |  | [−0.13, 2.96] | 0.97 |
+|  | Qwen3 Coder† | 25 | 0.06 | [−0.08, 0.54] |  | [−0.08, 0.46] | 0.08 |
+|  |  | 100 | 0.74 | [−0.34, 1.59] |  | [−0.18, 1.65] | 0.41 |
+|  |  | 300 | 1.74 | [−0.23, 4.78] |  | [−0.15, 4.85] | 1.11 |
 
 # Appendix B. Comparators and the Sample Oracle
 
@@ -750,7 +753,7 @@ Where the plan left a detail open, the choice made is stated here.
 - **Break-evens** are located by a scan in the logarithm of the rate refined by bisection, and every crossing is reported, as the plan requires.
 - **The tail composition** marks the annotated outside option on the decision grid by the share of running attempts whose spend has already passed it at $25 an hour, since the outside option differs by task.
 - **The first figure.** The plan asks that the abstract and the first figure be built from the primary result and the primary transfer. Figure 1 draws the whole ladder from the registered values of Table 3, each step as a share of step i, and the primary result and the primary transfer are two of its steps; Figures 2 and 3 then give each its own figure. It adds a display, not a quantity.
-- **Replicates for the fitted steps.** The plan allows fewer than 1,000 replicates where refitting inside every replicate is too expensive, and asks that the count be reported. The fitted steps' intervals, at $25, $100 and $300 an hour with an automated verifier, come from 100 replicates, each refitting every model and choice; elsewhere those steps are point estimates. The code can recompute the intervals at 1,000 on the same task resamples.
+- **Replicates for the fitted steps.** The plan allows fewer than 1,000 replicates where refitting inside every replicate is too expensive, and asks that the count be reported. The fitted steps' intervals at $25, $100 and $300 an hour with an automated verifier, where the plan reads the primary transfer, come from 1,000 replicates, each refitting every model and choice, computed first at 100 and then extended to 1,000 on the same task resamples, which changed no conclusion; the comparators' intervals (Appendix B), the cascade's switching margin and the two-stage transfer are from 100, and elsewhere the fitted steps are point estimates.
 - **The common-tasks check** in Appendix A was added after the registered results were in, and is marked as unregistered where it appears.
 
 Several exhibits were added after the registered results were in, and each is marked as exploratory where it appears: escalating every task without running the agent as a reference line (Tables 3 and 6, Figures 2 and 4); the outside option at which retrying first beats escalating (Figure 2 and Section 8.2); and the break-even in full attempts (Figure 5). The argument that the break-even in multiples does not depend on the level of token prices (Section 8.1) is arithmetic on the estimand rather than a result.
