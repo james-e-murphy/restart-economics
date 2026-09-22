@@ -1,6 +1,6 @@
 # Restart Economics for AI Agents
 
-Cutoffs, retries, and the cost of a resolved task. Working paper and companion code.
+Cutoffs, retries, and cost per resolved task. Working paper and companion code.
 
 This repository is the paper's reproducibility record. It holds the frozen analysis plan, the data
 audit record, the code that rebuilds the derived tables, the policy evaluator, the results it

@@ -1,5 +1,5 @@
 # Restart Economics for AI Agents
-## Cutoffs, Retries, and the Cost of a Resolved Task
+## Cutoffs, Retries, and Cost per Resolved Task
 
 **Working paper, version 0.1**
 **September 21, 2026**
