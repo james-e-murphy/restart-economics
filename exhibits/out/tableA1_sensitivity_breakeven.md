@@ -40,5 +40,9 @@
 | METR minutes | review at 0.1 H | 7 of 7 | 0 | 2.13 [0.80, 4.41] | 2.55 [2.22, 6.99] |
 | METR minutes | review at 0.3 H | 7 of 7 | 0 | 3.66 [1.42, 10.59] | 4.53 [3.62, 12.74] |
 | METR minutes | review at 0.5 H | 3 of 7 | 0 | 26.27 [17.47, 46.34] | 35.11 [11.60, 49.22] |
+| common tasks* | automated verifier | 7 of 7 | 0 | 4.26 [1.56, 6.84] | 2.31 [1.99, 5.18] |
+| common tasks* | review at 0.1 H | 7 of 7 | 0 | 6.15 [1.95, 15.91] | 2.95 [2.49, 12.04] |
+| common tasks* | review at 0.3 H | 7 of 7 | 0 | 9.73 [3.98, 107.98] | 5.79 [4.71, 81.71] |
+| common tasks* | review at 0.5 H | 1 of 7 | 0 | 70.37 | 106.27 |
 
-The break-even of the cap's marginal value under each registered sensitivity: median [range] of the first crossing across the configurations whose margin changes sign in the sweep. Every crossing is in results/breakeven.csv and results/sensitivity_breakeven.csv. † Qwen3 Coder's dollar figures rest on an imputed price (PLAN.md Section 10).
+The break-even of the cap's marginal value under each registered sensitivity: median [range] of the first crossing across the configurations whose margin changes sign in the sweep. A crossing is supported when the interval excludes zero on both sides of it. Every crossing is in results/breakeven.csv and results/sensitivity_breakeven.csv. * Not registered: a check added after the results were in. † Qwen3 Coder's dollar figures rest on an imputed price (PLAN.md Section 10).

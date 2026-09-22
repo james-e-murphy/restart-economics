@@ -52,6 +52,8 @@ check("every figure linked exists", all(os.path.exists(f) for f in
                                         re.findall(r"\]\((figures/[^)]+)\)", body)))
 check("no unrendered blocks", "{{" not in body)
 check("stands alone", "Beyond Average Cost" not in body)
+check("'resolved' is kept for tasks", not re.search(
+    r"\bresolved (as a (cost|saving)|for (one|two|three|four|five|six|all)|in \w+ cells|only|at \$)", body))
 pending = len(re.findall(r"^> Pending", body, re.M))
 print(f"  note  {pending} exhibit(s) pending their results files")
 sys.exit(1 if bad else 0)

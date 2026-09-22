@@ -69,6 +69,15 @@ def sections(results: str):
                          "saving %": f"{100 * x.retry_value / x.value_i:.1f}",
                          "K chosen": mk._choice(x.choice_ii).replace("attempts, none", "")})
     out.append(("Retry, automated verifier", _md(pd.DataFrame(rows)), ""))
+    rows = []
+    for r in RATES:
+        x = rate[(rate.regime_name == "automated") & (rate.rate == r)]
+        rows.append({"$/h": int(r), "in-sample cap margin, $": _range(x.cap_margin_in_sample, 3),
+                     "as % of step ii": _range(100 * x.cap_margin_in_sample / x.value_ii, 2)})
+    out.append(("The best constant cap chosen with hindsight on all tasks, automated",
+                _md(pd.DataFrame(rows)),
+                "cap_margin_in_sample: step ii minus step iii, each chosen on all the scored tasks "
+                "and scored on the same tasks; the most a cap could save here."))
     steps = [c for c in ("value_i", "value_ii", "value_iii", "value_iiib", "value_iv",
                          "value_iv_transfer") if c in rate]
     rows = []
@@ -78,7 +87,7 @@ def sections(results: str):
             med = (x[steps].div(x.value_i, axis=0) * 100).median()
             rows.append({"regime": regime, "$/h": int(r),
                          **{c.replace("value_", ""): round(float(med[c]), 1) for c in steps}})
-    out.append(("The ladder in Figure 2: median across configurations, % of step i",
+    out.append(("The ladder in Figure 1: median across configurations, % of step i",
                 _md(pd.DataFrame(rows)), ""))
     rv = rate[(rate.regime_name != "automated")]
     retry_any = rv.groupby("regime_name").retry_value.apply(lambda s: int((s > 1e-9).sum()))
@@ -99,9 +108,9 @@ def sections(results: str):
                          "x median attempt": "" if fr.crossing == 0 else round(fr.multiple, 2),
                          "crossings": int(fr.crossings),
                          "supported": int((here.supported.astype(str) == "True").sum()),
-                         "saving resolved up to $/h": round(res.rate.max(), 2) if len(res) else "",
-                         "saving resolved up to x": round(res.multiple.max(), 2) if len(res) else "",
-                         "rows resolved as a cost": len(cost),
+                         "saving distinct from zero up to $/h": round(res.rate.max(), 2) if len(res) else "",
+                         "saving distinct from zero up to x": round(res.multiple.max(), 2) if len(res) else "",
+                         "rows with a cost distinct from zero": len(cost),
                          "retry beats escalating above x*": round(mk.agent_pays_above(d, k, regime), 2)})
     t = pd.DataFrame(rows)
     out.append(("The cap given retry: break-evens and resolution", _md(t),
@@ -199,7 +208,7 @@ def sections(results: str):
         out.append(("Break-evens under each sensitivity", _md(pd.DataFrame(rows)), ""))
         allrows = pd.concat([d.assign(variant="primary"), sl])
         cost = allrows[allrows.cap_margin_high < 0]
-        out.append(("Cells of any sweep where the cap is resolved as a cost", str(len(cost)), ""))
+        out.append(("Cells of any sweep where the interval puts the cap wholly on the cost side", str(len(cost)), ""))
         rows = []
         for v in dict.fromkeys(allrows.variant):
             x = allrows[(allrows.variant == v) & (allrows.axis == "rate") & (allrows.rate == 100.0)]
@@ -262,7 +271,7 @@ def appendix_sections(results: str):
                           "first_look_margin", "state_margin"):
                     row[m] = _range(x[m], 3)
                     if f"{m}_low" in x and x[f"{m}_low"].notna().any():
-                        row[m] += f"; resolved {_resolved(x[m + '_low'], x[m + '_high'])} of {len(x)}"
+                        row[m] += f"; distinct from zero {_resolved(x[m + '_low'], x[m + '_high'])} of {len(x)}"
                 rows.append(row)
         out.append(("Comparators", _md(pd.DataFrame(rows)), ""))
         x = cmp_[(cmp_.axis == "rate") & (cmp_.regime_name == "human 0.5") & (cmp_.rate == 100.0)]
@@ -285,7 +294,7 @@ def appendix_sections(results: str):
                 rows.append({"regime": regime, "bucket": bucket,
                              "tasks": _range(x.tasks, 0),
                              "cap margin": _range(x.cap_margin, 3),
-                             "resolved": (f"{_resolved(x.cap_margin_low, x.cap_margin_high)} of "
+                             "distinct from zero": (f"{_resolved(x.cap_margin_low, x.cap_margin_high)} of "
                                           f"{int(x.cap_margin_low.notna().sum())}"),
                              "value ii": _range(x.value_ii, 2), "value iii": _range(x.value_iii, 2)})
         out.append(("Difficulty at $100", _md(pd.DataFrame(rows)), ""))

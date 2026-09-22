@@ -148,8 +148,8 @@ def test_every_exhibit_is_written_from_the_results_files(results, tmp_path):
     make = _module()
     out = tmp_path / "out"
     make.main(["--results", str(results), "--out", str(out)])
-    for stem in ("fig1_cap_margin", "fig_ladder", "fig2_transfer", "figA1_transfer_review_05", "fig3_cascade",
-                 "fig4_break_even_in_attempts", "figA2_outcome_correlation",
+    for stem in ("fig1_ladder", "fig2_cap_margin", "fig3_transfer", "figA1_transfer_review_05",
+                 "fig4_cascade", "fig5_break_even_in_attempts", "figA2_outcome_correlation",
                  "figA3_tail_composition"):
         for ext in ("pdf", "png"):
             assert (out / f"{stem}.{ext}").stat().st_size > 0, stem
@@ -174,7 +174,7 @@ def test_every_exhibit_is_written_from_the_results_files(results, tmp_path):
     assert a3["two-stage [95%]"].str.startswith("[").all()
     bare = tmp_path / "bare"
     make.main(["--results", str(results), "--out", str(bare), "--bare"])
-    assert (bare / "fig1_cap_margin.pdf").stat().st_size > 0
+    assert (bare / "fig2_cap_margin.pdf").stat().st_size > 0
     make.BARE = False
     a6 = pd.read_csv(out / "tableA6_difficulty.csv", dtype=str)
     assert list(a6.columns) == ["regime", "configuration", "under 15 min", "15 min to 1 h",

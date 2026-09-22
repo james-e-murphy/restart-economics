@@ -42,7 +42,17 @@ Written by `paper/facts.py` from `results/`. Do not edit by hand.
 | Qwen3 Coder† | 100 | 27.64 | 23.55 | 4.09 | 14.8 | 4  |
 | Qwen3 Coder† | 300 | 79.88 | 64.1 | 15.78 | 19.8 | 4  |
 
-## The ladder in Figure 2: median across configurations, % of step i
+## The best constant cap chosen with hindsight on all tasks, automated
+
+| $/h | in-sample cap margin, $ | as % of step ii |
+|---|---|---|
+| 25 | 0.000 to 0.016 (median 0.000) | 0.00 to 0.20 (median 0.00) |
+| 100 | 0.000 to 0.030 (median 0.006) | 0.00 to 0.12 (median 0.02) |
+| 300 | 0.000 to 0.030 (median 0.006) | 0.00 to 0.04 (median 0.01) |
+
+cap_margin_in_sample: step ii minus step iii, each chosen on all the scored tasks and scored on the same tasks; the most a cap could save here.
+
+## The ladder in Figure 1: median across configurations, % of step i
 
 | regime | $/h | i | ii | iii | iiib | iv | iv_transfer |
 |---|---|---|---|---|---|---|---|
@@ -64,7 +74,7 @@ Rows are configurations x rates on the dollar axis.
 
 ## The cap given retry: break-evens and resolution
 
-| regime | configuration | first crossing $/h | x median attempt | crossings | supported | saving resolved up to $/h | saving resolved up to x | rows resolved as a cost | retry beats escalating above x* |
+| regime | configuration | first crossing $/h | x median attempt | crossings | supported | saving distinct from zero up to $/h | saving distinct from zero up to x | rows with a cost distinct from zero | retry beats escalating above x* |
 |---|---|---|---|---|---|---|---|---|---|
 | automated | GPT-5 | 1.74 | 2.54 | 3 | 0 | 1.37 | 2.0 | 0 | 2.53 |
 | automated | GPT-5.2 | 3.36 | 2.89 | 4 | 0 | 1.16 | 1.0 | 0 | 2.38 |
@@ -169,27 +179,27 @@ value_iii / value_escalate 0.963 to 1.035 (median 1.007); value_ii / value_escal
 
 | configuration | $/h | transfer | low | high | state | state low | state high | schedule | sched low | sched high |
 |---|---|---|---|---|---|---|---|---|---|---|
-| GPT-5 | 25 | 0.094 | -0.005 | 0.248 | 0.094 | -0.005 | 0.248 | 0.009 | -0.118 | 0.181 |
-| GPT-5 | 100 | 0.378 | 0.071 | 1.609 | 0.378 | 0.071 | 1.609 | 0.028 | -0.905 | 0.598 |
-| GPT-5 | 300 | 1.134 | 0.222 | 4.816 | 1.134 | 0.222 | 4.816 | 0.079 | -2.715 | 1.767 |
-| GPT-5.2 | 25 | 0.011 | -0.052 | 0.108 | 0.006 | -0.053 | 0.08 | 0.0 | -0.074 | 0.067 |
-| GPT-5.2 | 100 | -0.011 | -0.054 | 0.45 | -0.011 | -0.054 | 0.45 | 0.0 | -0.273 | 0.074 |
-| GPT-5.2 | 300 | -0.019 | -0.097 | 1.519 | -0.019 | -0.097 | 1.519 | 0.0 | -0.248 | 0.089 |
-| Sonnet 4 | 25 | 0.003 | -0.11 | 0.075 | 0.003 | -0.109 | 0.074 | 0.001 | -0.062 | 0.113 |
-| Sonnet 4 | 100 | 0.106 | -0.003 | 0.316 | 0.106 | -0.003 | 0.316 | -0.098 | -0.235 | 0.169 |
-| Sonnet 4 | 300 | 0.083 | 0.015 | 0.734 | 0.083 | 0.015 | 0.734 | -0.075 | -0.5 | 0.285 |
-| Sonnet 4.5 | 25 | 0.001 | -0.114 | 0.147 | 0.002 | -0.114 | 0.147 | -0.001 | -0.135 | 0.115 |
-| Sonnet 4.5 | 100 | 0.046 | -0.025 | 0.655 | 0.046 | -0.025 | 0.655 | 0.189 | -0.591 | 0.302 |
-| Sonnet 4.5 | 300 | 0.146 | -0.018 | 2.488 | 0.146 | -0.018 | 2.488 | 0.489 | -2.011 | 0.978 |
-| Gemini 3 Pro | 25 | 0.001 | -0.095 | 0.081 | 0.004 | -0.092 | 0.083 | 0.0 | -0.029 | 0.128 |
-| Gemini 3 Pro | 100 | 0.118 | -0.036 | 0.597 | 0.118 | -0.036 | 0.597 | -0.004 | -0.193 | 0.202 |
-| Gemini 3 Pro | 300 | 0.362 | -0.033 | 2.678 | 0.362 | -0.033 | 2.678 | -0.004 | -0.785 | 0.903 |
-| Kimi K2 | 25 | 0.026 | -0.11 | 0.136 | 0.043 | -0.115 | 0.136 | 0.0 | -0.034 | 0.142 |
-| Kimi K2 | 100 | 0.453 | -0.271 | 1.394 | 0.453 | -0.271 | 1.394 | -0.017 | -0.201 | 0.147 |
-| Kimi K2 | 300 | 1.438 | -0.105 | 4.318 | 1.438 | -0.105 | 4.318 | 0.0 | -0.358 | 0.468 |
-| Qwen3 Coder† | 25 | 0.056 | -0.092 | 0.534 | 0.055 | -0.07 | 0.544 | 0.0 | -0.251 | 0.165 |
-| Qwen3 Coder† | 100 | 0.744 | -0.255 | 1.742 | 0.744 | -0.255 | 1.742 | 0.0 | -0.276 | 0.315 |
-| Qwen3 Coder† | 300 | 1.743 | -0.23 | 4.757 | 1.743 | -0.23 | 4.757 | 0.601 | -0.677 | 0.808 |
+| GPT-5 | 25 | 0.094 | -0.008 | 0.326 | 0.094 | -0.008 | 0.326 | 0.009 | -0.123 | 0.134 |
+| GPT-5 | 100 | 0.378 | 0.054 | 1.442 | 0.378 | 0.054 | 1.442 | 0.028 | -0.408 | 0.455 |
+| GPT-5 | 300 | 1.134 | 0.179 | 4.325 | 1.134 | 0.179 | 4.325 | 0.079 | -1.22 | 1.357 |
+| GPT-5.2 | 25 | 0.011 | -0.046 | 0.1 | 0.006 | -0.05 | 0.092 | 0.0 | -0.072 | 0.055 |
+| GPT-5.2 | 100 | -0.011 | -0.103 | 0.469 | -0.011 | -0.103 | 0.469 | 0.0 | -0.243 | 0.111 |
+| GPT-5.2 | 300 | -0.019 | -0.059 | 1.502 | -0.019 | -0.059 | 1.502 | 0.0 | -0.34 | 0.165 |
+| Sonnet 4 | 25 | 0.003 | -0.132 | 0.077 | 0.003 | -0.131 | 0.074 | 0.001 | -0.06 | 0.153 |
+| Sonnet 4 | 100 | 0.106 | -0.004 | 0.329 | 0.106 | -0.004 | 0.329 | -0.098 | -0.283 | 0.124 |
+| Sonnet 4 | 300 | 0.083 | 0.01 | 0.759 | 0.083 | 0.01 | 0.759 | -0.075 | -0.621 | 0.198 |
+| Sonnet 4.5 | 25 | 0.001 | -0.068 | 0.154 | 0.002 | -0.072 | 0.15 | -0.001 | -0.156 | 0.074 |
+| Sonnet 4.5 | 100 | 0.046 | -0.038 | 0.653 | 0.046 | -0.038 | 0.653 | 0.189 | -0.6 | 0.304 |
+| Sonnet 4.5 | 300 | 0.146 | -0.035 | 2.536 | 0.146 | -0.035 | 2.536 | 0.489 | -2.214 | 0.972 |
+| Gemini 3 Pro | 25 | 0.001 | -0.106 | 0.087 | 0.004 | -0.103 | 0.091 | 0.0 | -0.035 | 0.14 |
+| Gemini 3 Pro | 100 | 0.118 | -0.049 | 0.515 | 0.118 | -0.049 | 0.515 | -0.004 | -0.282 | 0.1 |
+| Gemini 3 Pro | 300 | 0.362 | -0.04 | 1.879 | 0.362 | -0.04 | 1.879 | -0.004 | -0.851 | 0.284 |
+| Kimi K2 | 25 | 0.026 | -0.156 | 0.209 | 0.043 | -0.117 | 0.224 | 0.0 | -0.055 | 0.141 |
+| Kimi K2 | 100 | 0.453 | -0.182 | 1.52 | 0.453 | -0.182 | 1.52 | -0.017 | -0.171 | 0.207 |
+| Kimi K2 | 300 | 1.438 | -0.138 | 5.429 | 1.438 | -0.138 | 5.429 | 0.0 | -0.389 | 0.509 |
+| Qwen3 Coder† | 25 | 0.056 | -0.081 | 0.539 | 0.055 | -0.073 | 0.547 | 0.0 | -0.21 | 0.208 |
+| Qwen3 Coder† | 100 | 0.744 | -0.344 | 1.592 | 0.744 | -0.344 | 1.592 | 0.0 | -0.455 | 0.404 |
+| Qwen3 Coder† | 300 | 1.743 | -0.231 | 4.775 | 1.743 | -0.231 | 4.775 | 0.601 | -1.189 | 1.281 |
 
 ## Switching configurations
 
@@ -321,8 +331,12 @@ off-diagonal 0.62 to 0.90 (median 0.81)
 | METR minutes | human 0.1 | 7 of 7 | 2.22 to 6.99 (median 2.55) | 0 |
 | METR minutes | human 0.3 | 7 of 7 | 3.62 to 12.74 (median 4.53) | 0 |
 | METR minutes | human 0.5 | 3 of 7 | 11.60 to 49.22 (median 35.11) | 0 |
+| common tasks | automated | 7 of 7 | 1.99 to 5.18 (median 2.31) | 0 |
+| common tasks | human 0.1 | 7 of 7 | 2.49 to 12.04 (median 2.95) | 0 |
+| common tasks | human 0.3 | 7 of 7 | 4.71 to 81.71 (median 5.79) | 0 |
+| common tasks | human 0.5 | 1 of 7 | 106.27 to 106.27 (median 106.27) | 0 |
 
-## Cells of any sweep where the cap is resolved as a cost
+## Cells of any sweep where the interval puts the cap wholly on the cost side
 
 0
 
@@ -340,6 +354,7 @@ off-diagonal 0.62 to 0.90 (median 0.81)
 | re-runs dropped | -0.834 to 0.027 (median -0.248) | 0.154 to 4.092 (median 1.873) | -0.026 to 0.834 (median 0.159) |
 | Qwen lowest price | -0.789 to 0.011 (median -0.236) | 0.747 to 3.354 (median 1.845) | -0.011 to 0.589 (median 0.118) |
 | METR minutes | -0.600 to 0.019 (median -0.393) | -1.095 to 4.956 (median 0.371) | -0.019 to 0.600 (median 0.302) |
+| common tasks | -0.732 to -0.001 (median -0.413) | -0.264 to 3.979 (median 1.102) | 0.089 to 0.718 (median 0.178) |
 
 ## Common 100-call horizon: what retrying costs at $100, automated
 
@@ -369,6 +384,7 @@ added is the common horizon minus the primary, own tasks.
 | re-runs dropped | 146 | 20.932 | 19.936 | 0.996 |
 | Qwen lowest price | 275 | 22.035 | 20.108 | 1.927 |
 | METR minutes | 275 | 36.193 | 30.718 | 5.475 |
+| common tasks | 275 | 21.97 | 19.944 | 2.025 |
 
 ## Two-stage bootstrap
 
@@ -404,9 +420,9 @@ cap cells 532; width ratio two/one 0.45 to 1.73 (median 1.02); cells where two-s
 
 | regime | $/h | cap in calls | dollar_cap_margin | rule_vs_threshold | schedule_vs_universal | first_look_margin | state_margin |
 |---|---|---|---|---|---|---|---|
-| automated | 25 | -0.103 to -0.000 (median -0.009) | -0.062 to 0.010 (median -0.017); resolved 0 of 7 | 0.019 to 0.372 (median 0.081); resolved 1 of 7 | -0.018 to 0.001 (median 0.000); resolved 0 of 7 | 0.001 to 0.094 (median 0.009); resolved 0 of 7 | 0.002 to 0.094 (median 0.006) |
-| automated | 100 | -0.744 to 0.011 (median -0.236) | -0.580 to 0.182 (median -0.121); resolved 0 of 7 | 0.246 to 1.166 (median 0.479); resolved 1 of 7 | -0.386 to 0.033 (median -0.075); resolved 0 of 7 | -0.011 to 0.744 (median 0.118); resolved 1 of 7 | -0.011 to 0.744 (median 0.118) |
-| automated | 300 | -2.344 to 0.019 (median -0.636) | -1.825 to 0.038 (median -0.365); resolved 0 of 7 | -0.124 to 3.913 (median 2.049); resolved 2 of 7 | -0.585 to 0.033 (median -0.093); resolved 0 of 7 | -0.019 to 1.743 (median 0.362); resolved 2 of 7 | -0.019 to 1.743 (median 0.362) |
+| automated | 25 | -0.103 to -0.000 (median -0.009) | -0.062 to 0.010 (median -0.017); distinct from zero 0 of 7 | 0.019 to 0.372 (median 0.081); distinct from zero 1 of 7 | -0.018 to 0.001 (median 0.000); distinct from zero 0 of 7 | 0.001 to 0.094 (median 0.009); distinct from zero 0 of 7 | 0.002 to 0.094 (median 0.006) |
+| automated | 100 | -0.744 to 0.011 (median -0.236) | -0.580 to 0.182 (median -0.121); distinct from zero 0 of 7 | 0.246 to 1.166 (median 0.479); distinct from zero 1 of 7 | -0.386 to 0.033 (median -0.075); distinct from zero 0 of 7 | -0.011 to 0.744 (median 0.118); distinct from zero 1 of 7 | -0.011 to 0.744 (median 0.118) |
+| automated | 300 | -2.344 to 0.019 (median -0.636) | -1.825 to 0.038 (median -0.365); distinct from zero 0 of 7 | -0.124 to 3.913 (median 2.049); distinct from zero 2 of 7 | -0.585 to 0.033 (median -0.093); distinct from zero 0 of 7 | -0.019 to 1.743 (median 0.362); distinct from zero 2 of 7 | -0.019 to 1.743 (median 0.362) |
 | human 0.5 | 25 | 0.404 to 1.940 (median 1.311) | 0.589 to 1.937 (median 1.309) | -0.818 to 0.270 (median -0.269) | 0.000 to 0.003 (median 0.000) | -1.755 to -0.360 (median -1.194) | -0.824 to 0.267 (median -0.283) |
 | human 0.5 | 100 | 0.747 to 3.563 (median 1.845) | 1.399 to 4.883 (median 2.124) | -3.134 to 0.569 (median -1.397) | -0.459 to 1.059 (median 0.006) | -3.563 to -0.626 (median -1.845) | -2.871 to 1.200 (median -1.471) |
 | human 0.5 | 300 | 1.537 to 10.149 (median 4.222) | 4.183 to 12.043 (median 7.534) | -9.443 to 1.451 (median -3.634) | -2.091 to 3.546 (median -0.130) | -10.149 to -1.232 (median -4.222) | -9.216 to 3.336 (median -2.409) |
@@ -436,7 +452,7 @@ share: gap as % of the cascade.
 
 ## Difficulty at $100
 
-| regime | bucket | tasks | cap margin | resolved | value ii | value iii |
+| regime | bucket | tasks | cap margin | distinct from zero | value ii | value iii |
 |---|---|---|---|---|---|---|
 | automated | under 15 minutes | 158 to 194 (median 193) | -0.029 to 0.043 (median -0.014) | 0 of 7 | 1.98 to 3.25 (median 2.35) | 2.00 to 3.27 (median 2.31) |
 | automated | 15 minutes to 1 hour | 210 to 261 (median 257) | -0.459 to 0.307 (median -0.002) | 0 of 7 | 15.22 to 19.16 (median 17.44) | 15.22 to 19.04 (median 17.21) |

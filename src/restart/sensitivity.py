@@ -20,6 +20,13 @@ price (Section 4), and a changed outside option re-selects every budget and cuto
                            attempts are among the rows the others' transfer rules are fitted on
     METR minutes           the outside option under the bucket-specific correction (Section 3)
 
+One check that the plan did not register runs beside them, and is marked as such wherever it
+appears:
+
+    common tasks           every configuration scored on the 275 tasks with four usable draws in
+                           all seven, the cascade's tasks, so that a median across configurations
+                           summarizes one task set rather than seven
+
 The ladder is scored on both axes of the sweep. The fitted steps (iii-b, iv and the transfer) are
 scored on the dollar axis, as point estimates; the multiples axis carries steps i to iii, which is
 what the break-even's resolution reads. The cap's margin carries its full-pipeline bootstrap
@@ -94,6 +101,8 @@ class Variant:
     all_tasks: bool = False
     qwen_price: bool = False
     metr: bool = False
+    common_tasks: bool = False
+    registered: bool = True                     # False: a check added after the results were in
 
     def load_kwargs(self) -> dict:
         kw = dict(self.load)
@@ -139,7 +148,13 @@ VARIANTS = (
             "the outside option under the bucket-specific METR correction",
             "Section 3", metr=True),
 )
-BY_KEY = {v.key: v for v in (PRIMARY,) + VARIANTS}
+# not registered: added after the registered results were in, reported as a check and marked so
+CHECKS = (
+    Variant("common", "common tasks",
+            "every configuration scored on the tasks with four usable draws in all seven",
+            "not registered", common_tasks=True, registered=False),
+)
+BY_KEY = {v.key: v for v in (PRIMARY,) + VARIANTS + CHECKS}
 
 
 def load_pools(variant: Variant, folders: Sequence[str],
@@ -159,12 +174,19 @@ def load_pools(variant: Variant, folders: Sequence[str],
     return pools
 
 
-def basis(variant: Variant, pool: ev.Pool) -> np.ndarray:
+def basis(variant: Variant, pool: ev.Pool,
+          pools: Optional[Dict[str, ev.Pool]] = None) -> np.ndarray:
     """The tasks scored: those with four usable draws, or under the all-tasks sensitivity every
-    task with one, each policy then scored on the tasks that can fill it."""
+    task with one, each policy then scored on the tasks that can fill it; under the common-tasks
+    check, those with four usable draws in every configuration of ``pools``."""
     if variant.all_tasks:
         return pool.usable.any(axis=1)
-    return ev.full_draw_tasks({pool.config: pool})
+    keep = ev.full_draw_tasks({pool.config: pool})
+    if variant.common_tasks and pools:
+        for c, other in pools.items():
+            if c != pool.config:
+                keep &= ev.full_draw_tasks({c: ev.reindex(other, pool.tasks)})
+    return keep
 
 
 def common_basis(variant: Variant, pools: Dict[str, ev.Pool]) -> np.ndarray:
@@ -194,7 +216,7 @@ def ladder_rows(variant: Variant, pools: Dict[str, ev.Pool], replicates: int = R
             continue
         others = [c for c in pools if c != name]
         source = {c: ev.reindex(pools[c], pool.tasks) for c in others}
-        mask = basis(variant, pool)
+        mask = basis(variant, pool, pools)
         got = ld.ladder(pool, rates=rates, multiples=(), regimes=regimes, phi=variant.phi,
                         replicates=0, steps=steps, fitted_replicates=0,
                         transfer=(source, others), mask=mask)
@@ -598,6 +620,13 @@ TWO_STAGE_FIELDS = ("config", "margin", "regime_name", "regime", "axis", "rate",
                     "replicates", "dropped")
 
 
+def _read(path: str) -> List[dict]:
+    if not os.path.exists(path):
+        return []
+    with open(path, newline="") as fh:
+        return list(csv.DictReader(fh))
+
+
 def write(rows: Sequence[dict], path: str, fields: Sequence[str]) -> str:
     os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
     with open(path, "w", newline="") as fh:
@@ -614,8 +643,13 @@ def _main(argv=None):
     ap.add_argument("--derived", default="data/derived")
     ap.add_argument("--notes", default="configurations_notes.json")
     ap.add_argument("--out-dir", default="results")
-    ap.add_argument("--variants", nargs="*", default=[v.key for v in VARIANTS],
-                    choices=sorted(BY_KEY), help="which sensitivities; all nine by default")
+    ap.add_argument("--variants", nargs="*", default=[v.key for v in VARIANTS + CHECKS],
+                    choices=sorted(BY_KEY),
+                    help="which sensitivities; the nine registered and the common-tasks check "
+                         "by default")
+    ap.add_argument("--append", action="store_true",
+                    help="keep the other variants' rows in the results files and replace only "
+                         "those of the variants run")
     ap.add_argument("--parts", nargs="*", default=list(PARTS), choices=PARTS)
     ap.add_argument("--replicates", type=int, default=REPLICATES,
                     help="replicates for the cap margin's interval under each sensitivity")
@@ -634,6 +668,13 @@ def _main(argv=None):
            for part in ("ladder", "breakeven", "cascade", "two_stage")}
     ladder_all, crossings_all, cascade_all = [], [], []
     cascade_names: Tuple[str, ...] = ()
+    if a.append:
+        running = {BY_KEY[k].name for k in a.variants}
+        ladder_all, crossings_all, cascade_all = (
+            [r for r in _read(out[part]) if r["variant"] not in running]
+            for part in ("ladder", "breakeven", "cascade"))
+        if cascade_all:
+            cascade_names = tuple(k[len("own_"):] for k in cascade_all[0] if k.startswith("own_"))
     cache: dict = {}
     written = []
     started = time.time()

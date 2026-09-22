@@ -213,12 +213,12 @@ def fig_cap_margin(d: pd.DataFrame, out: str):
              "line, escalating every task without running the agent is cheaper than retrying "
              "without a cap. " + IMPUTED, fontsize=7, color=INK_2, ha="left", wrap=True)
     fig.tight_layout(rect=(0.01, 0.08, 1, 0.97))
-    return _save(fig, out, "fig1_cap_margin")
+    return _save(fig, out, "fig2_cap_margin")
 
 
 # ----------------------------------------------------------------------------- figure 2
 
-def fig_transfer(d: pd.DataFrame, out: str, regime: str = "automated", name: str = "fig2_transfer"):
+def fig_transfer(d: pd.DataFrame, out: str, regime: str = "automated", name: str = "fig3_transfer"):
     """The primary transfer: the state rule's margin over the best schedule, its models fitted on
     the other six configurations, beside the same rule fitted on the configuration itself and
     beside the margin of not capping at all. Where the three lines coincide, the rule is not
@@ -334,7 +334,7 @@ def fig_ladder(d: pd.DataFrame, out: str, regimes=("automated", "human 0.5")):
              "other six. Every step is chosen on training folds and scored on held-out folds. "
              + IMPUTED, fontsize=7, color=INK_2, ha="left", wrap=True)
     fig.tight_layout(rect=(0.0, 0.07, 1, 0.97))
-    return _save(fig, out, "fig_ladder")
+    return _save(fig, out, "fig1_ladder")
 
 
 # ----------------------------------------------------------------------------- figure 3
@@ -370,7 +370,7 @@ def fig_cascade(c: pd.DataFrame, out: str):
              "reference line that is not in the registration). " + IMPUTED,
              fontsize=7, color=INK_2, ha="left", wrap=True)
     fig.tight_layout(rect=(0, 0.05, 1, 0.93))
-    return _save(fig, out, "fig3_cascade")
+    return _save(fig, out, "fig4_cascade")
 
 
 # ----------------------------------------------------------------------------- figure 4 (exploratory)
@@ -414,7 +414,7 @@ def fig_attempt_units(b: pd.DataFrame, out: str):
              "every configuration's threshold. GPT-5.2 at 0.3 H crosses nowhere for the same reason.",
              fontsize=7, color=INK_2, ha="left", wrap=True)
     fig.tight_layout()
-    return _save(fig, out, "fig4_break_even_in_attempts")
+    return _save(fig, out, "fig5_break_even_in_attempts")
 
 
 # ----------------------------------------------------------------------------- appendix figure
@@ -509,7 +509,7 @@ def table_ladder(d: pd.DataFrame, b: pd.DataFrame, out: str) -> List[str]:
 def table_breakeven(d: pd.DataFrame, b: pd.DataFrame, out: str) -> List[str]:
     """Table 2: the summary statistic of the primary result, per configuration and regime: the
     first break-even in both units, how many crossings the scan found and how many the bootstrap
-    supports, and the highest rate at which the cap's saving is resolved."""
+    supports, and the highest rate at which the cap's saving is distinct from zero."""
     rows = []
     for regime, f in REGIMES:
         for config in order_of(d.config):
@@ -524,7 +524,7 @@ def table_breakeven(d: pd.DataFrame, b: pd.DataFrame, out: str) -> List[str]:
                 "first break-even, $/h": _fmt(first.rate) if first.crossing else "none",
                 "x median attempt": _fmt(first.multiple) if first.crossing else "",
                 "crossings (supported)": f"{int(first.crossings)} ({supported})",
-                "saving resolved up to, $/h": _fmt(resolved.rate.max()) if len(resolved) else "",
+                "saving distinct from zero up to, $/h": _fmt(resolved.rate.max()) if len(resolved) else "",
                 "in full attempts*": _fmt(units),
                 "retry beats escalating above*": (lambda v: "never in sweep" if np.isnan(v)
                                                   else _fmt(v))(agent_pays_above(d, config, regime)),
@@ -533,7 +533,7 @@ def table_breakeven(d: pd.DataFrame, b: pd.DataFrame, out: str) -> List[str]:
     return _write_table(t, out, "table2_breakeven",
                         caption="The rate at which the cap's marginal value changes sign. Every "
                         "crossing is reported in results/breakeven.csv; one is supported when the "
-                        "bootstrap resolves the sign on both sides of it. * Exploratory, not "
+                        "interval excludes zero on both sides of it. * Exploratory, not "
                         "registered: the break-even over the full cost of an attempt, tokens plus "
                         "review, M / (1 + f M); and the multiple of the median attempt cost above which retrying without "
                         "a cap first costs less than escalating every task. " + IMPUTED)
@@ -571,6 +571,11 @@ def table_transfer(d: pd.DataFrame, out: str) -> List[str]:
 # ----------------------------------------------------------------------------- appendix: sensitivities
 
 PRIMARY = "primary"
+CHECKS = {"common tasks"}          # run beside the sensitivities but not registered; marked *
+
+
+def _variant_label(v: str) -> str:
+    return f"{v}*" if v in CHECKS else v
 
 
 def _with_primary(primary: pd.DataFrame, variants: pd.DataFrame) -> pd.DataFrame:
@@ -602,7 +607,7 @@ def table_sensitivity_breakeven(b: pd.DataFrame, sb: pd.DataFrame, out: str) -> 
             crossed = first[first.crossing == 1]
             supported = here[here.supported.astype(str) == "True"].config.nunique()
             rows.append({
-                "sensitivity": variant, "regime": REGIME_LABEL[regime],
+                "sensitivity": _variant_label(variant), "regime": REGIME_LABEL[regime],
                 "cross in sweep": f"{len(crossed)} of {len(first)}",
                 "with a supported crossing": str(supported),
                 "first break-even, $/h": _median_range(crossed.rate),
@@ -612,8 +617,10 @@ def table_sensitivity_breakeven(b: pd.DataFrame, sb: pd.DataFrame, out: str) -> 
     return _write_table(t, out, "tableA1_sensitivity_breakeven",
                         caption="The break-even of the cap's marginal value under each registered "
                         "sensitivity: median [range] of the first crossing across the "
-                        "configurations whose margin changes sign in the sweep. Every crossing is "
-                        "in results/breakeven.csv and results/sensitivity_breakeven.csv. " + IMPUTED)
+                        "configurations whose margin changes sign in the sweep. A crossing is "
+                        "supported when the interval excludes zero on both sides of it. Every "
+                        "crossing is in results/breakeven.csv and results/sensitivity_breakeven.csv. "
+                        "* Not registered: a check added after the results were in. " + IMPUTED)
 
 
 def table_sensitivity_margins(d: pd.DataFrame, sd: pd.DataFrame, c: pd.DataFrame,
@@ -626,7 +633,7 @@ def table_sensitivity_margins(d: pd.DataFrame, sd: pd.DataFrame, c: pd.DataFrame
     rows = []
     for variant in dict.fromkeys(both.variant):
         here = both[both.variant == variant]
-        row = {"sensitivity": variant}
+        row = {"sensitivity": _variant_label(variant)}
         for regime, short in (("automated", "A"), ("human 0.5", "R")):
             for rate in TABLE_RATES:
                 x = here[(here.regime_name == regime) & (here.rate == rate)].cap_margin
@@ -647,7 +654,8 @@ def table_sensitivity_margins(d: pd.DataFrame, sd: pd.DataFrame, c: pd.DataFrame
                         "and under review at 0.5 H (R). Transfer: step iii-b minus the "
                         "state rule fitted on the other configurations, automated verifier. "
                         "Switching: the best single configuration minus the cascade, automated "
-                        "verifier. " + IMPUTED)
+                        "verifier. * Not registered: a check added after the results were in. "
+                        + IMPUTED)
 
 
 def table_two_stage(two: pd.DataFrame, d: pd.DataFrame, out: str) -> List[str]:
@@ -973,8 +981,8 @@ def main(argv=None):
     got = load(a.results)
     d = got["ladder"]
     written = []
-    written += fig_cap_margin(d, a.out)
     written += fig_ladder(d, a.out)
+    written += fig_cap_margin(d, a.out)
     written += fig_transfer(d, a.out)
     written += fig_transfer(d, a.out, regime="human 0.5", name="figA1_transfer_review_05")
     if "breakeven" in got:

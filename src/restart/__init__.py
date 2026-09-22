@@ -16,6 +16,7 @@ Module map, in dependency order:
     schedules    step iii-b, the schedule of cutoffs searched on the training folds
     state        the receding-horizon restart rule and the two models it reads the state with
     ladder       steps i to iv and the transfer across the rate sweep and every verifier regime
+    fitted       the fitted steps' intervals recomputed at the primary's replicate count
     breakeven    the rates at which the cap's marginal value changes sign
     cascade      step v, switching configurations, and the outcome correlation
     sensitivity  the registered sensitivities and the two-stage bootstrap

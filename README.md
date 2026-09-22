@@ -70,6 +70,7 @@ argument, and every prespecified comparison.
     python -m restart.pricing --validate data/derived/   # prices every call, compares with logged cost
     python -m restart.evaluate --check data/derived      # loads and prices each attempt pool
     python -m restart.ladder --derived data/derived      # steps i to iv and the transfer, the sweep
+    python -m restart.fitted --derived data/derived      # the fitted steps' intervals at 1,000 replicates
     python -m restart.breakeven --derived data/derived   # the break-even of the primary result
     python -m restart.cascade --derived data/derived     # step v and the outcome correlation
     python -m restart.sensitivity --derived data/derived # every registered sensitivity

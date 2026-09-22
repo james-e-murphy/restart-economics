@@ -11,6 +11,7 @@ from restart import appendix as ap
 from restart import comparators as cp
 from restart import diagnostics as dg
 from restart import evaluate as ev
+from restart import fitted as ft
 from restart import ladder as ld
 from restart import oracle as orc
 
@@ -88,3 +89,21 @@ def test_the_diagnostics_runner(patched):
     assert len(_read(patched / "diagnostics.csv")) == 3
     tails = _read(patched / "tail_composition.csv")
     assert len(tails) == 3 * 19 and set(tails[0]) == set(dg.TAIL_FIELDS)
+
+
+def test_the_fitted_runner_refines_the_ladder_in_place(patched):
+    out = patched / "ladder.csv"
+    ld._main(["--out", str(out), "--replicates", "0", "--fitted-replicates", "3", "--only", "a"])
+    before = _read(out)
+    ft._main(["--ladder", str(out), "--replicates", "5", "--rates", "100", "--only", "a"])
+    after = _read(out)
+    assert len(after) == len(before) and set(after[0]) == set(ld.FIELDS)
+    refined = [r for r in after if r["regime_name"] == "automated" and r["axis"] == "rate"
+               and float(r["rate"]) == 100.0]
+    assert {r["fitted_replicates"] for r in refined} == {"5"}
+    untouched = [r for r in after if not (r["regime_name"] == "automated" and r["axis"] == "rate"
+                                          and float(r["rate"]) == 100.0)]
+    assert all(r["fitted_replicates"] in ("0", "3") for r in untouched)
+    for b, a in zip(before, after):
+        assert b["value_iv_transfer"] == a["value_iv_transfer"]
+

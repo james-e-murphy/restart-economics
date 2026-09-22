@@ -14,10 +14,10 @@ which the manuscript carries in its captions; the paper's build uses that (`pape
 
 | file | what it shows |
 |---|---|
-| `fig1_cap_margin` | the primary result: the cap's marginal value given retry, step ii minus step iii, across the sweep in every regime, per configuration and as the median |
-| `fig_ladder` | the ladder drawn: steps i to iv and the transferred rule, each as a share of one attempt's cost, per configuration and as the median, at $25, $100 and $300 an hour, automated verifier and review at 0.5 H; the table of policy values in a picture |
-| `fig2_transfer` | the primary transfer: the state rule's margin over the best schedule, fitted on the other six configurations and on the configuration itself, automated verifier |
-| `fig3_cascade` | the best cross-configuration schedule against each configuration's own, and against the best single configuration chosen from the same data |
+| `fig1_ladder` | the ladder drawn: steps i to iv and the transferred rule, each as a share of one attempt's cost, per configuration and as the median, at $25, $100 and $300 an hour, automated verifier and review at 0.5 H; the primary result and the primary transfer are two of its steps |
+| `fig2_cap_margin` | the primary result: the cap's marginal value given retry, step ii minus step iii, across the sweep in every regime, per configuration and as the median |
+| `fig3_transfer` | the primary transfer: the state rule's margin over the best schedule, fitted on the other six configurations and on the configuration itself, automated verifier |
+| `fig4_cascade` | the best cross-configuration schedule against each configuration's own, and against the best single configuration chosen from the same data |
 | `table1_ladder` | policy value by configuration for steps i to iii-b at $25, $100 and $300 an hour, with the cap's margin, its interval, what the folds chose and the first break-even |
 | `table2_breakeven` | the break-even, the summary statistic of the primary result, per configuration and regime, in dollars an hour and in multiples of the median attempt cost |
 | `table3_transfer` | the primary transfer with its intervals, and how far the transferred rule sits from retrying without any cap |
@@ -47,7 +47,7 @@ otherwise.
 Everything below is marked as exploratory in its title or caption, and computed after the
 registered results were in.
 
-- `fig4_break_even_in_attempts`, and the column of Table 2 marked with an asterisk: the first
+- `fig5_break_even_in_attempts`, and the column of Table 2 marked with an asterisk: the first
   break-even re-expressed in full attempts, tokens plus review, `M / (1 + f M)`.
 - The dotted line in Figure 1, and the last column of Table 2: the outside option above which
   retrying without a cap first costs less than escalating every task.

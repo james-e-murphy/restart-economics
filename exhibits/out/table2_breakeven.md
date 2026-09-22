@@ -1,4 +1,4 @@
-| regime | configuration | first break-even, $/h | x median attempt | crossings (supported) | saving resolved up to, $/h | in full attempts* | retry beats escalating above* |
+| regime | configuration | first break-even, $/h | x median attempt | crossings (supported) | saving distinct from zero up to, $/h | in full attempts* | retry beats escalating above* |
 |---|---|---|---|---|---|---|---|
 | automated verifier | GPT-5 | 1.74 | 2.54 | 3 (0) | 1.37 | 2.54 | 2.53 |
 | automated verifier | GPT-5.2 | 3.36 | 2.89 | 4 (0) | 1.16 | 2.89 | 2.38 |
@@ -29,4 +29,4 @@
 | review at 0.5 H | Kimi K2 | none |  | 0 (0) | 27.66 |  | never in sweep |
 | review at 0.5 H | Qwen3 Coder† | none |  | 0 (0) | 50.00 |  | never in sweep |
 
-The rate at which the cap's marginal value changes sign. Every crossing is reported in results/breakeven.csv; one is supported when the bootstrap resolves the sign on both sides of it. * Exploratory, not registered: the break-even over the full cost of an attempt, tokens plus review, M / (1 + f M); and the multiple of the median attempt cost above which retrying without a cap first costs less than escalating every task. † Qwen3 Coder's dollar figures rest on an imputed price (PLAN.md Section 10).
+The rate at which the cap's marginal value changes sign. Every crossing is reported in results/breakeven.csv; one is supported when the interval excludes zero on both sides of it. * Exploratory, not registered: the break-even over the full cost of an attempt, tokens plus review, M / (1 + f M); and the multiple of the median attempt cost above which retrying without a cap first costs less than escalating every task. † Qwen3 Coder's dollar figures rest on an imputed price (PLAN.md Section 10).

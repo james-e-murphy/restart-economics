@@ -187,6 +187,29 @@ def test_every_registered_sensitivity_is_a_variant():
                      "refusals excluded", "no verdict unresolved", "re-runs dropped",
                      "Qwen lowest price", "METR minutes"}
     assert len({v.key for v in se.VARIANTS}) == len(se.VARIANTS)
+    assert all(v.registered for v in se.VARIANTS)
+    assert {v.name for v in se.CHECKS} == {"common tasks"} and not any(v.registered
+                                                                       for v in se.CHECKS)
+
+
+def test_the_common_tasks_check_scores_the_tasks_every_configuration_has_four_draws_on():
+    pools = _pools()
+    # a second configuration missing draws on tasks the first has four on
+    b = pools["b"]
+    usable = b.usable.copy()
+    usable[10:14, 3] = False
+    pools["b"] = dataclasses.replace(b, usable=usable)
+    common = se.BY_KEY["common"]
+    a = pools["a"]
+    keep = se.basis(common, a, pools)
+    expect = np.ones(a.n_tasks, bool)
+    for c in pools:
+        expect &= ev.reindex(pools[c], a.tasks).usable.sum(axis=1) >= 4
+    assert keep.sum() < se.basis(se.PRIMARY, a).sum()
+    assert (keep == expect).all()
+    rows, _ = se.ladder_rows(common, pools, replicates=6, steps=(), rates=(100.0,),
+                             multiples=(), scan=4, only=["a"])
+    assert {r["tasks"] for r in rows} == {int(keep.sum())}
 
 
 def test_each_variant_asks_the_loader_for_what_it_changes(tmp_path):
@@ -307,3 +330,17 @@ def test_the_runner_writes_every_file_it_is_asked_for(tmp_path):
     assert {r["margin"] for r in two} == {"cap", "transfer"}
     assert len([r for r in two if r["margin"] == "cap"]) == 3 * 4 * 3
     assert len([r for r in two if r["margin"] == "transfer"]) == 3 * 2
+    # --append runs one variant and keeps the others' rows
+    with mock.patch.object(ld, "configurations", lambda derived, notes, only=None: folders), \
+            mock.patch.object(ev, "load", fake_load):
+        se._main(["--variants", "common", "--append", "--parts", "ladder", "cascade",
+                  "--out-dir", str(out), "--replicates", "6", "--rates", "25", "100",
+                  "--multiples", "2", "--scan", "4", "--steps", "iii-b", "transfer"])
+    with open(out / "sensitivity_ladder.csv", newline="") as fh:
+        ladder = list(csv.DictReader(fh))
+    assert {r["variant"] for r in ladder} == {"phi 0.50", "all tasks", "common tasks"}
+    assert len(ladder) == 3 * 3 * 4 * 3
+    with open(out / "sensitivity_cascade.csv", newline="") as fh:
+        cascade = list(csv.DictReader(fh))
+    assert {r["variant"] for r in cascade} == {"phi 0.50", "all tasks", "common tasks"}
+    assert all(r["own_a"] != "" for r in cascade)
