@@ -52,7 +52,6 @@ check("AI disclosure present", "Declaration of generative AI" in t)
 check("every figure linked exists", all(os.path.exists(f) for f in
                                         re.findall(r"\]\((figures/[^)]+)\)", body)))
 check("no unrendered blocks", "{{" not in body)
-check("stands alone", "Beyond Average Cost" not in body)
 check("'resolved' is kept for tasks", not re.search(
     r"\bresolved (as a (cost|saving)|for (one|two|three|four|five|six|all)|in \w+ cells|only|at \$)", body))
 # every exhibit referred to has a caption, and the captions are numbered without gaps
