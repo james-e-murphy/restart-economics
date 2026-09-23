@@ -31,6 +31,12 @@ the sweep and at a replicate count that is recorded in the row. The rule's model
 on the rate, so within a configuration they are fitted once per training set and reused across
 the sweep, replicate by replicate. Step v, the cascade, is in its own module.
 
+Beside every value sits the share of tasks that step resolves without the outside option, the
+agent's own contribution (PLAN.md Section 3): ``share_i`` to ``share_iv_transfer``, cross-fitted
+like the values, each the mean over the held-out tasks of the chance the fold's chosen policy
+resolves the task itself. The value of retry carries an interval from the same bootstrap as the
+cap's margin, read from the same task resamples.
+
 One column is not in the registration and is labelled so wherever it appears: ``value_escalate``,
 the cost of sending every task straight to the outside option without running the agent. The
 registered ladder has no policy that declines to run the agent, so where escalation is cheap the
@@ -106,18 +112,35 @@ def rung(pool: ev.Pool, rate: float, fraction: float, phi: float = 0.0,
     # in sample the capped family cannot lose: it contains the uncapped policies. A negative
     # figure here would be a bug, not a finding; a negative cross-fitted margin is the finding.
     floor = inf.in_sample(retry, mask)[0] - inf.in_sample(capped, mask)[0]
-    interval = inf.bootstrap(pool.n_tasks,
-                             lambda idx: inf.margin(retry, capped, idx, mask),
-                             replicates=replicates, seed=seed)
+
+    def margins(idx):
+        v = {k: inf.cross_fitted_value(f, idx, mask)
+             for k, f in (("i", one), ("ii", retry), ("iii", capped))}
+        return (v["i"] - v["ii"], v["ii"] - v["iii"])
+
+    # the value of retry and the cap's margin, from the same task resamples: the cap's interval is
+    # what ``inf.bootstrap`` alone would give it, replicate for replicate
+    if replicates > 0:
+        retry_band, interval = inf.bootstrap_many(pool.n_tasks, margins, replicates=replicates,
+                                                  seed=seed)
+    else:
+        retry_band = interval = dict(low=float("nan"), high=float("nan"), replicates=0, dropped=0)
     row = dict(
         config=pool.config, rate=rate, regime=fraction, phi=phi,
         multiple=ev.multiple_for_rate(pool, rate, mask),
         tasks=scored["i"].n_tasks,
+        # the tasks with at least one, two, three and four usable draws, which is what a policy
+        # of K attempts is estimated on under the all-tasks sensitivity (PLAN.md Section 10)
+        tasks_with_draws="|".join(str(int((pool.usable.sum(axis=1) >= k).sum()))
+                                  for k in range(1, po.MAX_ATTEMPTS + 1)),
         value_i=scored["i"].value, value_ii=scored["ii"].value, value_iii=scored["iii"].value,
         value_iiib="", value_iv="", value_iv_transfer="",
         # not registered: every task straight to the outside option, the agent never run
         value_escalate=float(outside[scored["i"].scored].mean()),
+        share_i=scored["i"].share, share_ii=scored["ii"].share, share_iii=scored["iii"].share,
+        share_iiib="", share_iv="", share_iv_transfer="",
         retry_value=scored["i"].value - scored["ii"].value,
+        retry_value_low=retry_band["low"], retry_value_high=retry_band["high"],
         cap_margin=scored["ii"].value - scored["iii"].value,
         cap_margin_in_sample=floor,
         cap_margin_low=interval["low"], cap_margin_high=interval["high"],
@@ -137,7 +160,8 @@ def rung(pool: ev.Pool, rate: float, fraction: float, phi: float = 0.0,
         sched = sc.family(pool, outside, verify, phi, ks, tab=tab, mask=mask,
                           start=sc.constant_start(capped, tab, ks))
         got = inf.cross_fit(sched, label, mask)
-        row.update(value_iiib=got.value, schedule_margin=scored["iii"].value - got.value,
+        row.update(value_iiib=got.value, share_iiib=got.share,
+                   schedule_margin=scored["iii"].value - got.value,
                    choice_iiib="|".join(sorted(set(got.choices))))
         if fitted_replicates:
             band = inf.bootstrap(pool.n_tasks,
@@ -151,7 +175,8 @@ def rung(pool: ev.Pool, rate: float, fraction: float, phi: float = 0.0,
         rule = st.family(pool, outside, verify, phi, ks, mask=mask, notes=notes,
                          cache=state_cache, cache_size=CACHE)
         got = inf.cross_fit(rule, label, mask)
-        row.update(value_iv=got.value, choice_iv="|".join(sorted(set(got.choices))),
+        row.update(value_iv=got.value, share_iv=got.share,
+                   choice_iv="|".join(sorted(set(got.choices))),
                    state_notes="; ".join(sorted(set(notes))))
         if row["value_iiib"] != "":
             row["state_margin"] = row["value_iiib"] - got.value
@@ -168,7 +193,7 @@ def rung(pool: ev.Pool, rate: float, fraction: float, phi: float = 0.0,
         moved = st.family(pool, outside, verify, phi, ks, source=source, source_configs=names,
                           mask=mask, notes=notes, cache=transfer_cache, cache_size=CACHE)
         got = inf.cross_fit(moved, label, mask)
-        row.update(value_iv_transfer=got.value,
+        row.update(value_iv_transfer=got.value, share_iv_transfer=got.share,
                    choice_iv_transfer="|".join(sorted(set(got.choices))),
                    transfer_notes="; ".join(sorted(set(notes))))
         if row["value_iiib"] != "":
@@ -243,7 +268,11 @@ def _line(row: dict) -> str:
            f"  ii {_num(row['value_ii'])}  iii {_num(row['value_iii'])}"
            f"  iii-b {_num(row['value_iiib'])}  iv {_num(row['value_iv'])}"
            f"  iv-t {_num(row['value_iv_transfer'])}  esc {_num(row['value_escalate'])}"
-           f"  | cap {_num(row['cap_margin'], 7)}"
+           f"  | resolves {_num(row['share_i'], 5)} {_num(row['share_ii'], 5)}"
+           f" {_num(row['share_iii'], 5)} {_num(row['share_iiib'], 5)} {_num(row['share_iv'], 5)}"
+           f"  | retry {_num(row['retry_value'], 7)}"
+           f" [{_num(row['retry_value_low'], 7)},{_num(row['retry_value_high'], 7)}]"
+           f"  cap {_num(row['cap_margin'], 7)}"
            f" [{_num(row['cap_margin_low'], 7)},{_num(row['cap_margin_high'], 7)}]"
            f"  sched {_num(row['schedule_margin'], 6)}  state {_num(row['state_margin'], 6)}"
            f"  transfer {_num(row['transfer_margin'], 6)}")
@@ -258,8 +287,10 @@ def _line(row: dict) -> str:
 
 
 FIELDS = ("config", "regime_name", "regime", "axis", "rate", "multiple", "phi", "tasks",
-          "value_i", "value_ii", "value_iii", "value_iiib", "value_iv", "value_iv_transfer",
-          "value_escalate", "retry_value", "cap_margin", "cap_margin_low", "cap_margin_high",
+          "tasks_with_draws", "value_i", "value_ii", "value_iii", "value_iiib", "value_iv", "value_iv_transfer",
+          "value_escalate", "share_i", "share_ii", "share_iii", "share_iiib", "share_iv",
+          "share_iv_transfer", "retry_value", "retry_value_low", "retry_value_high",
+          "cap_margin", "cap_margin_low", "cap_margin_high",
           "cap_margin_in_sample", "schedule_margin", "schedule_margin_low",
           "schedule_margin_high", "state_margin", "state_margin_low", "state_margin_high",
           "transfer_margin", "transfer_margin_low", "transfer_margin_high",
@@ -274,8 +305,55 @@ def write(rows, path: str) -> str:
         w = csv.DictWriter(fh, fieldnames=FIELDS)
         w.writeheader()
         for r in rows:
-            w.writerow({k: r[k] for k in FIELDS})
+            w.writerow({k: r.get(k, "") for k in FIELDS})
     return path
+
+
+CARRIED = ("schedule_margin_low", "schedule_margin_high", "state_margin_low",
+           "state_margin_high", "transfer_margin_low", "transfer_margin_high",
+           "fitted_replicates")
+CHECKED = ("value_i", "value_ii", "value_iii", "value_iiib", "value_iv", "value_iv_transfer",
+           "value_escalate", "retry_value", "cap_margin", "cap_margin_low", "cap_margin_high",
+           "cap_margin_in_sample")
+
+
+def carry(rows: Sequence[dict], previous: Sequence[dict], tolerance: float = 1e-6) -> int:
+    """Copy the fitted steps' intervals from an earlier ladder into these rows, in place.
+
+    A ladder rerun to add columns need not repeat ``restart.fitted``, whose 1,000-replicate
+    intervals cost far more than the ladder itself: with ``--fitted-replicates 0`` the rerun
+    computes every point estimate and the primary's own intervals afresh, and this carries the
+    refined intervals over from the committed file, row by row, after checking that every number
+    the two runs both computed agrees. A disagreement is a bug, not a finding, and stops the run.
+    Returns how many rows received intervals."""
+    by = {(r["config"], r["regime_name"], r["axis"], round(float(r["rate"]), 9)): r
+          for r in previous}
+    carried = 0
+    for row in rows:
+        old = by.get((row["config"], row["regime_name"], row["axis"], round(float(row["rate"]), 9)))
+        if old is None:
+            raise AssertionError(f"{row['config']} {row['regime_name']} {row['axis']} "
+                                 f"{row['rate']}: no row to carry from")
+        for k in CHECKED:
+            a, b = row.get(k, ""), old.get(k, "")
+            if a == "" or b == "":
+                if (a == "") != (b == ""):
+                    raise AssertionError(f"{row['config']} {row['regime_name']} {row['rate']}: "
+                                         f"{k} is {a!r} here and {b!r} before")
+                continue
+            if abs(float(a) - float(b)) > tolerance:
+                raise AssertionError(f"{row['config']} {row['regime_name']} {row['rate']}: "
+                                     f"{k} {a} here, {b} before")
+        if old.get("fitted_replicates", "") not in ("", "0", 0):
+            for k in CARRIED:
+                row[k] = old.get(k, "")
+            carried += 1
+    return carried
+
+
+def read(path: str) -> list:
+    with open(path, newline="") as fh:
+        return list(csv.DictReader(fh))
 
 
 def configurations(derived: str, notes: str, only: Optional[Sequence[str]] = None):
@@ -308,7 +386,13 @@ def _main(argv=None):
     ap.add_argument("--steps", nargs="*", default=["iii-b", "iv", "transfer"],
                     help="which of the fitted steps to score")
     ap.add_argument("--only", nargs="*", help="configuration folder names")
+    ap.add_argument("--carry", metavar="LADDER.CSV",
+                    help="an earlier ladder whose refined fitted-step intervals are carried into "
+                         "this run's rows after every shared number is checked to agree; use "
+                         "with --fitted-replicates 0 to add columns without rerunning "
+                         "restart.fitted")
     a = ap.parse_args(argv)
+    previous = read(a.carry) if a.carry else None
     # every included configuration is loaded before any is scored, because the transfer fits a
     # configuration's rule on all the others
     pools = {}
@@ -326,6 +410,9 @@ def _main(argv=None):
         rows += ladder(pool, phi=a.phi, replicates=a.replicates, steps=a.steps,
                        fitted_replicates=a.fitted_replicates, transfer=(source, others),
                        log=lambda line: print(line, flush=True))
+    if previous is not None:
+        n = carry(rows, previous)
+        print(f"every shared number agrees with {a.carry}; {n} rows carry its refined intervals")
     print(f"\n{len(rows)} rows -> {write(rows, a.out)}")
 
 if __name__ == "__main__":

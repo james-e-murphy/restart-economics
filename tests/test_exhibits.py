@@ -153,7 +153,8 @@ def test_every_exhibit_is_written_from_the_results_files(results, tmp_path):
                  "figA3_tail_composition"):
         for ext in ("pdf", "png"):
             assert (out / f"{stem}.{ext}").stat().st_size > 0, stem
-    for stem in ("table1_ladder", "table2_breakeven", "table3_transfer",
+    for stem in ("table1_ladder", "table2_breakeven", "table3_transfer", "table_retry",
+                 "tableA10_ladder_review", "tableA11_crossings",
                  "tableA1_sensitivity_breakeven", "tableA2_sensitivity_margins",
                  "tableA3_two_stage", "tableA4_comparators", "tableA5_oracle",
                  "tableA6_difficulty", "tableA7_distribution", "tableA8_spread",
@@ -163,6 +164,15 @@ def test_every_exhibit_is_written_from_the_results_files(results, tmp_path):
     t1 = pd.read_csv(out / "table1_ladder.csv")
     assert set(t1.configuration) == {"m1", "m2"}
     assert len(t1) == 2 * 2 * 3                 # regimes x configurations x rates
+    assert "resolves %" in t1                   # the share beside the value (PLAN.md Section 3)
+    a10 = pd.read_csv(out / "tableA10_ladder_review.csv")
+    assert set(a10.regime) == {"review at 0.1 H", "review at 0.3 H"} and len(a10) == 12
+    tr = pd.read_csv(out / "table_retry.csv")
+    assert list(tr.columns[:4]) == ["configuration", "$25 [95%]", "$100 [95%]", "$300 [95%]"]
+    assert len(tr) == 2
+    a11 = pd.read_csv(out / "tableA11_crossings.csv")
+    assert set(a11.columns) >= {"regime", "configuration", "crossing", "$/h", "below, above",
+                                "interval clear of zero"}
     a1 = pd.read_csv(out / "tableA1_sensitivity_breakeven.csv")
     assert list(dict.fromkeys(a1.sensitivity)) == ["primary", "phi 0.50", "all tasks"]
     assert len(a1) == 3 * 4                     # the primary and two variants, by regime

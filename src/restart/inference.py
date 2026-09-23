@@ -53,6 +53,8 @@ class Family:
     used: np.ndarray
     labels: Tuple[str, ...]
     fit: Optional[Callable[[np.ndarray], Tuple[np.ndarray, ...]]] = None
+    shares: Optional[np.ndarray] = None   # [policy, task] the chance the candidate resolves the
+                                          # task itself (PLAN.md Section 3); absent if not scored
 
     @staticmethod
     def of(results: Sequence) -> "Family":
@@ -60,15 +62,21 @@ class Family:
         values = np.vstack([r.per_task for r in results])
         used = np.vstack([r.used for r in results])
         labels = tuple(r.policy.label or str(r.policy.cutoffs) for r in results)
-        return Family(values=np.nan_to_num(values, nan=0.0), used=used, labels=labels)
+        shares = (np.vstack([r.resolved for r in results])
+                  if all(getattr(r, "resolved", None) is not None for r in results) else None)
+        return Family(values=np.nan_to_num(values, nan=0.0), used=used, labels=labels,
+                      shares=shares)
 
     def refit(self, train: np.ndarray) -> "Family":
+        """``fit`` returns (values, used), optionally followed by labels and then shares."""
         if self.fit is None:
             return self
         got = self.fit(train)
         values, used = got[0], got[1]
-        labels = tuple(got[2]) if len(got) > 2 else self.labels
-        return Family(values=np.nan_to_num(values, nan=0.0), used=used, labels=labels)
+        labels = tuple(got[2]) if len(got) > 2 and got[2] is not None else self.labels
+        shares = got[3] if len(got) > 3 else None
+        return Family(values=np.nan_to_num(values, nan=0.0), used=used, labels=labels,
+                      shares=shares)
 
 
 def _mean(values: np.ndarray, used: np.ndarray, where: np.ndarray) -> np.ndarray:
@@ -93,10 +101,19 @@ class CrossFitted:
     chosen: Tuple[int, ...]     # the candidate each fold chose
     labels: Tuple[str, ...]
     picked: Tuple[str, ...] = ()    # what each fold chose, named as that fold's fit named it
+    resolved: Optional[np.ndarray] = None   # [task] the chance the chosen policy resolves it
 
     @property
     def value(self) -> float:
         return float(self.per_task[self.scored].mean()) if self.scored.any() else float("nan")
+
+    @property
+    def share(self) -> float:
+        """The share of the scored tasks the chosen policies resolve without the outside option,
+        the agent's own contribution (PLAN.md Section 3); nan if the family did not score it."""
+        if self.resolved is None or not self.scored.any():
+            return float("nan")
+        return float(self.resolved[self.scored].mean())
 
     @property
     def n_tasks(self) -> int:
@@ -113,8 +130,10 @@ def cross_fit(family: Family, label: np.ndarray, restrict: Optional[np.ndarray] 
     n_tasks = family.values.shape[1]
     eligible = np.ones(n_tasks, bool) if restrict is None else np.asarray(restrict, bool)
     per_task = np.zeros(n_tasks)
+    resolved = np.full(n_tasks, np.nan)
     scored = np.zeros(n_tasks, bool)
     chosen, picked = [], []
+    have_shares = True
     for f in range(k):
         test = (label == f) & eligible
         train = (label != f) & eligible
@@ -124,9 +143,14 @@ def cross_fit(family: Family, label: np.ndarray, restrict: Optional[np.ndarray] 
         picked.append(fitted.labels[pick] if pick < len(fitted.labels) else str(pick))
         here = test & fitted.used[pick]
         per_task[here] = fitted.values[pick][here]
+        if fitted.shares is not None:
+            resolved[here] = fitted.shares[pick][here]
+        else:
+            have_shares = False
         scored |= here
     return CrossFitted(per_task=per_task, scored=scored, chosen=tuple(chosen),
-                       labels=family.labels, picked=tuple(picked))
+                       labels=family.labels, picked=tuple(picked),
+                       resolved=resolved if have_shares else None)
 
 
 def in_sample(family: Family, restrict: Optional[np.ndarray] = None) -> Tuple[float, int]:
@@ -206,7 +230,8 @@ def resampled(family: Family, idx: np.ndarray) -> Family:
     """The family as seen on a bootstrap resample of the tasks."""
     return Family(values=family.values[:, idx], used=family.used[:, idx], labels=family.labels,
                   fit=None if family.fit is None
-                  else (lambda train, f=family, i=idx: _refit_resampled(f, i, train)))
+                  else (lambda train, f=family, i=idx: _refit_resampled(f, i, train)),
+                  shares=None if family.shares is None else family.shares[:, idx])
 
 
 def _refit_resampled(family: Family, idx: np.ndarray, train: np.ndarray):
@@ -215,7 +240,12 @@ def _refit_resampled(family: Family, idx: np.ndarray, train: np.ndarray):
     original = np.zeros(family.values.shape[1], bool)
     original[idx[train]] = True
     got = family.fit(original)
-    return (got[0][:, idx], got[1][:, idx]) + tuple(got[2:])
+    out = [got[0][:, idx], got[1][:, idx]]
+    if len(got) > 2:
+        out.append(got[2])
+    if len(got) > 3:
+        out.append(None if got[3] is None else got[3][:, idx])
+    return tuple(out)
 
 
 def replicate_folds(idx: np.ndarray, k: int = FOLDS, seed: int = SEED) -> np.ndarray:

@@ -223,7 +223,9 @@ def family(pool: ev.Pool, outside: np.ndarray, verify: np.ndarray, phi: float = 
         results = [rule_result(pool, models, k, outside, verify, phi, train, mask, prediction,
                                allowed) for k in ks]
         return (np.vstack([r.per_task for r in results]),
-                np.vstack([r.used for r in results]))
+                np.vstack([r.used for r in results]),
+                None,
+                np.vstack([r.resolved for r in results]))
 
     return inf.Family(values=np.zeros((len(ks), pool.n_tasks)),
                       used=np.ones((len(ks), pool.n_tasks), bool), labels=labels, fit=fit_on)

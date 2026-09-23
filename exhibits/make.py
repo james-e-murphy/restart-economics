@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import argparse
 import os
+import sys
 from typing import Dict, List
 
 import numpy as np
@@ -103,7 +104,9 @@ def _log_x(ax, label: str = "", ticks=MULTIPLE_TICKS):
 
 
 def _pct(ax):
-    ax.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:+.0f}%" if v else "0"))
+    # a minus sign, not a hyphen, on negative ticks, as in every table
+    ax.yaxis.set_major_formatter(FuncFormatter(
+        lambda v, _: (f"{v:+.0f}%" if v else "0").replace("-", "\u2212")))
 
 
 def _zero(ax):
@@ -322,7 +325,8 @@ def fig_ladder(d: pd.DataFrame, out: str, regimes=("automated", "human 0.5")):
             ax.set_xticklabels([lab for c, lab in LADDER_STEPS if c in cols])
             ax.set_xlim(-0.3, len(cols) - 0.5)
             ax.grid(axis="x", visible=False)
-            ax.yaxis.set_major_formatter(FuncFormatter(lambda v, _: f"{v:.0f}%"))
+            ax.yaxis.set_major_formatter(FuncFormatter(
+                lambda v, _: f"{v:.0f}%".replace("-", "\u2212")))
         axes[i, 0].set_ylabel(f"{REGIME_LABEL[regime]}\ncost, % of one attempt", fontsize=8)
     fig.supxlabel("step of the ladder", fontsize=8.5, color=INK_2, y=0.07)
     handles, labels = axes[0, 0].get_legend_handles_labels()
@@ -463,6 +467,19 @@ def _band(lo, hi) -> str:
     return "" if pd.isna(lo) or pd.isna(hi) else f"[{lo:,.2f}, {hi:,.2f}]"
 
 
+def _percent(x) -> str:
+    """A share as a whole percentage; empty where the results predate the column."""
+    x = pd.to_numeric(x, errors="coerce")
+    return "" if pd.isna(x) else f"{100 * float(x):.0f}"
+
+
+def _shares(r, steps=("share_i", "share_ii", "share_iii", "share_iiib")) -> str:
+    """The share of tasks each step resolves without the outside option, i/ii/iii/iii-b in
+    percent (PLAN.md Section 3: reported beside the value); empty if the ladder lacks them."""
+    got = [_percent(r.get(k, np.nan)) for k in steps]
+    return "" if not all(got) else "/".join(got)
+
+
 def _choice(s: str) -> str:
     """What the folds chose for step iii, written short: 4x@175 is four attempts at 175 calls."""
     if pd.isna(s):
@@ -474,12 +491,14 @@ def _choice(s: str) -> str:
     return ", ".join(sorted(set(out)))
 
 
-def table_ladder(d: pd.DataFrame, b: pd.DataFrame, out: str) -> List[str]:
+def table_ladder(d: pd.DataFrame, b: pd.DataFrame, out: str,
+                 regimes=("automated", "human 0.5"), name: str = "table1_ladder") -> List[str]:
     """Table 1: policy value by configuration for steps i to iii-b, in the automated regime and
     under review at 0.5 H, at three rates, with the cap's margin and its interval, what the folds
-    chose, and the first break-even. The full sweep is results/ladder.csv."""
+    chose, and the first break-even; the same table under review at 0.1 and 0.3 H is written for
+    the appendix. The full sweep is results/ladder.csv."""
     rows = []
-    for regime in ("automated", "human 0.5"):
+    for regime in regimes:
         for config in order_of(d.config):
             be = b[(b.config == config) & (b.regime_name == regime) & (b.crossing <= 1)].iloc[0]
             first = ("none in sweep" if be.crossing == 0 else
@@ -495,15 +514,85 @@ def table_ladder(d: pd.DataFrame, b: pd.DataFrame, out: str) -> List[str]:
                     "cap's saving [95%]": _interval(r.cap_margin, r.cap_margin_low,
                                                     r.cap_margin_high),
                     "iii chose": _choice(r.choice_iii),
+                    "resolves %": _shares(r),
                     "escalate all*": _fmt(r.value_escalate),
                     "first break-even": first if rate == TABLE_RATES[0] else "",
                 })
     t = pd.DataFrame(rows)
-    return _write_table(t, out, "table1_ladder",
+    if not t["resolves %"].astype(bool).all():
+        print("note: ladder.csv lacks the resolved-share columns; rerun restart.ladder "
+              "(with --carry) and the 'resolves %' column fills", file=sys.stderr)
+    return _write_table(t, out, name,
                         caption="Policy value, expected cost per incoming task in dollars, "
                         "chosen on training folds and scored on held-out folds. Cap's saving is "
-                        "step ii minus step iii. * Not registered: every task sent straight to the "
+                        "step ii minus step iii. Resolves: the share of tasks each of steps i, "
+                        "ii, iii and iii-b resolves without the outside option, in percent. "
+                        "* Not registered: every task sent straight to the "
                         "outside option. " + IMPUTED)
+
+
+def table_retry(d: pd.DataFrame, out: str) -> List[str]:
+    """The value of retry, step i minus step ii, with its interval from the same bootstrap as the
+    cap's margin, in the automated regime at three rates; with it, the saving as a share of one
+    attempt's cost at $100, the attempt budget the folds chose there, and the share of tasks
+    resolved without the outside option before and after retrying."""
+    rows = []
+    for config in order_of(d.config):
+        row = {"configuration": label_of(config)}
+        at = {}
+        for rate in TABLE_RATES:
+            r = d[(d.config == config) & (d.regime_name == "automated") & (d.axis == "rate")
+                  & (d.rate == rate)].iloc[0]
+            at[rate] = r
+            row[f"${rate:.0f} [95%]"] = _interval(r.retry_value,
+                                                  r.get("retry_value_low", np.nan),
+                                                  r.get("retry_value_high", np.nan))
+        r = at[100.0]
+        row["% of i"] = f"{100 * r.retry_value / r.value_i:.1f}"
+        # the budgets the folds chose: '2 attempts' and '4 attempts' become '2, 4'
+        budgets = sorted({int(c.split(":")[-1].split()[0]) for c in str(r.choice_ii).split("|")})
+        row["attempts"] = ", ".join(str(k) for k in budgets)
+        i, ii = _percent(r.get("share_i", np.nan)), _percent(r.get("share_ii", np.nan))
+        row["resolves i, ii"] = f"{i}, {ii}" if i and ii else ""
+        rows.append(row)
+    t = pd.DataFrame(rows)
+    return _write_table(t, out, "table_retry",
+                        caption="The value of retry, step i minus step ii, dollars per task with "
+                        "its 95 percent interval, automated verifier; the last three columns at "
+                        "$100 an hour. " + IMPUTED)
+
+
+def table_crossings(b: pd.DataFrame, out: str) -> List[str]:
+    """Every crossing of the cap's margin the scan found, in every regime (PLAN.md Section 7:
+    if the sign changes more than once over the sweep, every crossing is reported). The
+    main-text break-even table gives the first; this gives them all, each with its direction
+    and whether the bootstrap resolves the sign on either side."""
+    rows = []
+    for regime, _ in REGIMES:
+        for config in order_of(b.config):
+            here = b[(b.config == config) & (b.regime_name == regime) & (b.crossing >= 1)]
+            here = here.sort_values("crossing")
+            for _, r in here.iterrows():
+                # 'the cap saves below this rate, the cap adds nothing above it' -> saves, zero
+                def side(text):
+                    return ("saves" if "saves" in text else "zero" if "adds nothing" in text
+                            else "costs")
+                below, above = (side(part) for part in str(r.direction).split(","))
+                rows.append({
+                    "regime": REGIME_LABEL[regime], "configuration": label_of(config),
+                    "crossing": f"{int(r.crossing)} of {int(r.crossings)}",
+                    "$/h": f"{r.rate:,.2f}", "x median attempt": f"{r.multiple:.2f}",
+                    "below, above": f"{below}, {above}",
+                    "interval clear of zero": (
+                        "both sides" if r.resolved_below and r.resolved_above else
+                        "below" if r.resolved_below else
+                        "above" if r.resolved_above else "neither"),
+                })
+    t = pd.DataFrame(rows)
+    return _write_table(t, out, "tableA11_crossings",
+                        caption="Every crossing of the cap's marginal value over the sweep, "
+                        "per configuration and regime, located by a scan in the logarithm of the "
+                        "rate refined by bisection. " + IMPUTED)
 
 
 def table_breakeven(d: pd.DataFrame, b: pd.DataFrame, out: str) -> List[str]:
@@ -985,9 +1074,13 @@ def main(argv=None):
     written += fig_cap_margin(d, a.out)
     written += fig_transfer(d, a.out)
     written += fig_transfer(d, a.out, regime="human 0.5", name="figA1_transfer_review_05")
+    written += table_retry(d, a.out)
     if "breakeven" in got:
         written += table_ladder(d, got["breakeven"], a.out)
+        written += table_ladder(d, got["breakeven"], a.out, regimes=("human 0.1", "human 0.3"),
+                                name="tableA10_ladder_review")
         written += table_breakeven(d, got["breakeven"], a.out)
+        written += table_crossings(got["breakeven"], a.out)
         written += fig_attempt_units(got["breakeven"], a.out)
     written += table_transfer(d, a.out)
     if "cascade" in got:

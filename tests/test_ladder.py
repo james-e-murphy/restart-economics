@@ -222,3 +222,62 @@ def test_the_rule_s_models_are_fitted_once_per_training_set_across_the_sweep():
     # within and transfer: five folds on the sample and five in each replicate, once each,
     # however many rates reuse them
     assert len(calls) <= 2 * 5 * (reps + 1)
+
+
+# ----------------------------------------------------------------------------- the resolved share
+
+def test_a_rung_reports_the_share_each_step_resolves_beside_its_value():
+    """PLAN.md Section 3: beside every value, the share of tasks the step resolves without the
+    outside option. More attempts never resolve fewer tasks, and a cutoff never more than none."""
+    pool = _world(n=80)
+    got = ld.rung(pool, rate=100.0, fraction=0.0, replicates=10, fitted_replicates=0)
+    for k in ("share_i", "share_ii", "share_iii", "share_iiib", "share_iv"):
+        assert isinstance(got[k], float) and 0.0 <= got[k] <= 1.0, k
+    assert got["share_ii"] >= got["share_i"]
+    assert got["share_iii"] <= got["share_ii"] + 1e-12
+    # the value of retry carries an interval from the same resamples as the cap's margin
+    assert got["retry_value_low"] <= got["retry_value"] <= got["retry_value_high"]
+
+
+def test_the_retry_interval_comes_from_the_same_resamples_as_the_cap_s():
+    from restart import inference as inf
+    from restart import policies as po
+    pool = _world(n=60)
+    got = ld.rung(pool, rate=100.0, fraction=0.0, replicates=25, steps=())
+    mask = ev.full_draw_tasks({pool.config: pool})
+    outside = ev.outside_option(pool, 100.0)
+    verify = ev.verification(outside, 0.0)
+    ks = tuple(range(1, po.MAX_ATTEMPTS + 1))
+    one = ld._family(pool, [po.single(pool.config)], outside, verify, 0.0, mask)
+    retry = ld._family(pool, [po.retry(pool.config, k) for k in ks], outside, verify, 0.0, mask)
+    capped = ld._family(pool, po.constant_family(pool.config, pool.grid, ks), outside, verify,
+                        0.0, mask)
+    alone = inf.bootstrap(pool.n_tasks, lambda idx: inf.margin(retry, capped, idx, mask),
+                          replicates=25)
+    assert got["cap_margin_low"] == pytest.approx(alone["low"])
+    assert got["cap_margin_high"] == pytest.approx(alone["high"])
+    alone = inf.bootstrap(pool.n_tasks, lambda idx: inf.margin(one, retry, idx, mask),
+                          replicates=25)
+    assert got["retry_value_low"] == pytest.approx(alone["low"])
+    assert got["retry_value_high"] == pytest.approx(alone["high"])
+
+
+def test_carrying_refined_intervals_checks_every_shared_number_first():
+    pool = _world(n=60)
+    rows = ld.ladder(pool, rates=(100.0,), multiples=(), regimes=(("automated", 0.0),),
+                     replicates=5, steps=("iii-b", "iv"), fitted_replicates=4)
+    before = [dict(r) for r in rows]
+    for r in before:                          # as if restart.fitted had refined them
+        r["schedule_margin_low"], r["schedule_margin_high"] = -1.0, 1.0
+        r["fitted_replicates"] = 1000
+    again = ld.ladder(pool, rates=(100.0,), multiples=(), regimes=(("automated", 0.0),),
+                      replicates=5, steps=("iii-b", "iv"), fitted_replicates=0)
+    assert ld.carry(again, before) == 1
+    assert again[0]["schedule_margin_low"] == -1.0 and again[0]["fitted_replicates"] == 1000
+    assert again[0]["share_iiib"] == pytest.approx(before[0]["share_iiib"])
+    wrong = [dict(r) for r in before]
+    wrong[0]["value_iii"] = float(wrong[0]["value_iii"]) + 0.01
+    with pytest.raises(AssertionError):
+        ld.carry(again, wrong)
+    with pytest.raises(AssertionError):
+        ld.carry(again, [])

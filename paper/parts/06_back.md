@@ -1,6 +1,6 @@
 # Data, Code and Preregistration
 
-The trajectories are those released with Bai et al. (2026) on Hugging Face (`loong0814/openhands_trajectories`). The release records no license, so the tables derived from it are not redistributed; the repository instead ships the code that acquires each archive, checks it against the checksum Hugging Face records and rebuilds the tables locally. The code, the results files, the exhibits and the sources of this manuscript are at github.com/james-e-murphy/restart-economics, where `results/README.md` names the command that writes each file every number here comes from. The code is under the MIT license and the plan and manuscript under CC BY 4.0. The analysis plan, the data audit and the repository at the `plan-frozen` tag are registered at osf.io/pdmw9.
+`loong0814/openhands_trajectories`, the Hugging Face release accompanying Bai et al. (2026), holds the trajectories. The release records no license, so the tables derived from it are not redistributed; the repository instead ships the code that acquires each archive, checks it against the checksum Hugging Face records and rebuilds the tables locally. The code, the results files, the exhibits and the sources of this manuscript are at github.com/james-e-murphy/restart-economics, where `results/README.md` names the command that writes each file every number here comes from. The code is under the MIT license and the plan and manuscript under CC BY 4.0. The analysis plan, the data audit and the repository at the `plan-frozen` tag are registered at osf.io/pdmw9. The code, results and manuscript sources this version was built from are at the `v0.1` tag.
 
 # References
 
@@ -53,6 +53,14 @@ Wang, Xingyao, Yangyi Chen, Lifan Yuan, Yizhe Zhang, Yunzhu Li, Hao Peng, and He
 Wang, Xingyao, Boxuan Li, Yufan Song, Frank F. Xu, Xiangru Tang, Mingchen Zhuge, Jiayi Pan, et al. 2025. "OpenHands: An Open Platform for AI Software Developers as Generalist Agents." *The Thirteenth International Conference on Learning Representations* (ICLR 2025). arXiv:2407.16741.
 
 Whitfill, Parker, Cheryl Wu, Joel Becker, and Nate Rush. 2026. "Many SWE-bench-Passing PRs Would Not Be Merged into Main." METR Note, March 10, 2026.
+
+# Declarations
+
+**Funding.** This work received no external funding.
+
+**Competing interests.** The author declares no competing interests.
+
+**Acknowledgements.** The paper rests on the trajectories that Bai et al. (2026) released; the author thanks them for making the logs public.
 
 # Declaration of generative AI and AI-assisted technologies in the writing process
 

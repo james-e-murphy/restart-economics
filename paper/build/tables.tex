@@ -1,5 +1,8 @@
 \usepackage{etoolbox}
 \usepackage{array}
+% loaded here rather than left to the template, which loads them only when a table is not
+% set as a float (blocks.lua sets every table as one)
+\usepackage{longtable,booktabs}
 % the font and column gap are macros so that a nowrap table (blocks.lua) can set its own
 \newcommand{\LTfont}{\footnotesize}
 \newlength{\LTsep}\setlength{\LTsep}{5pt}
@@ -16,6 +19,12 @@
 \setlength{\aboverulesep}{2.5pt}
 \setlength{\belowrulesep}{3.5pt}
 \usepackage{needspace}
+\usepackage{placeins}
+% a figure goes on a page of its own only when it nearly fills it; otherwise it sits at the
+% top and the text flows on below
+\renewcommand{\topfraction}{0.9}
+\renewcommand{\floatpagefraction}{0.85}
+\makeatletter\setlength{\@fptop}{0pt}\setlength{\@fpsep}{14pt}\makeatother
 \usepackage{caption}
 \captionsetup[table]{labelformat=empty,font=small,justification=raggedright,singlelinecheck=false}
 \setlength{\LTcapwidth}{\textwidth}

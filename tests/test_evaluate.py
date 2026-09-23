@@ -360,3 +360,24 @@ def test_the_metr_correction_keeps_the_measured_buckets_and_interpolates_between
     assert 131.6 / 120.0 < factor < 32.9 / 3.9
     # above the last measured bucket it is held, not extrapolated
     assert m[">4 hours"] / 480.0 == pytest.approx(131.6 / 120.0)
+
+
+def test_the_share_the_policy_resolves_itself_is_enumerated_beside_its_cost():
+    """PLAN.md Section 3: beside the value, the share of tasks resolved without the outside
+    option. One attempt resolves 'one' a quarter of the time; two attempts, in six of twelve
+    ordered pairs; a cutoff below the resolving draw's length resolves nothing."""
+    one = _value(_pool(), po.single("m"))
+    by = dict(zip(one.tasks, one.resolved))
+    assert by["none"] == 0.0 and by["all"] == 1.0 and by["limit"] == 0.0
+    assert by["one"] == pytest.approx(0.25)
+    assert one.share == pytest.approx((0 + 1 + 0.25 + 0) / 4)
+    two = _value(_pool(), po.retry("m", 2))
+    assert dict(zip(two.tasks, two.resolved))["one"] == pytest.approx(6 / 12)
+    assert two.share >= one.share
+    # at a cutoff of five the resolving draw has reached its own stop and still counts, and a
+    # cutoff can never resolve more than no cutoff
+    cut = _value(_pool(), po.constant("m", 5, 2))
+    assert dict(zip(cut.tasks, cut.resolved))["one"] == pytest.approx(6 / 12)
+    assert cut.share <= two.share
+    # a task that cannot fill the policy has no share, as it has no cost
+    assert np.isnan(one.resolved).sum() == np.isnan(one.per_task).sum()

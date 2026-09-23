@@ -11,7 +11,12 @@
 
 Repeated runs of the same AI coding agent on the same task differ widely in what they cost and whether they succeed, so an operator runs a policy rather than a single attempt: cap each attempt, retry, and hand the task to an engineer when the attempts are spent. Most work on stopping agents early asks how much compute a stopping rule saves for a given loss in success. This paper asks the operator's question instead: once every lost success has to be bought from a fallback that costs money, does stopping still save anything? It replays four logged OpenHands runs on each of the 500 SWE-bench Verified tasks for seven model configurations, 13,681 attempts in all, and scores every policy on expected cost per task, which charges agent spend, verification of what the agent submits, and a task-specific outside option priced from the benchmark's annotated engineer time at a swept wage. Because the outside option resolves every task, no policy can look cheap by abandoning hard ones. Policies are chosen on training folds and scored on held-out folds, under an analysis plan frozen and registered before any result existed.
 
-Three things follow. When verification is automated and the fallback is an engineer, retrying is the lever: at $100 to $300 an hour it cuts expected cost by 13 to 21 percent for six configurations and 4 to 8 percent for the seventh. Choosing a cap on attempt length from these data adds nothing at any human wage, because attempts that have run long still succeed a third to a half of the time, and each success cut off costs tens of dollars against the few dollars of tokens a cutoff saves; a cap pays only while the fallback is worth fewer than two to four attempts, which is a few dollars an hour here, and even chosen with hindsight the best cap saves at most three cents per task at $100 an hour. When each submitted patch must be reviewed at a large share of the fallback's cost, the economics reverse: retrying stops paying, the cap saves by keeping long attempts out of review, and the best capped policy costs about what sending every task straight to the engineer costs, so the question becomes whether to run the agent at all. The registered low-complexity state rule adds little beyond a fixed cap, and switching configurations after a failure saves about 9 percent in point estimate, with an interval that includes zero.
+Three things follow. When verification is automated and the fallback is an engineer, retrying is the lever: at $100 to $300 an hour it cuts expected cost by 13 to 21 percent for six configurations and 4 to 8 percent for the seventh, and raises the share of tasks the agent resolves itself from 58 to 69 percent to 69 to 78 percent. Choosing a cap on attempt length from these data adds nothing at any human wage, because attempts that have run long still succeed a third to a half of the time, and each success cut off costs tens of dollars against the few dollars of tokens a cutoff saves; a cap pays only while the fallback is worth fewer than two to four attempts, which is a few dollars an hour here, and in an unregistered check even the best cap chosen with hindsight saves at most three cents per task at $100 an hour. When each submitted patch must be reviewed at a large share of the fallback's cost, the economics reverse: retrying stops paying, the cap saves in point estimate at every wage, distinctly from zero below about $10 to $50 an hour, by keeping long attempts out of review, and, in an unregistered comparison, the best capped policy costs about what sending every task straight to the engineer costs, so the question becomes whether to run the agent at all. The registered low-complexity state rule adds little beyond a fixed cap, and switching configurations after a failure saves about 9 percent in point estimate, with an interval that includes zero.
+
+
+**Keywords:** AI agents; unit economics; optimal stopping; retry policies; cost per resolved task; SWE-bench; preregistration.
+
+**JEL:** C44, D24, L86, M15, O33.
 
 ---
 
@@ -25,7 +30,7 @@ This paper answers that question on logged data. It uses the release accompanyin
 
 The policies form a ladder: one attempt; several attempts; several attempts each capped at a constant number of calls; several attempts under a schedule of caps that varies by attempt; a rule that reads the running attempt's state and decides when to restart; and schedules that switch configurations between attempts. Each is chosen on training folds and scored on held-out folds, and the intervals come from a bootstrap that repeats the choice inside every replicate. The analysis plan, including the primary comparison, the policy classes, the sensitivities and the expected direction of the primary result, was frozen and registered on OSF before any policy was evaluated.
 
-The primary result is the value of the cap given retry: what an operator gains by choosing a cap on attempt length from about 400 tasks of history, over retrying without one. With an automated verifier, as in the benchmark's own test suite, retrying pays at every wage from $50 an hour up, and choosing a cap adds nothing measurable once the outside option exceeds two to four times what a median attempt costs. That threshold is a few dollars an hour here. In an observation that was not registered, it is also close to the point at which retrying without a cap first beats escalating every task without running the agent, which suggests that below it the cap's saving is mostly the saving of not running the agent. Above it, the cap's margin is within a few percent of what retrying costs, mostly on the cost side in point estimate, its interval straddles zero everywhere, and nine sensitivities leave that where it is. The gain available to any cap is small: even chosen with hindsight on all of a configuration's tasks, the best constant cap saves at most three cents per task at $100 an hour. With human review priced at half the outside option, retrying stops paying, the cap saves in point estimate at every wage, and, in a comparison the plan did not register, the best capped policy costs about what escalating everything costs.
+The primary result is the value of the cap given retry: what an operator gains by choosing a cap on attempt length from about 400 tasks of history, over retrying without one. With an automated verifier, as in the benchmark's own test suite, retrying pays at every wage from $50 an hour up, and choosing a cap adds nothing measurable once the outside option exceeds two to four times what a median attempt costs. That threshold is a few dollars an hour here. In an observation that was not registered, it is also close to the point at which retrying without a cap first beats escalating every task without running the agent, which suggests that below it the cap's saving is mostly the saving of not running the agent. Above it, the cap's margin is within a few percent of what retrying costs, mostly on the cost side in point estimate, its interval straddles zero everywhere, and nine sensitivities leave that where it is. The gain available to any cap is small: in an unregistered check, even the best constant cap chosen with hindsight on all of a configuration's tasks saves at most three cents per task at $100 an hour. With human review priced at half the outside option, retrying stops paying, the cap saves in point estimate at every wage, and, in a comparison the plan did not register, the best capped policy costs about what escalating everything costs.
 
 The paper also tests whether a low-complexity rule that reads an execution's state can do better than a fixed cap. The registered rule, a plug-in restart rule with eight coefficients fitted on the other six configurations, costs what retrying without a cap costs when the verifier is automated, because it almost never stops an attempt, and its measured gain over the best schedule is the schedule's own cost of being chosen from data. On synthetic attempts where the optimal rule can be computed exactly, the plug-in rule stops too many attempts too early. Switching configurations after a failure lowers cost in point estimate by about 9 percent with an automated verifier, but the interval includes zero, and outcomes across configurations are correlated at a median of 0.81, which limits what a portfolio can do.
 
@@ -69,7 +74,7 @@ The tasks are mostly short. On the tasks scored here the mean annotated time is 
 
 ## 3.4 The verifier
 
-Every result is reported under two verifier regimes. With an automated verifier, the benchmark's own tests, \(v_i\) is taken as zero. With a human reviewer, \(v_i = f H_i\) for \(f\) of 0.1, 0.3 and 0.5: review costs a share of what it would cost the reviewer to fix the task, so it costs more on the tasks whose escalation costs more. Under review a cap earns a second credit, because an attempt cut off before it produces a patch saves a review as well as tokens.
+Every result is computed under four verifier regimes, an automated verifier and review at 0.1, 0.3 and 0.5 of the outside option, and the text reads the two that bracket the answer, the automated verifier and review at 0.5, with review at 0.1 and 0.3 in Tables 4, 7, A1, A5, A8, A10 and A11 and in the results files. With an automated verifier, the benchmark's own tests, \(v_i\) is taken as zero. With a human reviewer, \(v_i = f H_i\) for \(f\) of 0.1, 0.3 and 0.5: review costs a share of what it would cost the reviewer to fix the task, so it costs more on the tasks whose escalation costs more. Under review a cap earns a second credit, because an attempt cut off before it produces a patch saves a review as well as tokens.
 
 ## 3.5 What resolution means
 
@@ -83,23 +88,23 @@ The data are the trajectories released with Bai et al. (2026): four OpenHands ru
 
 All seven included configurations run the same agent, CodeActAgent (Wang et al. 2024), under OpenHands (Wang et al. 2025). Table 1 describes them. Harness versions differ, and are reported with every result. GPT-5 stops at 100 iterations and the other six at 500, and the cap is treated as an attribute of the configuration: each is evaluated within its own cap, and a common 100-call horizon is a sensitivity. The audit found one model call per agent iteration and no history condensation in any configuration, so cutoffs are stated in calls.
 
-Table: **Table 1. The seven configurations.** Usable attempts are those in the attempt pool (Section 4.2); the resolved share is among them. Tasks with four usable draws are the tasks on which every comparison across attempt budgets is scored. The median attempt is the median cost of a usable attempt run to its own end, on those tasks, at list price. † Qwen3 Coder's price is imputed.
+Table: **Table 1. The seven configurations.** Usable attempts are those in the attempt pool (Section 4.2); the resolved share is among them. Tasks with four usable draws are the tasks on which every comparison across attempt budgets is scored. The median attempt is the median cost of a usable attempt run to its own end, on those tasks, at list price. † Qwen3 Coder's price is imputed.
 
 | Configuration | Harness, run dates | Cap | Usable attempts | Resolved | Tasks with four draws | Median attempt |
-|--------------------|----------------------------|----|--------|--------|-----|-------|
+|---------------------|-----------------------------|-----|---------|---------|------|--------|
 | GPT-5 | 0.62.0, Dec 2025 to Jan 2026 | 100 | 1,995 | 59.8% | 496 | $0.34 |
 | GPT-5.2 | 0.62.0, Jan 2026 | 500 | 1,891 | 65.9% | 405 | $0.56 |
 | Claude Sonnet 4 | 0.40.0, Jun 2025 | 500 | 1,998 | 68.7% | 498 | $1.04 |
 | Claude Sonnet 4.5 | 0.62.0, Dec 2025 | 500 | 2,000 | 64.1% | 500 | $1.66 |
 | Gemini 3 Pro Preview | 0.62.0, Jan 2026 | 500 | 1,893 | 61.3% | 410 | $0.82 |
 | Kimi K2 | 1.1.0, Jan 2026 | 500 | 1,904 | 56.7% | 412 | $0.70 |
-| Qwen3 Coder 480B† | 0.48.0, Jul 2025 | 500 | 2,000 | 66.1% | 500 | $1.09 |
+| Qwen3 Coder 480B† | 0.48.0, Jul 2025 | 500 | 2,000 | 66.1% | 500 | $1.09 |
 
 ## 4.2 The attempt pool
 
 How an attempt stopped and whether it resolved are recorded separately, because the harness evaluates whatever patch exists when it stops, including at its own limit. An attempt enters the pool when it is a draw from the configuration's behavior and its outcome was observed. Infrastructure failures (outages, rate limits, relayed provider errors and the harness's eight-hour timeout) and evaluations that returned no verdict are excluded. Finishes, empty patches, patches that did not apply, stops at the iteration limit or by the harness's loop detector, provider refusals and errors caused by the model's own output are retained and scored by the benchmark's report. The pool holds 13,681 of the 13,999 executions. Three prespecified sensitivities change these rules: excluding refusals, which occur only for GPT-5; counting evaluations without a verdict as failures; and dropping executions the harness re-ran after a crash, which every configuration has, from 12 for GPT-5 to 108 for GPT-5.2.
 
-Excluding attempts leaves some tasks with fewer than four usable draws, mostly in the three configurations that suffered outages. Comparisons across attempt budgets are therefore scored on the tasks with four usable draws in every configuration involved, which is each configuration's own subset for the ladder (Table 1) and 275 tasks common to all seven for the cascades. Scoring every policy on every task that can fill it is a registered sensitivity.
+Excluding attempts leaves some tasks with fewer than four usable draws, mostly in the three configurations that suffered outages: every configuration has at least one usable draw on 499 or 500 tasks and at least two on 498 to 500, but at least three on 486 to 500 and four on 405 to 500 (Table 1; the counts for every budget are in `results/ladder.csv`). Comparisons across attempt budgets are therefore scored on the tasks with four usable draws in every configuration involved, which is each configuration's own subset for the ladder (Table 1) and 275 tasks common to all seven for the cascades. Scoring every policy on every task that can fill it is a registered sensitivity.
 
 ## 4.3 Prices
 
@@ -136,7 +141,7 @@ All policies are schedules of attempts over (configuration, cutoff) pairs, evalu
 Table: **Table 2. The policy ladder.** Each step is chosen on training folds from its class, the attempt budget \(K \le 4\) included.
 
 | Step | Policy | What it measures |
-|-----|------------------------------------|------------------------------------|
+|------|------------------------------------|------------------------------------|
 | i | One attempt, no cutoff, then the outside option | Baseline |
 | ii | \(K\) attempts, no cutoff | The value of retrying |
 | iii | \(K\) attempts at a constant cutoff | The value of a cap, given retry |
@@ -162,117 +167,133 @@ The same rule serves within and across configurations; the two differ only in wh
 
 All values are expected cost per incoming task in dollars, chosen on training folds and scored on held-out folds. Margins are written so that a positive number is what the richer policy saves. Intervals are 95 percent bootstrap intervals that repeat the choice inside every replicate, and a margin is distinct from zero when its interval excludes zero.
 
-Figure 1 draws the whole ladder, from one attempt to the transferred state rule, at three wages in the two headline regimes; Table 3 in Section 7.2 gives the values behind it. With an automated verifier nearly all of the fall in cost is the step from one attempt to several, in the median 3 percent at $25 an hour and 14 and 18 percent at $100 and $300; the cap and the schedule then add up to two points of cost, and the state rule, which stops almost nothing, returns to what retrying costs. Under review at 0.5 the fall is the step from no cap to a cap, 10 percent at $25 an hour and about 3 percent at $100 and $300, and the state rule gives part of it back at $25 and most or all of it at $100 and $300.
+Figure 1 draws the whole ladder, from one attempt to the transferred state rule, at three wages in the two headline regimes; Table 5 gives the values behind it. With an automated verifier nearly all of the fall in cost is the step from one attempt to several, in the median 3 percent at $25 an hour and 14 and 18 percent at $100 and $300; the cap and the schedule then add up to two points of cost, and the state rule, which stops almost nothing, returns to what retrying costs. Under review at 0.5 the fall is the step from no cap to a cap, 10 percent at $25 an hour and about 3 percent at $100 and $300, and the state rule gives part of it back at $25 and most or all of it at $100 and $300.
 
 ![Figure 1](figures/fig1_ladder.pdf)
 
-> **Figure 1. The ladder.** Expected cost per task at each step as a share of the cost of one attempt followed by the outside option (step i), for each configuration (grey) and their median (blue), at $25, $100 and $300 an hour, with an automated verifier (top) and under review at 0.5 of the outside option (bottom). iv: the state rule fitted on the configuration itself; iv-t: fitted on the other six. Every step is chosen on training folds and scored on held-out folds, so a step can cost more than the one before it. † Imputed price.
+> **Figure 1. The ladder.** Expected cost per task at each step as a share of the cost of one attempt followed by the outside option (step i), for each configuration (gray) and their median (blue), at $25, $100 and $300 an hour, with an automated verifier (top) and under review at 0.5 of the outside option (bottom). iv: the state rule fitted on the configuration itself; iv-t: fitted on the other six. Every step is chosen on training folds and scored on held-out folds, so a step can cost more than the one before it. † Imputed price.
 
 ## 7.1 Retrying
 
-With an automated verifier, retrying pays at every wage from $50 an hour up (Figure 1 shows three of them). At $100 an hour, letting the folds choose up to four attempts lowers expected cost by 13.2 to 19.6 percent against a single attempt for six configurations, and at $300 an hour by 16.4 to 21.0 percent. The folds choose four attempts at both wages. GPT-5.2 gains least, 4.3 percent at $100 and 8.0 percent at $300, and at $25 an hour retrying it does not pay at all. At $25 the other six gain 1.5 to 13.8 percent, most of them with two attempts. Where the outside option is worth five median attempts or fewer, no configuration retries.
+With an automated verifier, retrying pays at every wage from $50 an hour up: its saving is distinct from zero there in every configuration, and from $25 an hour for GPT-5 (two of Figure 1's three wages; Table 3 gives the saving with its interval). At $100 an hour, letting the folds choose up to four attempts lowers expected cost by 13.2 to 19.6 percent against a single attempt for six configurations, and at $300 an hour by 16.4 to 21.0 percent. The folds choose four attempts at both wages. Beside the cost sits the agent's own contribution: one attempt resolves 58 to 69 percent of tasks without the outside option, and the chosen budget 69 to 78 percent, the rest being resolved by the engineer either way. GPT-5.2 gains least, 4.3 percent at $100 and 8.0 percent at $300, and at $25 an hour retrying it does not pay at all. At $25 the other six gain 1.5 to 13.8 percent, most of them with two attempts. Where the outside option is worth five median attempts or fewer, no configuration retries.
 
-Review changes this. When each patch submitted costs a review of 0.3 or 0.5 of the outside option, no configuration retries at any wage: every fold chooses one attempt. At 0.1 of the outside option, retrying pays in 8 of the 63 configuration and wage cells. A second attempt is only worth its review when the first failed, and after a failure the chance that the next attempt succeeds is not high enough to cover a review priced at a large share of what the engineer would charge to fix the task.
+Review changes this. When each patch submitted costs a review of 0.3 or 0.5 of the outside option, no configuration retries at any wage: every fold chooses one attempt. At 0.1 of the outside option, retrying pays in point estimate in 8 of the 63 configuration and wage cells, in none of them distinctly from zero. A second attempt is only worth its review when the first failed, and after a failure the chance that the next attempt succeeds is not high enough to cover a review priced at a large share of what the engineer would charge to fix the task.
+
+Table: **Table 3. The value of retry.** Step i minus step ii, dollars per task with its 95 percent interval from the same bootstrap as the cap's margin, automated verifier. The last three columns are at $100 an hour: the saving as a share of what one attempt and the outside option cost, the attempt budgets the folds chose, and the share of tasks resolved without the outside option by one attempt and by the chosen budget, in percent. Under review at 0.3 and 0.5 every fold chooses one attempt, so retry is worth nothing there. † Imputed price.
+
+| configuration | $25 [95%] | $100 [95%] | $300 [95%] | % of i | attempts | resolves i, ii |
+|--------------|--------------------|------------------|---------------------|-----|---------|---------|
+| GPT-5 | 1.04 [0.41, 1.82] | 5.67 [3.42, 8.80] | 18.04 [11.27, 27.46] | 19.6 | 4 | 60, 70 |
+| GPT-5.2 | −0.06 [−0.12, 0.18] | 1.01 [0.45, 2.16] | 5.59 [2.76, 8.99] | 4.3 | 2, 3, 4 | 67, 72 |
+| Sonnet 4 | 0.20 [−0.08, 0.35] | 3.71 [2.13, 5.42] | 13.58 [8.98, 18.76] | 14.6 | 4 | 69, 78 |
+| Sonnet 4.5 | 0.12 [−0.23, 0.43] | 3.83 [1.99, 5.73] | 15.47 [10.52, 21.37] | 13.8 | 4 | 64, 72 |
+| Gemini 3 Pro | 0.25 [−0.03, 0.38] | 3.64 [1.95, 5.44] | 13.31 [8.67, 18.76] | 13.2 | 4 | 61, 70 |
+| Kimi K2 | 0.29 [−0.05, 0.48] | 4.19 [2.44, 5.91] | 15.48 [10.71, 20.73] | 14.2 | 4 | 58, 69 |
+| Qwen3 Coder† | 0.21 [−0.14, 0.48] | 4.09 [2.26, 5.88] | 15.78 [10.85, 21.28] | 14.8 | 4 | 66, 76 |
 
 ## 7.2 The cap given retry
 
-The primary result is the marginal value of a constant cutoff given retry, step ii minus step iii. The plan registered an expectation, set from the magnitudes the audit established and not from any policy result: that with an automated verifier the cap would not pay at any wage an enterprise would recognize, because the outside option exceeds attempt cost by two orders of magnitude, and that under human review it would pay, because a discarded attempt saves a review. Figure 2 shows the margin across the sweep in every regime, and Tables 3 and 4 give its values and its break-evens.
+The primary result is the marginal value of a constant cutoff given retry, step ii minus step iii. The plan registered an expectation, set from the magnitudes the audit established and not from any policy result: that with an automated verifier the cap would not pay at any wage an enterprise would recognize, because the outside option exceeds attempt cost by two orders of magnitude, and that under human review it would pay, because a discarded attempt saves a review. Figure 2 shows the margin across the sweep in every regime, and Tables 4 and 5 give its break-evens and its values.
 
 ![Figure 2](figures/fig2_cap_margin.pdf)
 
-> **Figure 2. The cap's marginal value given retry.** Step ii minus step iii across the sweep, for each configuration and as the median across them, as a share of what retrying without a cap costs. The horizontal axis is the outside option in multiples of the configuration's median attempt cost. Bands are 95 percent intervals from 1,000 bootstrap replicates for the automated verifier and for review at 0.5 of the outside option. The dotted line, an exploratory addition, marks the outside option above which retrying without a cap first costs less than escalating every task. † Qwen3 Coder's price is imputed.
+> **Figure 2. The cap's marginal value given retry.** Step ii minus step iii across the sweep, for each configuration and as the median across them, as a share of what retrying without a cap costs. The horizontal axis is the outside option in multiples of the configuration's median attempt cost. Bands are 95 percent intervals from 1,000 bootstrap replicates for the automated verifier and for review at 0.5 of the outside option. The dotted line, an exploratory addition and starred in the legend, marks the outside option above which retrying without a cap first costs less than escalating every task. † Qwen3 Coder's price is imputed.
 
-**With an automated verifier, choosing a cap stops paying at two to four attempts' worth of outside option.** For every configuration the margin is positive at the bottom of the sweep and crosses zero between 2.14 and 3.83 times the median attempt cost, which is between $1.74 and $7.08 an hour (Table 4). The saving is distinct from zero only below about one to two median attempt costs, between $1.16 and $5.00 an hour. Above the crossing the margin is small and mostly negative: at $100 an hour it runs from −0.74 to +0.01 dollars per task, a median of −0.24 (Table 3), and its interval straddles zero at every point of the sweep above the crossings, in every configuration. It is never distinct from zero on the cost side either, in any of the sweep's 532 cells, though those cells are far from independent and the count is a description, not a test. Some configurations cross zero more than once, GPT-5.2 four times, and no crossing has the interval clear of zero on both sides.
+**With an automated verifier, choosing a cap stops paying at two to four attempts' worth of outside option.** For every configuration the margin is positive at the bottom of the sweep and crosses zero between 2.14 and 3.83 times the median attempt cost, which is between $1.74 and $7.08 an hour (Table 4). The saving is distinct from zero only below about one to two median attempt costs, between $1.16 and $5.00 an hour. Above the crossing the margin is small and mostly negative: at $100 an hour it runs from −0.74 to +0.01 dollars per task, a median of −0.24 (Table 5), and its interval straddles zero at every point of the sweep above the crossings, in every configuration. It is never distinct from zero on the cost side either, in any of the sweep's 532 cells, though those cells are far from independent and the count is a description, not a test. Some configurations cross zero more than once, GPT-5.2 four times, and no crossing has the interval clear of zero on both sides.
 
-The gain available to any cap is small, whichever way it is measured. Chosen with hindsight on all of a configuration's tasks, where the capped family contains the uncapped policy and cannot lose, the best constant cap saves at most three cents per task at $100 an hour, 0.12 percent of what retrying costs, and nothing at all for Sonnet 4. Out of sample, what the folds' choices lose is the cost of picking from that class on about 400 tasks.
-
-::: nowrap
-
-Table: **Table 3. Policy value across the sweep.** Dollars per task, each step chosen on training folds and scored on held-out folds. Cap's saving: step ii minus step iii, with its 95 percent interval. Step iii chose: the folds' distinct choices, attempts × cutoff in calls, cutoffs for the same number of attempts separated by a slash; none is no cutoff. Under review at 0.5 every fold chooses one attempt for step ii, which is therefore step i. \* Exploratory, not registered: every task sent to the outside option. † Imputed price.
-
-| Configuration | $/h | i | ii | iii | iii-b | Cap's saving [95%] | Step iii chose | Escalate all\* |
-|:----------------------|----:|------:|------:|------:|------:|--------------------:|:-------------------|--------:|
-| **Automated verifier** | | | | | | | | |
-| GPT-5 | 25 | 7.54 | 6.50 | 6.60 | 6.59 | −0.10 [−0.38, 0.01] | 4×80/85/none | 12.56 |
-|  | 100 | 28.91 | 23.23 | 23.64 | 23.61 | −0.41 [−1.62, 0.01] | 4×80/85/none | 50.22 |
-|  | 300 | 85.90 | 67.86 | 69.07 | 68.99 | −1.21 [−4.84, 0.01] | 4×80/85/none | 150.67 |
-| GPT-5.2 | 25 | 6.46 | 6.52 | 6.53 | 6.53 | −0.01 [−0.08, 0.02] | 1×175, 2×125/175 | 11.96 |
-|  | 100 | 23.66 | 22.65 | 22.64 | 22.64 | 0.01 [−0.43, 0.09] | 2×175, 3×175, 4×125 | 47.84 |
-|  | 300 | 69.51 | 63.92 | 63.91 | 63.91 | 0.02 [−1.50, 0.06] | 4×125 | 143.53 |
-| Sonnet 4 | 25 | 7.33 | 7.13 | 7.13 | 7.13 | −0.00 [−0.06, 0.00] | 2×200/275 | 12.58 |
-|  | 100 | 25.47 | 21.76 | 21.77 | 21.87 | −0.01 [−0.32, 0.00] | 4×200/275 | 50.31 |
-|  | 300 | 73.84 | 60.26 | 60.27 | 60.35 | −0.01 [−0.73, 0.00] | 4×200/275 | 150.93 |
-| Sonnet 4.5 | 25 | 8.31 | 8.19 | 8.19 | 8.19 | −0.00 [−0.03, 0.01] | 2×175/225 | 12.56 |
-|  | 100 | 27.72 | 23.89 | 24.12 | 23.94 | −0.24 [−0.36, 0.02] | 4×150/175 | 50.22 |
-|  | 300 | 79.48 | 64.01 | 64.64 | 64.15 | −0.64 [−1.27, 0.01] | 4×150/175 | 150.67 |
-| Gemini 3 Pro | 25 | 7.68 | 7.43 | 7.43 | 7.43 | −0.00 [−0.10, 0.01] | 2×300/400 | 12.29 |
-|  | 100 | 27.67 | 24.03 | 24.14 | 24.14 | −0.11 [−0.48, 0.05] | 4×175/225 | 49.17 |
-|  | 300 | 80.95 | 67.64 | 68.00 | 68.00 | −0.36 [−1.45, 0.05] | 4×175/225 | 147.51 |
-| Kimi K2 | 25 | 8.14 | 7.85 | 7.87 | 7.87 | −0.03 [−0.23, 0.13] | 2×175/250/275 | 12.62 |
-|  | 100 | 29.44 | 25.26 | 25.69 | 25.71 | −0.44 [−1.50, 0.21] | 4×175/250 | 50.48 |
-|  | 300 | 86.26 | 70.78 | 72.22 | 72.22 | −1.44 [−5.47, 0.15] | 4×175/250 | 151.43 |
-| Qwen3 Coder† | 25 | 8.05 | 7.85 | 7.89 | 7.89 | −0.04 [−0.52, 0.12] | 2×175/225/300 | 12.56 |
-|  | 100 | 27.64 | 23.55 | 24.30 | 24.30 | −0.74 [−1.58, 0.37] | 4×125/225 | 50.22 |
-|  | 300 | 79.88 | 64.10 | 66.44 | 65.84 | −2.34 [−4.76, 0.25] | 4×125/225 | 150.67 |
-| **Review at 0.5 H** | | | | | | | | |
-| GPT-5 | 25 | 13.59 | 13.59 | 12.60 | 12.60 | 1.00 [−0.24, 1.91] | 1×5 | 12.56 |
-|  | 100 | 53.14 | 53.14 | 50.97 | 50.97 | 2.16 [−1.53, 6.20] | 1×20/35, 2×20 | 50.22 |
-|  | 300 | 158.58 | 158.58 | 153.10 | 153.10 | 5.48 [−4.88, 17.85] | 1×20/35, 2×20, 4×20 | 150.67 |
-| GPT-5.2 | 25 | 12.41 | 12.41 | 12.01 | 12.01 | 0.40 [−0.44, 1.22] | 1×45/70 | 11.96 |
-|  | 100 | 47.45 | 47.45 | 46.70 | 46.70 | 0.75 [−2.02, 4.03] | 1×45/70/75 | 47.84 |
-|  | 300 | 140.89 | 140.89 | 139.35 | 139.35 | 1.54 [−6.58, 11.09] | 1×45/50/70/75 | 143.53 |
-| Sonnet 4 | 25 | 13.62 | 13.62 | 12.63 | 12.63 | 0.99 [−0.50, 1.94] | 1×5 | 12.58 |
-|  | 100 | 50.62 | 50.62 | 49.18 | 49.18 | 1.45 [−3.13, 3.92] | 1×60/65/70 | 50.31 |
-|  | 300 | 149.31 | 149.31 | 145.41 | 145.41 | 3.90 [−10.56, 10.94] | 1×60/70 | 150.93 |
-| Sonnet 4.5 | 25 | 14.55 | 14.55 | 12.61 | 12.61 | 1.94 [1.06, 2.84] | 1×5 | 12.56 |
-|  | 100 | 52.69 | 52.69 | 50.85 | 50.85 | 1.85 [−1.86, 5.59] | 1×5/70/75 | 50.22 |
-|  | 300 | 154.40 | 154.40 | 150.17 | 150.17 | 4.22 [−5.93, 15.12] | 1×70/75/90 | 150.67 |
-| Gemini 3 Pro | 25 | 13.69 | 13.69 | 12.38 | 12.38 | 1.31 [−0.12, 2.44] | 1×5 | 12.29 |
-|  | 100 | 51.69 | 51.69 | 50.05 | 50.05 | 1.64 [−2.36, 6.41] | 1×5/60 | 49.17 |
-|  | 300 | 153.04 | 153.04 | 150.63 | 150.63 | 2.41 [−8.18, 15.89] | 1×5/70 | 147.51 |
-| Kimi K2 | 25 | 14.42 | 14.42 | 12.64 | 12.64 | 1.78 [0.24, 2.84] | 1×5 | 12.62 |
-|  | 100 | 54.56 | 54.56 | 51.25 | 51.25 | 3.30 [−1.48, 7.84] | 1×40/55/60/65 | 50.48 |
-|  | 300 | 161.61 | 161.61 | 153.42 | 153.42 | 8.19 [−5.77, 21.69] | 1×40/55/65, 3×40 | 151.43 |
-| Qwen3 Coder† | 25 | 14.33 | 14.33 | 12.58 | 12.58 | 1.75 [0.66, 2.70] | 1×5 | 12.56 |
-|  | 100 | 52.75 | 52.75 | 49.19 | 49.19 | 3.56 [−0.36, 6.03] | 1×60/65 | 50.22 |
-|  | 300 | 155.21 | 155.21 | 145.06 | 145.06 | 10.15 [−2.16, 16.88] | 1×65 | 150.67 |
-
-:::
+The gain available to any cap is small, whichever way it is measured. In a check the plan did not register, chosen with hindsight on all of a configuration's tasks, where the capped family contains the uncapped policy and cannot lose, the best constant cap saves at most three cents per task at $100 an hour, 0.12 percent of what retrying costs, and nothing at all for Sonnet 4 (`cap_margin_in_sample` in `results/ladder.csv`). Out of sample, what the folds' choices lose is the cost of picking from that class on about 400 tasks.
 
 What the folds choose explains the size of the margin. With an automated verifier at $100 an hour, step iii keeps four attempts, except in some folds for GPT-5.2, and caps each at 80 to 275 calls, or in at least one of GPT-5's folds not at all. The cap therefore stops only attempts that have already run long, some of which would have succeeded. Each success cut off costs the outside option, about $50 on average at this wage, against the few dollars of tokens the cap saves on the attempts it stops. The cap is chosen on the training folds because it helps there by a little, and out of sample that little does not survive.
 
-Table: **Table 4. The break-even of the cap's marginal value.** For each configuration and regime, the first rate at which the margin changes sign, in multiples of the median attempt cost with dollars an hour in parentheses, and the largest multiple up to which the cap's saving is distinct from zero. None: the margin does not change sign in the sweep; under review at 0.5 the cap saves across the whole sweep in point estimate. Every crossing found is in `results/breakeven.csv`; at none is the interval clear of zero on both sides. † Imputed price.
+::: nowrap
+
+Table: **Table 4. The break-even of the cap's marginal value.** For each configuration and regime, the first rate at which the margin changes sign, in multiples of the median attempt cost with dollars an hour in parentheses, and the largest multiple up to which the cap's saving is distinct from zero. None: the margin does not change sign in the sweep; under review at 0.5 the cap saves across the whole sweep in point estimate. Every crossing found is in `results/breakeven.csv`; at none is the interval clear of zero on both sides. † Imputed price.
 
 | Configuration | Automated | Review 0.1 | Review 0.3 | Review 0.5 |
-|-------------|-----------------------------|-----------------|-------------------|----------|
+|--------------|------------------------------|------------------|--------------------|-----------|
 | GPT-5 | 2.54 ($1.74); distinct to 2.0 | 3.18 ($2.18); 2.0 | 6.86 ($4.71); 2.0 | none; 20.0 |
 | GPT-5.2 | 2.89 ($3.36); 1.0 | 5.79 ($6.73); 2.0 | none; 2.0 | none; 8.6 |
 | Sonnet 4 | 2.18 ($4.51); 1.0 | 2.68 ($5.54); 2.0 | 4.98 ($10.29); 2.4 | none; 5.0 |
 | Sonnet 4.5 | 2.14 ($7.08); 1.5 | 2.68 ($8.87); 2.0 | 5.47 ($18.11); 3.0 | none; 10.0 |
 | Gemini 3 Pro | 2.35 ($3.90); 2.0 | 2.95 ($4.88); 2.0 | 6.13 ($10.16); 3.0 | none; 10.0 |
 | Kimi K2 | 3.83 ($5.30); 2.0 | 5.90 ($8.16); 2.0 | 10.76 ($14.88); 5.0 | none; 20.0 |
-| Qwen3 Coder† | 2.73 ($5.91); 2.0 | 3.42 ($7.40); 2.3 | 10.56 ($22.82); 4.6 | none; 23.1 |
+| Qwen3 Coder† | 2.73 ($5.91); 2.0 | 3.42 ($7.40); 2.3 | 10.56 ($22.82); 4.6 | none; 23.1 |
+
+:::
 
 **Under review at half the outside option the cap saves, in point estimate at every wage, but the saving is distinct from zero only at the lower wages.** With review at half the outside option, the margin is positive across the whole sweep for all seven configurations, from $0.75 to $3.56 per task at $100 an hour, but its interval excludes zero only up to between 5 and 23 median attempt costs, between $10 and $50 an hour. At review of 0.3, six configurations cross from saving to costing between 5.0 and 10.8 median attempt costs, and at 0.1 the crossings sit between 2.7 and 5.9, close to the automated ones. As with the automated verifier, on the cost side of every crossing the interval straddles zero. The registered expectation holds in point estimate at a review share of 0.5: opposite answers in the two regimes from one policy class, with the review side distinct from zero only at the lowest wages, up to $10 to $50 an hour. At review shares of 0.1 and 0.3 the answer is the automated one with a later break-even.
 
-What the cap does under review is mostly not to run the agent. At $5 and $10 an hour, every fold under review at 0.5 chooses one attempt cut at 5 calls, which spends a few cents, submits nothing for review, and hands the task to the outside option. At higher wages most folds cut a single attempt at 20 to 90 calls, so that the long attempts, which are the least likely to succeed, are never reviewed; a few still cut at 5 calls, and at the top of the sweep some of GPT-5's and Kimi K2's folds keep two to four capped attempts. A comparison the plan did not register makes the point sharper. Across the wage sweep under review at 0.5, the best capped policy costs between 3.7 percent less and 3.5 percent more than sending every task to the outside option without running the agent, and a single attempt without a cap costs a median of 6 percent more than escalating everything. At a review price of half the outside option, the agent on this benchmark is worth about nothing, and the cap's registered saving is the saving of submitting less for review.
+What the cap does under review is mostly not to run the agent. At $100 an hour under review at 0.5 the capped policy resolves only 7 to 51 percent of tasks itself, a median of 20, against 58 to 69 percent for one uncapped attempt (Table 5). At $5 and $10 an hour, every fold under review at 0.5 chooses one attempt cut at 5 calls, which spends a few cents, submits nothing for review, and hands the task to the outside option. At higher wages most folds cut a single attempt at 20 to 90 calls, so that the long attempts, which are the least likely to succeed, are never reviewed; a few still cut at 5 calls, and at the top of the sweep some folds keep two to four capped attempts, for GPT-5 and Kimi K2 from $100 an hour and for Sonnet 4 and Sonnet 4.5 from 200 median attempt costs. A comparison the plan did not register makes the point sharper. Across the wage sweep under review at 0.5, the best capped policy costs between 3.7 percent less and 3.5 percent more than sending every task to the outside option without running the agent, and a single attempt without a cap costs a median of 6 percent more than escalating everything. At a review price of half the outside option, the agent on this benchmark is worth about nothing, and the cap's registered saving is the saving of submitting less for review.
 
 ## 7.3 Schedules
 
 Letting the cap vary by attempt adds nothing measurable. With an automated verifier the schedule's margin over the constant cutoff at $100 an hour runs from −0.10 to +0.19 dollars per task, a median of zero, and at $300 from −0.08 to +0.60; its interval includes zero for every configuration at every rate at which it is computed. Under review at 0.5 the margin is zero at all three wages for every configuration, since the folds choose few attempts and cut them alike; at 0.1, where the folds retry, it runs from −0.64 to +0.31 at $300 in point estimate. The search starts from the best constant cutoff and moves only when a move pays on the training folds, so on those folds the schedule is never worse; the moves it finds do not carry to held-out tasks.
 
+::: nowrap
+
+Table: **Table 5. Policy value across the sweep.** Dollars per task, each step chosen on training folds and scored on held-out folds. Cap's saving: step ii minus step iii, with its 95 percent interval. Step iii chose: the folds' distinct choices, attempts × cutoff in calls, cutoffs sharing an attempt count separated by a slash; none is no cutoff. Resolves: the share of tasks steps i, ii, iii and iii-b resolve without the outside option, in percent. Under review at 0.5 step ii is step i, every fold there choosing one attempt. \* Exploratory, not registered: every task to the outside option; it differs across configurations only because each is scored on its own tasks with four draws (Table 1). † Imputed price.
+
+| Configuration | $/h | i | ii | iii | iii-b | Cap's saving [95%] | Step iii chose | Resolves % | Escalate all\* |
+|:-----------------------|-----:|-------:|-------:|-------:|-------:|---------------------:|:--------------------|:------------|---------:|
+| **Automated verifier** | | | | | | | | | |
+| GPT-5 | 25 | 7.54 | 6.50 | 6.60 | 6.59 | −0.10 [−0.38, 0.01] | 4×80/85/none | 60/70/70/70 | 12.56 |
+|  | 100 | 28.91 | 23.23 | 23.64 | 23.61 | −0.41 [−1.62, 0.01] | 4×80/85/none | 60/70/70/70 | 50.22 |
+|  | 300 | 85.90 | 67.86 | 69.07 | 68.99 | −1.21 [−4.84, 0.01] | 4×80/85/none | 60/70/70/70 | 150.67 |
+| GPT-5.2 | 25 | 6.46 | 6.52 | 6.53 | 6.53 | −0.01 [−0.08, 0.02] | 1×175, 2×125/175 | 67/70/69/69 | 11.96 |
+|  | 100 | 23.66 | 22.65 | 22.64 | 22.64 | 0.01 [−0.43, 0.09] | 2×175, 3×175, 4×125 | 67/72/72/72 | 47.84 |
+|  | 300 | 69.51 | 63.92 | 63.91 | 63.91 | 0.02 [−1.50, 0.06] | 4×125 | 67/72/72/72 | 143.53 |
+| Sonnet 4 | 25 | 7.33 | 7.13 | 7.13 | 7.13 | −0.00 [−0.06, 0.00] | 2×200/275 | 69/74/74/74 | 12.58 |
+|  | 100 | 25.47 | 21.76 | 21.77 | 21.87 | −0.01 [−0.32, 0.00] | 4×200/275 | 69/78/78/78 | 50.31 |
+|  | 300 | 73.84 | 60.26 | 60.27 | 60.35 | −0.01 [−0.73, 0.00] | 4×200/275 | 69/78/78/78 | 150.93 |
+| Sonnet 4.5 | 25 | 8.31 | 8.19 | 8.19 | 8.19 | −0.00 [−0.03, 0.01] | 2×175/225 | 64/68/68/68 | 12.56 |
+|  | 100 | 27.72 | 23.89 | 24.12 | 23.94 | −0.24 [−0.36, 0.02] | 4×150/175 | 64/72/71/72 | 50.22 |
+|  | 300 | 79.48 | 64.01 | 64.64 | 64.15 | −0.64 [−1.27, 0.01] | 4×150/175 | 64/72/71/72 | 150.67 |
+| Gemini 3 Pro | 25 | 7.68 | 7.43 | 7.43 | 7.43 | −0.00 [−0.10, 0.01] | 2×300/400 | 61/67/67/67 | 12.29 |
+|  | 100 | 27.67 | 24.03 | 24.14 | 24.14 | −0.11 [−0.48, 0.05] | 4×175/225 | 61/70/70/70 | 49.17 |
+|  | 300 | 80.95 | 67.64 | 68.00 | 68.00 | −0.36 [−1.45, 0.05] | 4×175/225 | 61/70/70/70 | 147.51 |
+| Kimi K2 | 25 | 8.14 | 7.85 | 7.87 | 7.87 | −0.03 [−0.23, 0.13] | 2×175/250/275 | 58/65/64/64 | 12.62 |
+|  | 100 | 29.44 | 25.26 | 25.69 | 25.71 | −0.44 [−1.50, 0.21] | 4×175/250 | 58/69/68/68 | 50.48 |
+|  | 300 | 86.26 | 70.78 | 72.22 | 72.22 | −1.44 [−5.47, 0.15] | 4×175/250 | 58/69/68/68 | 151.43 |
+| Qwen3 Coder† | 25 | 8.05 | 7.85 | 7.89 | 7.89 | −0.04 [−0.52, 0.12] | 2×175/225/300 | 66/73/72/72 | 12.56 |
+|  | 100 | 27.64 | 23.55 | 24.30 | 24.30 | −0.74 [−1.58, 0.37] | 4×125/225 | 66/76/76/76 | 50.22 |
+|  | 300 | 79.88 | 64.10 | 66.44 | 65.84 | −2.34 [−4.76, 0.25] | 4×125/225 | 66/76/76/76 | 150.67 |
+| **Review at 0.5 H** | | | | | | | | | |
+| GPT-5 | 25 | 13.59 | 13.59 | 12.60 | 12.60 | 1.00 [−0.24, 1.91] | 1×5 | 60/60/0/0 | 12.56 |
+|  | 100 | 53.14 | 53.14 | 50.97 | 50.97 | 2.16 [−1.53, 6.20] | 1×20/35, 2×20 | 60/60/10/10 | 50.22 |
+|  | 300 | 158.58 | 158.58 | 153.10 | 153.10 | 5.48 [−4.88, 17.85] | 1×20/35, 2×20, 4×20 | 60/60/12/12 | 150.67 |
+| GPT-5.2 | 25 | 12.41 | 12.41 | 12.01 | 12.01 | 0.40 [−0.44, 1.22] | 1×45/70 | 67/67/48/48 | 11.96 |
+|  | 100 | 47.45 | 47.45 | 46.70 | 46.70 | 0.75 [−2.02, 4.03] | 1×45/70/75 | 67/67/51/51 | 47.84 |
+|  | 300 | 140.89 | 140.89 | 139.35 | 139.35 | 1.54 [−6.58, 11.09] | 1×45/50/70/75 | 67/67/53/53 | 143.53 |
+| Sonnet 4 | 25 | 13.62 | 13.62 | 12.63 | 12.63 | 0.99 [−0.50, 1.94] | 1×5 | 69/69/0/0 | 12.58 |
+|  | 100 | 50.62 | 50.62 | 49.18 | 49.18 | 1.45 [−3.13, 3.92] | 1×60/65/70 | 69/69/45/45 | 50.31 |
+|  | 300 | 149.31 | 149.31 | 145.41 | 145.41 | 3.90 [−10.56, 10.94] | 1×60/70 | 69/69/46/46 | 150.93 |
+| Sonnet 4.5 | 25 | 14.55 | 14.55 | 12.61 | 12.61 | 1.94 [1.06, 2.84] | 1×5 | 64/64/0/0 | 12.56 |
+|  | 100 | 52.69 | 52.69 | 50.85 | 50.85 | 1.85 [−1.86, 5.59] | 1×5/70/75 | 64/64/16/16 | 50.22 |
+|  | 300 | 154.40 | 154.40 | 150.17 | 150.17 | 4.22 [−5.93, 15.12] | 1×70/75/90 | 64/64/27/27 | 150.67 |
+| Gemini 3 Pro | 25 | 13.69 | 13.69 | 12.38 | 12.38 | 1.31 [−0.12, 2.44] | 1×5 | 61/61/0/0 | 12.29 |
+|  | 100 | 51.69 | 51.69 | 50.05 | 50.05 | 1.64 [−2.36, 6.41] | 1×5/60 | 61/61/7/7 | 49.17 |
+|  | 300 | 153.04 | 153.04 | 150.63 | 150.63 | 2.41 [−8.18, 15.89] | 1×5/70 | 61/61/15/15 | 147.51 |
+| Kimi K2 | 25 | 14.42 | 14.42 | 12.64 | 12.64 | 1.78 [0.24, 2.84] | 1×5 | 58/58/0/0 | 12.62 |
+|  | 100 | 54.56 | 54.56 | 51.25 | 51.25 | 3.30 [−1.48, 7.84] | 1×40/55/60/65 | 58/58/20/20 | 50.48 |
+|  | 300 | 161.61 | 161.61 | 153.42 | 153.42 | 8.19 [−5.77, 21.69] | 1×40/55/65, 3×40 | 58/58/18/18 | 151.43 |
+| Qwen3 Coder† | 25 | 14.33 | 14.33 | 12.58 | 12.58 | 1.75 [0.66, 2.70] | 1×5 | 66/66/0/0 | 12.56 |
+|  | 100 | 52.75 | 52.75 | 49.19 | 49.19 | 3.56 [−0.36, 6.03] | 1×60/65 | 66/66/42/42 | 50.22 |
+|  | 300 | 155.21 | 155.21 | 145.06 | 145.06 | 10.15 [−2.16, 16.88] | 1×65 | 66/66/44/44 | 150.67 |
+
+:::
+
 ## 7.4 Execution state and the primary transfer
 
-The primary transfer is the state rule's margin over the best schedule, step iii-b minus the rule, with its two models fitted on the other six configurations. Table 5 and Figure 3 give it with an automated verifier.
+The primary transfer is the state rule's margin over the best schedule, step iii-b minus the rule, with its two models fitted on the other six configurations. Table 6 and Figure 3 give it with an automated verifier.
 
 ![Figure 3](figures/fig3_transfer.pdf)
 
-> **Figure 3. The state rule against the best schedule, automated verifier.** Step iii-b minus the state rule, as a share of what retrying without a cap costs, for the rule fitted on the other six configurations (solid) and on the configuration itself (dashed), and for not capping at all (dotted). Points are 95 percent intervals for the transferred rule at $25, $100 and $300 an hour, from 1,000 replicates that refit every model. Where the lines coincide the rule is not stopping attempts. † Imputed price.
+> **Figure 3. The state rule against the best schedule, automated verifier.** Step iii-b minus the state rule, as a share of what retrying without a cap costs, for the rule fitted on the other six configurations (solid) and on the configuration itself (dashed), and for not capping at all (dotted). Points are 95 percent intervals for the transferred rule at $25, $100 and $300 an hour, from 1,000 replicates that refit every model. Where the lines coincide the rule is not stopping attempts. † Imputed price.
 
-Table: **Table 5. The primary transfer.** Step iii-b minus the state rule fitted on the other six configurations, automated verifier, dollars per task, with 95 percent intervals from 1,000 replicates that refit the rule's models and the schedule inside each. The last two columns, at $100 an hour, give the same margin for the rule fitted on the configuration itself, and how far the transferred rule sits from retrying without a cap. † Imputed price.
+Table: **Table 6. The primary transfer.** Step iii-b minus the state rule fitted on the other six configurations, automated verifier, dollars per task, with 95 percent intervals from 1,000 replicates that refit the rule's models and the schedule inside each. The last two columns, at $100 an hour, give the same margin for the rule fitted on the configuration itself, and how far the transferred rule sits from retrying without a cap. † Imputed price.
 
 | Configuration | $25 | $100 | $300 | Within, $100 | Transferred minus ii |
-|:-------------|------------------:|-------------------:|-------------------:|-------:|-----------:|
+|:--------------|-------------------:|--------------------:|--------------------:|--------:|------------:|
 | GPT-5 | 0.09 [−0.01, 0.33] | 0.38 [0.05, 1.44] | 1.13 [0.18, 4.32] | 0.38 | 0.000 |
 | GPT-5.2 | 0.01 [−0.05, 0.10] | −0.01 [−0.10, 0.47] | −0.02 [−0.06, 1.50] | −0.01 | 0.000 |
 | Sonnet 4 | 0.00 [−0.13, 0.08] | 0.11 [−0.004, 0.33] | 0.08 [0.01, 0.76] | 0.11 | 0.000 |
@@ -289,16 +310,16 @@ Synthetic attempts whose optimal restart policy can be computed exactly show whi
 
 ## 7.5 Switching configurations
 
-After a failed attempt an operator can retry the same configuration or switch to another. Figure 4 and Table 6 compare the best cascade with the best single configuration chosen from the same training folds, on the 275 tasks with four usable draws in all seven configurations.
+After a failed attempt an operator can retry the same configuration or switch to another. Figure 4 and Table 7 compare the best cascade with the best single configuration chosen from the same training folds, on the 275 tasks with four usable draws in all seven configurations.
 
 ![Figure 4](figures/fig4_cascade.pdf)
 
-> **Figure 4. Switching configurations.** The best cascade (blue), the best single configuration chosen from the same training folds (orange) and each configuration's own schedule (grey), as a share of the cost of escalating every task, on the 275 tasks with four usable draws in all seven configurations. Escalating every task is an exploratory reference. † Imputed price.
+> **Figure 4. Switching configurations.** The best cascade (blue), the best single configuration chosen from the same training folds (orange) and each configuration's own schedule (gray), as a share of the cost of escalating every task, on the 275 tasks with four usable draws in all seven configurations. Escalating every task is an exploratory reference. † Imputed price.
 
-Table: **Table 6. Switching configurations.** Dollars per task on the 275 common tasks. Switching saves: the best single configuration chosen on the training folds minus the cascade, with a 95 percent interval from 100 replicates where computed. Best own in hindsight: the cheapest configuration's own schedule, cross-fitted, and which configuration that is. Escalate all: every task sent to the outside option without running the agent, an exploratory reference not in the registration. † Imputed price.
+Table: **Table 7. Switching configurations.** Dollars per task on the 275 common tasks. Switching saves: the best single configuration chosen on the training folds minus the cascade, with a 95 percent interval from 100 replicates where computed. Best own in hindsight: the cheapest configuration's own schedule, cross-fitted, and which configuration that is. Escalate all: every task sent to the outside option without running the agent, an exploratory reference not in the registration. † Imputed price.
 
 | Regime | $/h | Best single | Cascade | Switching saves | Best own in hindsight | Escalate all |
-|----------|----|------|-------|-------------------|----------------|--------|
+|-----------|-----|-------|--------|--------------------|-----------------|---------|
 | Automated | 25 | 6.42 | 5.98 | 0.44 [−0.27, 1.36] | 6.42 (GPT-5) | 12.51 |
 | Automated | 100 | 21.97 | 19.94 | 2.03 [−2.22, 5.59] | 20.99 (Sonnet 4) | 50.05 |
 | Automated | 300 | 61.36 | 56.01 | 5.35 [−8.30, 17.95] | 58.56 (Sonnet 4) | 150.16 |
@@ -314,9 +335,9 @@ Switching pays only where failures do not coincide, and here they mostly do. Acr
 
 Nine registered sensitivities change one input each and rerun the ladder, the break-even and the cascade with every choice redone (Appendix A); the cap stated in dollars rather than calls, which the plan also registers as a sensitivity, is reported with the comparators (Appendix B). None changes the pattern of the primary result, although individual cells move. With an automated verifier the first break-even stays between 1.8 and 8.8 median attempt costs under every sensitivity, and its median across configurations between 2.1 and 5.0. False accepts raise it most, to a median of 3.8 at \(\phi = 0.34\) and 5.0 at \(\phi = 0.50\), because a success cut off by the cap then costs less: part of its value was never real. Under no sensitivity is the cap's margin distinct from zero on the cost side anywhere in the sweep. The only crossings with the interval clear of zero on both sides come under the common 100-call horizon, two with an automated verifier and two under review at 0.1, and each runs from saving to exactly zero, where no fold chooses a cap that binds.
 
-Under review at 0.5 the cap still saves across the whole sweep for every configuration under the false-accept and price sensitivities, and when refusals are excluded or evaluations without a verdict are counted as failures. False accepts raise that saving from a median of $1.85 per task at $100 an hour to $10.20 at \(\phi = 0.34\) and $13.69 at \(\phi = 0.50\), since every patch the cap keeps from review now also carries part of an outside option that will be paid later. Under the other four, the saving turns high in the sweep for one to three configurations: between 11.6 and 49 median attempt costs under the bucket-specific correction to the annotated times, which raises the shortest tasks' outside option about eightfold; at 41 and 58 under the common horizon; at 46 and 136 when every task that can fill a policy is scored; and at 272 when re-runs are dropped. As everywhere else, on the costing side the interval straddles zero.
+Under review at 0.5 the cap still saves across the whole sweep for every configuration under the false-accept and price sensitivities, and when refusals are excluded or evaluations without a verdict are counted as failures. False accepts raise that saving from a median of $1.85 per task at $100 an hour to $10.20 at \(\phi = 0.34\) and $13.69 at \(\phi = 0.50\), since every patch the cap keeps from review now also carries part of an outside option that will be paid later. Under the other four, the saving turns into a cost high in the sweep for one to three configurations: between 11.6 and 49 median attempt costs under the bucket-specific correction to the annotated times, which raises the shortest tasks' outside option about eightfold; at 41 and 58 under the common horizon; at 46 and 136 when every task that can fill a policy is scored; and at 272 when re-runs are dropped. As everywhere else, on the costing side the interval straddles zero.
 
-Switching keeps its sign: with an automated verifier at $100 an hour it saves between $1.00 and $5.48 per task under every sensitivity, most under the annotation correction and the common horizon. The two-stage bootstrap, which resamples each task's attempts as well as the tasks, gives intervals for the cap's margin of about the same width as the task-level bootstrap, a median ratio of 1.02, and centred in the same place at the median, though individual cells shift. GPT-5's transfer margin stays distinct from zero at $100 and $300 an hour under it; Sonnet 4's at $300 does not.
+Switching keeps its sign: with an automated verifier at $100 an hour it saves between $1.00 and $5.48 per task under every sensitivity, most under the annotation correction and the common horizon. The two-stage bootstrap, which resamples each task's attempts as well as the tasks, gives intervals for the cap's margin of about the same width as the task-level bootstrap, a median ratio of 1.02, and centered in the same place at the median, though individual cells shift. GPT-5's transfer margin stays distinct from zero at $100 and $300 an hour under it; Sonnet 4's at $300 does not.
 
 The medians across configurations quoted throughout summarize seven estimates, each on its own configuration's tasks with four usable draws, 405 to 500 of them; they are not estimates on one common task set. Appendix A adds a check, not registered, that scores every configuration on the 275 tasks common to all seven. On those tasks the medians move a little and the pattern does not: with an automated verifier retrying saves a median of 13 percent at $100 an hour against 14 on each configuration's own tasks, the cap's median margin is −$0.41 against −$0.24, and the first break-even runs from 2.0 to 5.2 median attempts, a median of 2.3.
 
@@ -324,9 +345,9 @@ The medians across configurations quoted throughout summarize seven estimates, e
 
 ## 8.1 Why a cap does not pay when the fallback is a person
 
-A cap trades two things of very different size. It saves the spend of the attempts it stops, which is at most the cost of the calls they would have made after the cutoff, and it loses the successes among them, each of which must then be bought from the next attempt or from the outside option. With an automated verifier and a human fallback, an attempt costs cents to a dollar or two and the outside option tens of dollars, so a cap pays only if the attempts it stops almost never succeed. They do succeed: in the six configurations capped at 500 calls, an attempt still running at 100 calls goes on to resolve 33 to 55 percent of the time (Appendix D). No cutoff meets that test. Even chosen with hindsight on all of a configuration's tasks, the best constant cap saves at most three cents per task at $100 an hour, and the folds, choosing on about 400 tasks, cannot find that much: the caps they choose at $100 and $300 an hour, at 80 to 275 calls, stop only attempts that have already run long, and the margin that remains is the cost of having chosen them. Two statements are therefore distinct. The gain available to a cap here is a few cents at most; and the deployable value of choosing a cap from this much history, which is what the estimand measures, is nothing or a little less, by up to a few percent of what retrying costs. A far larger history could in principle find the few cents. It could not find more, on these logs.
+A cap trades two things of very different size. It saves the spend of the attempts it stops, which is at most the cost of the calls they would have made after the cutoff, and it loses the successes among them, each of which must then be bought from the next attempt or from the outside option. With an automated verifier and a human fallback, an attempt costs cents to a dollar or two and the outside option tens of dollars, so a cap pays only if the attempts it stops almost never succeed. They do succeed: in the six configurations capped at 500 calls, an attempt still running at 100 calls goes on to resolve 33 to 55 percent of the time (Appendix D). No cutoff meets that test. In an unregistered check, even the best constant cap chosen with hindsight on all of a configuration's tasks saves at most three cents per task at $100 an hour, and the folds, choosing on about 400 tasks, cannot find that much: the caps they choose at $100 and $300 an hour, at 80 to 275 calls, stop only attempts that have already run long, and the margin that remains is the cost of having chosen them. Two statements are therefore distinct. The gain available to a cap here is a few cents at most; and the deployable value of choosing a cap from this much history, which is what the estimand measures, is nothing or a little less, by up to a few percent of what retrying costs. A far larger history could in principle find the few cents. It could not find more, on these logs.
 
-The break-even says the same thing in the operator's units. Choosing a cap, given retry, pays only while the outside option is worth fewer than two to four median attempts. The multiple, unlike the dollar figure, does not depend on the price of tokens: a uniform change in prices rescales every attempt and every outside option measured in attempts by the same factor, so the break-even in multiples stays where it is and only its dollar value moves. For the cap to pay against an engineer at $100 an hour, with the agents behaving as they did here, token prices would have to be at least 14 to 57 times the list prices these runs were priced at. An iteration limit on these configurations is therefore a harness setting, a guard against runaway attempts, and not a lever on cost. Setting it well below where the harness sets it, as the common-horizon sensitivity does by stopping the 500-call configurations at 100, removes between 2 and 21 percent of their successes, and at $100 an hour raises what retrying costs them by $0.31 to $6.94 per task.
+The break-even says the same thing in the operator's units. Choosing a cap, given retry, pays only while the outside option is worth fewer than two to four median attempts. The multiple, unlike the dollar figure, does not depend on the price of tokens: a uniform change in prices rescales every attempt and every outside option measured in attempts by the same factor, so the break-even in multiples stays where it is and only its dollar value moves. For the cap to pay against an engineer at $100 an hour, with the agents behaving as they did here, token prices would have to be at least 14 to 57 times the list prices these runs were priced at. An iteration limit on these configurations is therefore a harness setting, a guard against runaway attempts, and not a lever on cost. Setting it well below where the harness sets it, as the common-horizon sensitivity does by stopping the 500-call configurations at 100, removes between 1 and 21 percent of their successes, and at $100 an hour raises what retrying costs them by $0.31 to $6.94 per task.
 
 Retrying is the lever. It pays because a failed attempt does not doom the next one: the runs of one configuration on one task differ widely, and a second or third draw resolves tasks the first did not. Only 11 to 25 percent of tasks have mixed outcomes across their four runs, and all of retrying's value comes from them; on the 22 to 31 percent where every run fails, a retry adds an attempt that cannot succeed, which costs little against the outside option (Appendix D). The same size difference that makes a cap useless makes retrying valuable, since each success a retry buys saves an outside option for the price of an attempt.
 
@@ -338,15 +359,15 @@ The second is that the break-even is stable across verifier regimes once review 
 
 ![Figure 5](figures/fig5_break_even_in_attempts.pdf)
 
-> **Figure 5. The first break-even in full attempts (exploratory).** The outside option at the cap's first break-even, divided by the full cost of an attempt, its median token cost plus the review of its patch. The dashed lines are the most the outside option can be worth in full attempts under review at 0.5 and 0.3 of the outside option. Under review at 0.5 no configuration crosses, and GPT-5.2 does not cross at 0.3. Not registered; computed after the registered results. † Imputed price.
+> **Figure 5. The first break-even in full attempts (exploratory).** The outside option at the cap's first break-even, divided by the full cost of an attempt, its median token cost plus the review of its patch. The dashed lines are the most the outside option can be worth in full attempts under review at 0.5 and 0.3 of the outside option. Under review at 0.5 no configuration crosses, and GPT-5.2 does not cross at 0.3. Not registered; computed after the registered results. † Imputed price.
 
 Read together, the two give an operator a rule that needs only two numbers: choosing a cap on attempt length pays when the outside option is worth fewer than about two to four full attempts, which is also about where running the agent at all stops paying. Above that, cap generously and retry. The rule is exploratory, drawn from one benchmark and one harness, and should be checked before it is used elsewhere.
 
 ## 8.3 Under review, whether to run the agent
 
-With review priced at half the outside option, the question the policy class answers is not how long to let an attempt run but whether to run it. The comparisons with escalating every task in this section are exploratory. A single uncapped attempt followed by escalation saves the outside option when the attempt resolves, and costs its tokens and, when it produces a patch, a review. It pays only if the chance of resolving, weighted by the outside option, exceeds the review share plus the token cost as a share of the outside option. At $100 an hour a single attempt costs more than escalating every task for six of the seven configurations (Table 3), so for those six the resolve rate weighted by each task's outside option cannot be much above one half, although the unweighted rate is 57 to 69 percent. The agent resolves least often the tasks that are most expensive to escalate. The difficulty display shows where: with the annotation admitted to every policy, under review at 0.5 the cap saves $39 to $63 per task on the tasks annotated at an hour or more (Appendix C). The cap then saves by not submitting the long attempts, the least likely to succeed, for review, and the best capped policy ends within 4 percent of not running the agent at all.
+With review priced at half the outside option, the question the policy class answers is not how long to let an attempt run but whether to run it. The comparisons with escalating every task in this section are exploratory. A single uncapped attempt followed by escalation saves the outside option when the attempt resolves, and costs its tokens and, when it produces a patch, a review. It pays only if the chance of resolving, weighted by the outside option, exceeds the review share plus the token cost as a share of the outside option. At $100 an hour a single attempt costs more than escalating every task for six of the seven configurations (Table 5), so for those six the resolve rate weighted by each task's outside option cannot be much above one half, although the unweighted rate is 58 to 69 percent. The agent resolves least often the tasks that are most expensive to escalate. The difficulty display shows where: with the annotation admitted to every policy, under review at 0.5 the cap saves $39 to $63 per task on the tasks annotated at an hour or more (Appendix C). The cap then saves by not submitting the long attempts, the least likely to succeed, for review, and the best capped policy ends within 4 percent of not running the agent at all.
 
-What would change this is on the verifier's side. At a review of a tenth of the outside option the best single configuration costs 40 percent less than escalating every task at $100 an hour, retrying pays in some cells, and the break-even returns to about where it is with an automated verifier. The value of an agent in a reviewed workflow depends on the price of review at least as much as on the agent's pass rate, and a benchmark's resolve rate, unweighted by what the tasks would cost to do another way, overstates it.
+What would change this is on the verifier's side. At a review of a tenth of the outside option the best single configuration costs 40 percent less than escalating every task at $100 an hour, retrying pays in point estimate in some cells, and the break-even returns to about where it is with an automated verifier. The value of an agent in a reviewed workflow depends on the price of review at least as much as on the agent's pass rate, and a benchmark's resolve rate, unweighted by what the tasks would cost to do another way, overstates it.
 
 ## 8.4 What state-aware stopping would need
 
@@ -378,7 +399,7 @@ On the 275 tasks that all seven configurations cover, with an automated verifier
 
 # 10. Conclusion
 
-Work on stopping agents early asks how much compute a stopping rule saves for a given loss in success. This paper priced the loss. Once a success that a cutoff throws away has to be bought back from a fallback that costs money, the economics of restarting turn on the ratio of the fallback's cost to an attempt's cost, and on these logs that ratio settles the question. When a failed task goes to an engineer and the tests verify a patch for free, the ratio is in the tens to hundreds, retrying pays at every wage from $50 an hour up, and choosing a cap on attempt length adds nothing that can be told from zero, because the attempts a cap would stop still succeed a third to a half of the time and the best cap that hindsight can find saves a few cents. A cap pays only when the fallback is worth fewer than two to four attempts, which is about where running the agent at all stops paying. When each patch must be reviewed at a large share of the fallback's cost, the economics reverse: the cap saves, mostly by keeping long attempts out of review, and the best such policy costs about what escalating every task costs. Both comparisons with escalating every task are exploratory. The registered low-complexity state rule adds little, and switching configurations after a failure helps in point estimate but is limited by how often the configurations fail together.
+Work on stopping agents early asks how much compute a stopping rule saves for a given loss in success. This paper priced the loss. Once a success that a cutoff throws away has to be bought back from a fallback that costs money, the economics of restarting turn on the ratio of the fallback's cost to an attempt's cost, and on these logs that ratio settles the question. When a failed task goes to an engineer and the tests verify a patch for free, the ratio is in the tens to hundreds, retrying pays at every wage from $50 an hour up, and choosing a cap on attempt length adds nothing that can be told from zero, because the attempts a cap would stop still succeed a third to a half of the time and, in an unregistered check, the best cap that hindsight can find saves a few cents. A cap pays only when the fallback is worth fewer than two to four attempts, which is about where running the agent at all stops paying. When each patch must be reviewed at a large share of the fallback's cost, the economics reverse: the cap saves in point estimate at every wage, distinctly from zero only at the lower wages, mostly by keeping long attempts out of review, and the best such policy costs about what escalating every task costs. Both comparisons with escalating every task are exploratory. The registered low-complexity state rule adds little, and switching configurations after a failure helps in point estimate but is limited by how often the configurations fail together.
 
 For an operator, the practical question is not how aggressively to stop bad runs but what another attempt, a verification and an escalation cost relative to one another. The ordering that follows is to choose the configuration, retry, and set the iteration limit as a guard rather than a lever, then to price review before deciding whether to run the agent at all. For research on agent efficiency, the estimand suggests reporting cost per task with the fallback priced, rather than tokens saved or resolution lost on their own, since the trade between them is set by the fallback.
 
@@ -400,7 +421,7 @@ One check that the plan did not register runs beside the nine and is marked as s
 Table: **Table A1. The break-even under each sensitivity.** The median and, in brackets, the range across configurations of the first rate at which the cap's margin changes sign, among the configurations whose margin changes sign in the sweep, in dollars an hour and in multiples of the median attempt cost. A crossing is supported when the interval excludes zero on both sides of it. Every crossing is in `results/sensitivity_breakeven.csv`. \* Not registered: a check added after the results were in.
 
 | sensitivity | regime | cross in sweep | with a supported crossing | first break-even, $/h | x median attempt |
-|---------------------|------------------|------|---------|----------------------|---------------------|
+|----------------------|-------------------|-------|----------|-----------------------|----------------------|
 | primary | automated verifier | 7 of 7 | 0 | 4.51 [1.74, 7.08] | 2.54 [2.14, 3.83] |
 |  | review at 0.1 H | 7 of 7 | 0 | 6.73 [2.18, 8.87] | 3.18 [2.68, 5.90] |
 |  | review at 0.3 H | 6 of 7 | 0 | 12.59 [4.71, 22.82] | 6.49 [4.98, 10.76] |
@@ -449,7 +470,7 @@ Table: **Table A1. The break-even under each sensitivity.** The median and, in b
 Table: **Table A2. The primary margins under each sensitivity.** Medians across configurations, dollars per task; positive is what the richer policy saves. Cap: step ii minus step iii, with an automated verifier (A) and under review at 0.5 of the outside option (R), at $25, $100 and $300 an hour. Transfer: step iii-b minus the state rule fitted on the other configurations, automated verifier. Switching: the best single configuration minus the cascade, automated verifier. \* Not registered: a check added after the results were in.
 
 | sensitivity | cap A $25 | cap A $100 | cap A $300 | cap R $25 | cap R $100 | cap R $300 | transfer $25 | transfer $100 | transfer $300 | switching $100 |
-|---------------------|-----|-----|-----|----|-----|-----|--------|--------|--------|---------|
+|----------------------|------|------|------|-----|------|------|---------|---------|---------|----------|
 | primary | −0.01 | −0.24 | −0.64 | 1.31 | 1.85 | 4.22 | 0.01 | 0.12 | 0.36 | 2.03 |
 | phi 0.34 | −0.01 | −0.07 | −0.43 | 3.23 | 10.20 | 28.50 | 0.00 | 0.08 | 0.24 | 1.66 |
 | phi 0.50 | −0.00 | −0.05 | −0.34 | 4.26 | 13.69 | 40.19 | 0.01 | 0.07 | 0.18 | 1.34 |
@@ -462,12 +483,12 @@ Table: **Table A2. The primary margins under each sensitivity.** Medians across 
 | METR minutes | −0.06 | −0.39 | −1.27 | 0.31 | 0.37 | 0.88 | 0.07 | 0.30 | 0.91 | 5.48 |
 | common tasks* | −0.02 | −0.41 | −1.14 | 1.13 | 1.10 | 3.09 | 0.02 | 0.18 | 0.54 | 2.03 |
 
-The two-stage bootstrap resamples each task's usable draws as well as the tasks, on the same task resamples as the primary interval, so the two differ only by the second stage. For a mean over tasks the second stage would count within-task variation twice and widen the interval. Policy value is not such a mean: a retry draws a task's attempts without replacement, so a replicate that holds one draw twice prices a retry that can meet the same attempt again. The two bootstraps therefore need not be centred alike, and Table A3 gives each one's mean beside its interval. For the cap's margin the two intervals have about the same width, a median ratio of 1.02 over the 532 cells of the sweep, and the same centre at the median, though in individual cells the centres differ by as much as $2. For the transfer the two-stage intervals, from 100 replicates, are narrower than the task-level ones from 1,000 in 20 of the 21 cells; GPT-5's margin stays distinct from zero at $100 and $300 an hour and Sonnet 4's at $300 does not.
+The two-stage bootstrap resamples each task's usable draws as well as the tasks, on the same task resamples as the primary interval, so the two differ only by the second stage. For a mean over tasks the second stage would count within-task variation twice and widen the interval. Policy value is not such a mean: a retry draws a task's attempts without replacement, so a replicate that holds one draw twice prices a retry that can meet the same attempt again. The two bootstraps therefore need not be centered alike, and Table A3 gives each one's mean beside its interval. For the cap's margin the two intervals have about the same width, a median ratio of 1.02 over the 532 cells of the sweep, and the same center at the median, though in individual cells the centers differ by as much as $2. For the transfer the two-stage intervals, from 100 replicates, are narrower than the task-level ones from 1,000 in 20 of the 21 cells; GPT-5's margin stays distinct from zero at $100 and $300 an hour and Sonnet 4's at $300 does not.
 
-Table: **Table A3. The two-stage bootstrap.** For the cap's margin in both regimes and the primary transfer at the three wages with fitted intervals: the point estimate, the task-level interval and the two-stage interval, each with the mean of its replicates. The transfer's task-level interval is the one in Table 5, from 1,000 replicates; its two-stage interval is from 100. † Imputed price.
+Table: **Table A3. The two-stage bootstrap.** For the cap's margin in both regimes and the primary transfer at the three wages with fitted intervals: the point estimate, the task-level interval and the two-stage interval, each with the mean of its replicates for the cap; for the transfer the task-level mean is not recorded. The transfer's task-level interval is the one in Table 6, from 1,000 replicates; its two-stage interval is from 100. † Imputed price.
 
 | margin | configuration | $/h | estimate | one-stage [95%] | one-stage mean | two-stage [95%] | two-stage mean |
-|----------------------------|-------------|----|--------|---------------|---------|--------------|---------|
+|-----------------------------|--------------|-----|---------|----------------|----------|---------------|----------|
 | cap, automated verifier | GPT-5 | 25 | −0.10 | [−0.38, 0.01] | −0.11 | [−0.28, 0.01] | −0.06 |
 |  |  | 100 | −0.41 | [−1.62, 0.01] | −0.50 | [−1.22, 0.01] | −0.32 |
 |  |  | 300 | −1.21 | [−4.84, 0.01] | −1.49 | [−3.65, 0.01] | −0.95 |
@@ -541,10 +562,12 @@ The plan registers four comparators beside the ladder, each a family chosen on t
 - **The universal schedule.** Cutoffs in the sequence 1, 1, 2, 1 of a unit (Luby, Sinclair and Zuckerman 1993), the first four terms of the universal sequence. The plan does not fix the unit, and a unit of one call would stop every attempt at once, so the unit is chosen on the training folds among the decision points whose double is also a decision point or reaches the configuration's cap. Its classical guarantee assumes unbounded restarts of a procedure that eventually succeeds and is not claimed to carry over.
 - **The first look.** The state rule allowed to act only at the first decision point, which if nearly as good as the full rule would recommend one early look and a fixed rule thereafter.
 
-Table: **Table A4. The registered comparators, automated verifier.** Dollars per task; positive is what the richer or registered policy saves. Cap in calls: step ii minus step iii. Cap in dollars: step ii minus the dollar cutoff. Rule over threshold: the threshold comparator minus the state rule. Searched over universal: the universal schedule minus step iii-b. First look: step iii-b minus the first-look rule, beside the same margin for the unrestricted rule. Intervals from 100 replicates with every family refitted inside each. † Imputed price.
+::: small
+
+Table: **Table A4. The registered comparators, automated verifier.** Dollars per task; positive is what the richer or registered policy saves. Cap in calls: step ii minus step iii. Cap in dollars: step ii minus the dollar cutoff. Rule over threshold: the threshold comparator minus the state rule. Searched over universal: the universal schedule minus step iii-b. First look: step iii-b minus the first-look rule, beside the same margin for the unrestricted rule. Intervals from 100 replicates with every family refitted inside each. † Imputed price.
 
 | configuration | $/h | cap in calls | cap in dollars [95%] | rule over threshold [95%] | searched over universal [95%] | first look [95%] | rule, any point |
-|-------------|----|-----|-------------------|-------------------|-------------------|-------------------|-----|
+|--------------|-----|------|--------------------|--------------------|--------------------|--------------------|------|
 | GPT-5 | 25 | −0.10 | 0.01 [−0.30, 0.05] | 0.18 [−0.02, 0.89] | −0.02 [−0.17, 0.11] | 0.09 [−0.00, 0.25] | 0.09 |
 |  | 100 | −0.41 | 0.01 [−1.21, 0.02] | 0.78 [−0.02, 2.60] | −0.08 [−0.84, 0.06] | 0.38 [0.07, 1.61] | 0.38 |
 |  | 300 | −1.21 | 0.01 [−3.63, 0.02] | 2.40 [−0.02, 7.86] | −0.23 [−2.53, 0.16] | 1.13 [0.22, 4.82] | 1.13 |
@@ -570,22 +593,24 @@ Table: **Table A4. The registered comparators, automated verifier.** Dollars per
 |  | 100 | −0.24 | −0.12 | 0.48 | −0.08 | 0.12 | 0.12 |
 |  | 300 | −0.64 | −0.37 | 2.05 | −0.09 | 0.36 | 0.36 |
 
-With an automated verifier at $100 an hour, the cap stated in dollars behaves as the cap in calls does: its margin runs from −0.58 to +0.18 per task and every interval includes zero. Under review at 0.5, at the same wage, it saves $1.40 to $4.88, more than the cap in calls for six of the seven configurations. At $100 an hour with an automated verifier the state rule beats the threshold comparator for all seven, by $0.25 to $1.17, distinct from zero for Gemini alone (at $300 it is distinct from zero for two, and loses for Qwen3 Coder); since the rule does not stop attempts there, this says that the threshold family, chosen from data, costs more than not capping at all. Under review at 0.5 at $100 an hour the threshold comparator does better than the rule for six of the seven. At $100 an hour the universal schedule costs less than the searched schedule in point estimate for five of the seven with an automated verifier, by up to $0.39, and every interval includes zero, which is the searched schedule's cost of being chosen from data again. With an automated verifier at $100 and $300 an hour the first-look rule is the full rule, since neither stops attempts. Under review at 0.5 at $100 an hour, restricting the rule to the first decision point costs $0.69 to $4.51 more for four configurations and changes the other three by at most three cents, so one early look does not stand in for the full rule where the rule acts at all.
+:::
+
+With an automated verifier at $100 an hour, the cap stated in dollars behaves as the cap in calls does: its margin runs from −0.58 to +0.18 per task and every interval includes zero. Under review at 0.5, at the same wage, it saves $1.40 to $4.88, more than the cap in calls for six of the seven configurations. At $100 an hour with an automated verifier the state rule beats the threshold comparator for all seven, by $0.25 to $1.17, distinct from zero for Gemini alone (at $300 it is distinct from zero for two, and loses for Qwen3 Coder); since the rule does not stop attempts there, this says that the threshold family, chosen from data, costs more than not capping at all. Under review at 0.5 at $100 an hour the threshold comparator does better than the rule for six of the seven. At $100 an hour the universal schedule costs less than the searched schedule in point estimate for five of the seven with an automated verifier, by up to $0.39, and every interval includes zero, which is the searched schedule's cost of being chosen from data again. With an automated verifier at $100 and $300 an hour the first-look rule is the full rule, since neither stops attempts. Under review at 0.5 at $100 an hour, restricting the rule to the first decision point costs $0.69 to $4.50 more for four configurations and changes the other three by at most three cents, so one early look does not stand in for the full rule where the rule acts at all.
 
 Figure A1 draws the state rule against the best schedule across the sweep under review at 0.5, the regime in which the rule stops attempts: fitted on the configuration itself it gains for three configurations at some points of the sweep, and fitted on the other six it gains in 3 of the sweep's 133 cells and loses by more than a cent in 97.
 
 ![Figure A1](figures/figA1_transfer_review_05.pdf)
 
-> **Figure A1. The state rule against the best schedule under review at 0.5 of the outside option.** As Figure 3, not the registered regime for the transfer and without intervals: the rule fitted on the other six configurations (solid), on the configuration itself (dashed), and not capping at all (dotted), as a share of what retrying without a cap costs. Where the dotted line leaves the frame, not capping costs far more than the schedule. † Imputed price.
+> **Figure A1. The state rule against the best schedule under review at 0.5 of the outside option.** As Figure 3, not the registered regime for the transfer and without intervals: the rule fitted on the other six configurations (solid), on the configuration itself (dashed), and not capping at all (dotted), as a share of what retrying without a cap costs. Where the dotted line leaves the frame, not capping costs far more than the schedule. † Imputed price.
 
 **Leave-one-out essentialness.** Removing one configuration from the cascade's choices and rechoosing shows which the cascade relies on. With an automated verifier, removing GPT-5.2 raises the cascade's cost by $1.48 per task at $100 an hour and $2.19 at $300, and removing Sonnet 4 by $0.96 and $2.05; at $25 GPT-5 and Sonnet 4 matter most, at $0.41 and $0.31. Removing Sonnet 4.5 or Gemini lowers the cascade's cost at $100, by $0.06 and $0.15, because the cascade chosen with them does worse out of sample. Under review at 0.5, only removing GPT-5.2 raises the cost by more than a cent, by $1.12 per task at $100 and $2.70 at $300.
 
 **The sample oracle.** For each of the 275 common tasks, the oracle is the cheapest schedule of one to four (configuration, cutoff) attempts on that task's own draws, and its value is the average over tasks. No policy in the class the cascades are drawn from can beat it on these draws, but as an estimate of any population quantity it is biased downward, since it takes a minimum over seven configurations on four draws per task, so its gap to the best cross-fitted cascade is an upper estimate of what knowing the task in advance would be worth, not a value of information. The minimum is found exactly by a recursion that the tests hold to a brute-force search over every schedule.
 
-Table: **Table A5. The sample oracle.** On the 275 common tasks, dollars per task: the oracle, the best cross-fitted cascade and single configuration on the same tasks, and the gap as a share of the cascade's cost. \* Exploratory, not registered: every task sent to the outside option. † Imputed price.
+Table: **Table A5. The sample oracle.** On the 275 common tasks, dollars per task: the oracle, the best cross-fitted cascade and single configuration on the same tasks, and the gap as a share of the cascade's cost. \* Exploratory, not registered: every task sent to the outside option. † Imputed price.
 
 | regime | $/h | sample oracle | cascade | best single | escalate all* | cascade minus oracle | share of the cascade |
-|------------------|----|------|-------|------|--------|-------|-------|
+|-------------------|-----|-------|--------|-------|---------|--------|--------|
 | automated verifier | 25 | 3.99 | 5.98 | 6.42 | 12.51 | 1.99 | 33% |
 |  | 100 | 14.07 | 19.94 | 21.97 | 50.05 | 5.87 | 29% |
 |  | 300 | 40.90 | 56.01 | 61.36 | 150.16 | 15.11 | 27% |
@@ -605,10 +630,10 @@ With an automated verifier at $100 an hour the oracle costs $14.07 per task agai
 
 **Difficulty.** In the primary ladder no policy observes a task's annotation. Here the annotation is admitted to every policy at once: each is chosen within a difficulty bucket, and the cap's margin is reported per bucket with its interval. The longest bucket holds a handful of tasks, too few for a training fold to choose on, so it is shown by its count and also pooled with the 1 to 4 hour bucket. Pooling the choices made within the buckets and comparing them with the primary's blind choice gives what admitting the annotation is worth.
 
-Table: **Table A6. The cap's margin by difficulty.** Dollars per task at $100 an hour, every policy chosen within the bucket. \* The 95 percent interval from 1,000 replicates excludes zero; every interval is in `results/difficulty.csv`. Over 4 hours: too few tasks for a training fold to choose on, with their count in parentheses; the two longest buckets are also shown together. All, within: the choices made under 15 minutes, from 15 minutes to 1 hour and at 1 hour or more, pooled. All, blind: the primary. Tasks per bucket: 158 to 194, 210 to 261, 30 to 42, 2 to 3 and 32 to 45. † Imputed price.
+Table: **Table A6. The cap's margin by difficulty.** Dollars per task at $100 an hour, every policy chosen within the bucket. \* The 95 percent interval from 1,000 replicates excludes zero; every interval is in `results/difficulty.csv`. Over 4 hours: too few tasks for a training fold to choose on, with their count in parentheses; the two longest buckets are also shown together. All, within: the choices made under 15 minutes, from 15 minutes to 1 hour and at 1 hour or more, pooled. All, blind: the primary. Tasks per bucket: 158 to 194, 210 to 261, 30 to 42, 2 to 3 and 32 to 45. † Imputed price.
 
 | regime | configuration | under 15 min | 15 min to 1 h | 1 to 4 h | over 4 h | 1 h or more | all, within | all, blind |
-|------------------|-------------|-----|-----|------|----|------|------|-----|
+|-------------------|--------------|------|------|-------|-----|-------|-------|------|
 | automated verifier | GPT-5 | −0.03 | −0.20 | −0.01* | (3) | −0.01 | −0.12 | −0.41 |
 |  | GPT-5.2 | −0.02 | −0.00 | −6.80 | (2) | −6.38 | −0.51 | 0.01 |
 |  | Sonnet 4 | −0.01 | −0.00 | 0.00 | (3) | 0.00 | −0.00 | −0.01 |
@@ -630,10 +655,10 @@ Under review at 0.5 the long tasks are where the cap pays. At $100 an hour it sa
 
 **The distribution of cost.** A cap is partly insurance, and the mean alone undervalues it. The distribution of cost per incoming task is taken over tasks and, within a task, over the orderings of its draws the policy can use, each task weighing the same, and its quantiles are lower quantiles, so each is a cost some task and ordering actually incurs. The median-cost version of the primary comparison chooses steps ii and iii on the training folds by median cost and scores them by the median of the held-out costs.
 
-Table: **Table A7. The distribution of cost per task at $100 an hour.** Under steps ii and iii as chosen on mean cost: the mean, median and 95th percentile of cost per incoming task, and the cap's margin at the 95th percentile; and the median-cost version of the primary comparison. † Imputed price.
+Table: **Table A7. The distribution of cost per task at $100 an hour.** Under steps ii and iii as chosen on mean cost: the mean, median and 95th percentile of cost per incoming task, and the cap's margin at the 95th percentile; and the median-cost version of the primary comparison. † Imputed price.
 
 | regime | configuration | ii mean | ii median | ii p95 | iii mean | iii median | iii p95 | cap's saving at p95 | median version |
-|------------------|-------------|-----|------|------|-----|------|------|------|-------|
+|-------------------|--------------|------|-------|-------|------|-------|-------|-------|--------|
 | automated verifier | GPT-5 | 23.23 | 0.50 | 201.30 | 23.64 | 0.50 | 201.44 | −0.14 | −0.00 |
 |  | GPT-5.2 | 22.65 | 0.72 | 200.85 | 22.64 | 0.72 | 200.85 | 0.00 | −0.00 |
 |  | Sonnet 4 | 21.76 | 1.26 | 203.06 | 21.77 | 1.26 | 203.06 | 0.00 | 0.00 |
@@ -653,10 +678,10 @@ With an automated verifier at $100 an hour, the 95th percentile of cost per task
 
 **The spread.** On the 275 common tasks, the range of policy value across the configurations, each at its best policy or at a single attempt, against the range across steps i to iii-b within a configuration: whether choosing the configuration or the policy moves cost more.
 
-Table: **Table A8. Choosing the configuration against choosing the policy.** On the 275 common tasks, dollars per task: the range across configurations, holding each at its best policy and at one attempt, and the median and largest range across steps i to iii-b within a configuration. † Imputed price.
+Table: **Table A8. Choosing the configuration against choosing the policy.** On the 275 common tasks, dollars per task: the range across configurations, holding each at its best policy and at one attempt, and the median and largest range across steps i to iii-b within a configuration. † Imputed price.
 
 | regime | $/h | across configurations, best policy | across configurations, one attempt | within a configuration, median | within a configuration, largest | cheapest | dearest |
-|------------------|----|---------------|---------------|--------------|--------------|------------|----------|
+|-------------------|-----|----------------|----------------|---------------|---------------|-------------|-----------|
 | automated verifier | 25 | 1.76 | 1.47 | 0.24 | 0.78 | GPT-5 | Sonnet 4.5 |
 |  | 100 | 4.94 | 5.15 | 3.83 | 4.44 | Sonnet 4 | Kimi K2 |
 |  | 300 | 13.72 | 14.96 | 14.22 | 15.08 | Sonnet 4 | Kimi K2 |
@@ -676,10 +701,10 @@ With an automated verifier at $100 an hour, the range across configurations at t
 
 The share of the variance in log spend that is within task, and the share of tasks with mixed outcomes across their four runs, motivate restarts but do not bound their value, which depends jointly on the cost and success distributions, their dependence, the outside option, \(K\) and the cutoff.
 
-Table: **Table A9. Within-task variation.** Per configuration, on its tasks with four usable draws: the share of the variance in log spend that is within task, the shares of tasks with mixed outcomes, with all four draws failing and with all four resolving, the median attempt cost, and the share of attempts whose spend passes their own task's outside option at $25 an hour. † Imputed price.
+Table: **Table A9. Within-task variation.** Per configuration, on its tasks with four usable draws: the share of the variance in log spend that is within task, the shares of tasks with mixed outcomes, with all four draws failing and with all four resolving, the median attempt cost, and the share of attempts whose spend passes their own task's outside option at $25 an hour. † Imputed price.
 
 | configuration | tasks | within-task share of log-spend variance | mixed outcomes | all four fail | all four resolve | median attempt, $ | attempts past their outside option at $25/h |
-|-------------|-----|-----------|--------|----|-------|--------|--------|
+|--------------|------|------------|---------|-----|--------|---------|---------|
 | GPT-5 | 496 | 64% | 24% | 30% | 46% | 0.345 | 0.05% |
 | GPT-5.2 | 405 | 30% | 11% | 28% | 61% | 0.556 | 0.68% |
 | Sonnet 4 | 498 | 29% | 19% | 22% | 58% | 1.039 | 4.82% |
@@ -694,11 +719,11 @@ Whether switching after a failure can pay depends on how often the configuration
 
 ![Figure A2](figures/figA2_outcome_correlation.pdf)
 
-> **Figure A2. Outcome correlation across configurations.** The correlation, across the 275 common tasks, of the share of each configuration's draws that resolve. It is the portfolio predictor of whether switching after a failure can pay. † Imputed price.
+> **Figure A2. Outcome correlation across configurations.** The correlation, across the 275 common tasks, of the share of each configuration's draws that resolve. It is the portfolio predictor of whether switching after a failure can pay. † Imputed price.
 
 ![Figure A3](figures/figA3_tail_composition.pdf)
 
-> **Figure A3. Tail composition.** For each cutoff on the decision grid: the share of attempts still running (dotted); of the spend incurred beyond the cutoff, the share by attempts that go on to resolve (solid), which is what a cutoff there would cut from successes; the chance that an attempt still running there resolves (dashed); and the share of running attempts whose spend has already passed their own task's outside option at $25 an hour (dash-dot), which marks where on the grid a cutoff at the annotated engineer time would fall. The last three are drawn while at least 1 percent of attempts are still running. † Imputed price.
+> **Figure A3. Tail composition.** For each cutoff on the decision grid: the share of attempts still running (dotted); of the spend incurred beyond the cutoff, the share by attempts that go on to resolve (solid), which is what a cutoff there would cut from successes; the chance that an attempt still running there resolves (dashed); and the share of running attempts whose spend has already passed their own task's outside option at $25 an hour (dash-dot), which marks where on the grid a cutoff at the annotated engineer time would fall. The last three are drawn while at least 1 percent of attempts are still running. † Imputed price.
 
 # Appendix E. Verification
 
@@ -707,7 +732,7 @@ Whether switching after a failure can pay depends on how often the configuration
 Table: **Table E1. Coverage of the registered interval on a synthetic population.** The cap's margin in dollars per task. Target: the population value of the procedure's choice. Best: the margin of the best policies in the population. Bias: the mean point estimate minus the target, with its standard error.
 
 | Outside option | Verifier | Target | Best | Bias (s.e.) | Mean width | Covers |
-|------------------|-------------|------|------|--------------|-----|------|
+|-------------------|--------------|-------|-------|---------------|------|-------|
 | 1 median attempt | automated | +0.464 | +0.464 | +0.003 (0.003) | 0.111 | 93% |
 | 5 median attempts | automated | +0.374 | +0.386 | −0.006 (0.008) | 0.417 | 98% |
 | 50 median attempts | automated | −0.029 | +0.043 | +0.015 (0.022) | 1.022 | 98% |
@@ -720,7 +745,7 @@ The point estimate is no more than one standard error from the target at every s
 Table: **Table E2. The state rule against the exact optimum on synthetic attempts.** Dollars per task. Signals weak: a good attempt has a high-output interval with probability 0.3 and a bad one 0.6; strong: 0.2 and 0.8. Stopped: the share of first attempts each policy stops before their end, and the mean call at which it does.
 
 | Signals | Outside option | Verifier | Optimum | Rule | Rule above optimum | Best constant cutoff | No cap | Stopped: optimum | Stopped: rule |
-|-------|-------|-------------|-------|------|-------|--------|------|---------|---------|
+|--------|--------|--------------|--------|-------|--------|---------|-------|----------|----------|
 | weak | 2 | automated | 1.220 | 1.302 | 6.8% | 1.511 | 1.771 | 65% at 12 | 78% at 10 |
 | weak | 10 | automated | 2.150 | 2.842 | 32.2% | 2.636 | 2.636 | 42% at 29 | 65% at 8 |
 | weak | 50 | automated | 5.420 | 6.198 | 14.3% | 5.642 | 5.642 | 29% at 42 | 42% at 5 |
@@ -740,7 +765,12 @@ The optimum's own policy, replayed by the evaluator on the held-out tasks, repro
 
 # Appendix F. The Plan and the Choices It Left Open
 
-The analysis plan was frozen at the `plan-frozen` tag of the repository after the data audit and registered on OSF Registries (osf.io/pdmw9) on 20 September 2026 under the Secondary Data Preregistration template, both before any policy was evaluated. Everything the audit found that the plan had not anticipated was recorded in the plan before the freeze: the configurations admitted and excluded, the attempt pool, each configuration's own iteration cap, the unequal numbers of usable draws, the price schedules, the state rule's class, and the value of \(\phi\). No departure from the frozen plan has been recorded as a deviation.
+The analysis plan was frozen at the `plan-frozen` tag of the repository after the data audit and registered on OSF Registries (osf.io/pdmw9) on 20 September 2026 under the Secondary Data Preregistration template, both before any policy was evaluated. Everything the audit found that the plan had not anticipated was recorded in the plan before the freeze: the configurations admitted and excluded, the attempt pool, each configuration's own iteration cap, the unequal numbers of usable draws, the price schedules, the state rule's class, and the value of \(\phi\). The paper departs from the frozen plan in four places, each a matter of what is reported rather than of what is computed, and each is stated here so that the plan and the paper can be read against each other.
+
+- **Intervals for the fitted steps.** The plan asks for a 95 percent interval on every quantity chosen from data and allows a reduced replicate count where refitting inside every replicate is too expensive. Steps iii-b, iv and iv-t carry intervals only at $25, $100 and $300 an hour with an automated verifier, where the plan reads the primary transfer; elsewhere they are point estimates, which the plan did not provide for. The cap's margin and the value of retry carry their intervals at every point of the sweep in every regime.
+- **The cascades' tasks.** The plan says that cascades enumerate all available draw combinations and are unbiased at any count, and also that comparisons across attempt budgets rest on the tasks with four usable draws in every configuration involved. The second rule is applied: step v, the leave-one-out, the sample oracle and the spread are scored on the 275 tasks that all seven configurations cover with four draws. Those tasks are not a random subset of the 500 (Appendix A).
+- **Where the diagnostics and the flags sit.** The plan places the diagnostics beside the results they explain and the configuration's cap and harness version in every table; the diagnostics are in Appendix D, cross-referenced from Section 8.1, and the cap and harness version are in Table 1.
+- **Two summaries given in prose or in the results files rather than as exhibits.** The rates at which the chosen attempt budget and cutoff change over the sweep are described in Sections 7.1 and 7.2 and recorded in the `choice_*` columns of `results/ladder.csv`; the 95th percentile of cost is given for steps ii and iii (Table A7) rather than for every step, with the rest in `results/distribution.csv`.
 
 Where the plan left a detail open, the choice made is stated here.
 
@@ -749,18 +779,123 @@ Where the plan left a detail open, the choice made is stated here.
 - **The universal schedule's unit** is chosen on the training folds, since the plan does not fix it (Appendix B).
 - **The difficulty display** shows all four buckets, with the smallest shown by its count only and pooled with the next, and the pooled choices are those made under 15 minutes, from 15 minutes to 1 hour and at 1 hour or more (Appendix C).
 - **Quantiles and the median version** are defined as in Appendix C.
-- **The two-stage bootstrap** uses the same task resamples as the primary and reports both centres without correcting either (Appendix A).
-- **Break-evens** are located by a scan in the logarithm of the rate refined by bisection, and every crossing is reported, as the plan requires.
+- **The two-stage bootstrap** uses the same task resamples as the primary and reports both centers without correcting either (Appendix A).
+- **Break-evens** are located by a scan in the logarithm of the rate refined by bisection. Table 4 gives the first crossing per configuration and regime, and every crossing the scan found is in Table A11, as the plan requires.
 - **The tail composition** marks the annotated outside option on the decision grid by the share of running attempts whose spend has already passed it at $25 an hour, since the outside option differs by task.
-- **The first figure.** The plan asks that the abstract and the first figure be built from the primary result and the primary transfer. Figure 1 draws the whole ladder from the registered values of Table 3, each step as a share of step i, and the primary result and the primary transfer are two of its steps; Figures 2 and 3 then give each its own figure. It adds a display, not a quantity.
-- **Replicates for the fitted steps.** The plan allows fewer than 1,000 replicates where refitting inside every replicate is too expensive, and asks that the count be reported. The fitted steps' intervals at $25, $100 and $300 an hour with an automated verifier, where the plan reads the primary transfer, come from 1,000 replicates, each refitting every model and choice, computed first at 100 and then extended to 1,000 on the same task resamples, which changed no conclusion; the comparators' intervals (Appendix B), the cascade's switching margin and the two-stage transfer are from 100, and elsewhere the fitted steps are point estimates.
+- **The first figure.** The plan asks that the abstract and the first figure be built from the primary result and the primary transfer. Figure 1 draws the whole ladder from the registered values of Table 5, each step as a share of step i, and the primary result and the primary transfer are two of its steps; Figures 2 and 3 then give each its own figure. It adds a display, not a quantity.
+- **Replicates for the fitted steps.** The plan allows fewer than 1,000 replicates where refitting inside every replicate is too expensive, and asks that the count be reported. The fitted steps' intervals at $25, $100 and $300 an hour with an automated verifier come from 1,000 replicates, each refitting every model and choice, computed first at 100 and then extended to 1,000 on the same task resamples, which changed no conclusion; the comparators' intervals (Appendix B), the cascade's switching margin and the two-stage transfer are from 100. The value of retry's interval comes from the same bootstrap and the same resamples as the cap's margin.
 - **The common-tasks check** in Appendix A was added after the registered results were in, and is marked as unregistered where it appears.
+- **The best cap chosen with hindsight** (Sections 7.2 and 8.1, `cap_margin_in_sample` in `results/ladder.csv`), the in-sample margin of the capped family over the uncapped one, is not in the plan, whose only hindsight quantity is the per-task sample oracle of Appendix B. It is reported as an unregistered check on the size of the gain any cap could find.
 
-Several exhibits were added after the registered results were in, and each is marked as exploratory where it appears: escalating every task without running the agent as a reference line (Tables 3 and 6, Figures 2 and 4); the outside option at which retrying first beats escalating (Figure 2 and Section 8.2); and the break-even in full attempts (Figure 5). The argument that the break-even in multiples does not depend on the level of token prices (Section 8.1) is arithmetic on the estimand rather than a result.
+Several exhibits were added after the registered results were in, and each is marked as exploratory where it appears: escalating every task without running the agent as a reference line (Tables 5, 7, A5 and A10, Figure 4) and the comparisons of the best capped policy with it under review (the abstract, Sections 1, 7.2, 8.3 and 10); the outside option at which retrying first beats escalating (Figure 2 and Section 8.2); the best cap chosen with hindsight, above; and the break-even in full attempts (Figure 5). The argument that the break-even in multiples does not depend on the level of token prices (Section 8.1) is arithmetic on the estimand rather than a result.
+
+# Appendix G. The Ladder under Review at 0.1 and 0.3, and Every Crossing
+
+The plan reports every result under an automated verifier and under review at 0.1, 0.3 and 0.5 of the outside option. The text and the main exhibits read the automated verifier and review at 0.5, the two regimes that bracket the answer; Tables 4, 7, A1, A5 and A8 carry all four. Table A10 gives the ladder of Table 5 under review at 0.1 and 0.3, and Table A11 lists every crossing of the cap's margin the scan found, where Table 4 gives only the first. Every number here is in `results/ladder.csv` and `results/breakeven.csv`.
+
+::: nowrap
+
+Table: **Table A10. Policy value under review at 0.1 and 0.3 of the outside option.** As Table 5, with each patch submitted charged a review of 0.1 (top) or 0.3 (bottom) of its task's outside option. Resolves: the share of tasks steps i, ii, iii and iii-b resolve without the outside option, in percent. \* Exploratory, not registered: every task to the outside option. † Imputed price.
+
+| Configuration | $/h | i | ii | iii | iii-b | Cap's saving [95%] | Step iii chose | Resolves % | Escalate all\* |
+|:--------------------|-----:|-------:|-------:|-------:|-------:|---------------------:|:---------------------|:------------|---------:|
+| **Review at 0.1 H** | | | | | | | | | |
+| GPT-5 | 25 | 8.75 | 8.81 | 8.93 | 8.94 | −0.13 [−0.32, 0.05] | 1×85/none, 2×80/85 | 60/61/62/63 | 12.56 |
+|  | 100 | 33.75 | 33.81 | 33.55 | 33.45 | 0.25 [−1.46, 0.49] | 2×80/85/none | 60/65/66/66 | 50.22 |
+|  | 300 | 100.43 | 98.74 | 99.45 | 99.14 | −0.72 [−4.26, 0.90] | 2×80/85/none | 60/66/66/66 | 150.67 |
+| GPT-5.2 | 25 | 7.65 | 7.65 | 7.64 | 7.64 | 0.01 [−0.09, 0.04] | 1×125 | 67/67/67/67 | 11.96 |
+|  | 100 | 28.42 | 28.42 | 28.45 | 28.45 | −0.03 [−0.65, 0.13] | 1×125/150/175 | 67/67/67/67 | 47.84 |
+|  | 300 | 83.79 | 83.79 | 83.93 | 83.93 | −0.14 [−2.27, 0.45] | 1×125/150/175 | 67/67/67/67 | 143.53 |
+| Sonnet 4 | 25 | 8.59 | 8.59 | 8.60 | 8.60 | −0.01 [−0.08, 0.01] | 1×200/275 | 69/69/69/69 | 12.58 |
+|  | 100 | 30.50 | 30.50 | 30.85 | 30.84 | −0.35 [−0.54, 0.29] | 1×275, 2×150 | 69/69/71/71 | 50.31 |
+|  | 300 | 88.93 | 89.07 | 89.26 | 89.26 | −0.19 [−2.19, 1.08] | 1×275, 2×150/175 | 69/73/72/72 | 150.93 |
+| Sonnet 4.5 | 25 | 9.56 | 9.56 | 9.57 | 9.57 | −0.01 [−0.03, 0.01] | 1×175/200/225 | 64/64/64/64 | 12.56 |
+|  | 100 | 32.71 | 32.97 | 32.94 | 33.15 | 0.03 [−0.44, 0.24] | 1×225, 2×175 | 64/67/67/67 | 50.22 |
+|  | 300 | 94.46 | 92.51 | 92.39 | 93.03 | 0.12 [−2.00, 1.25] | 2×175 | 64/68/68/68 | 150.67 |
+| Gemini 3 Pro | 25 | 8.89 | 8.89 | 8.89 | 8.89 | −0.00 [−0.08, 0.00] | 1×300/400 | 61/61/61/61 | 12.29 |
+|  | 100 | 32.47 | 32.93 | 32.95 | 32.95 | −0.02 [−0.31, 0.04] | 1×400, 2×300/400 | 61/63/63/63 | 49.17 |
+|  | 300 | 95.37 | 96.38 | 96.43 | 96.44 | −0.06 [−0.93, 0.21] | 1×400, 2×300/400 | 61/63/63/63 | 147.51 |
+| Kimi K2 | 25 | 9.39 | 9.39 | 9.42 | 9.42 | −0.02 [−0.24, 0.07] | 1×175/200/250/275 | 58/58/58/58 | 12.62 |
+|  | 100 | 34.47 | 34.91 | 35.14 | 35.14 | −0.23 [−1.03, 0.92] | 1×250/275, 2×125/175 | 58/62/61/61 | 50.48 |
+|  | 300 | 101.33 | 100.18 | 100.14 | 100.14 | 0.04 [−3.76, 2.87] | 2×175/275 | 58/65/64/64 | 151.43 |
+| Qwen3 Coder† | 25 | 9.31 | 9.31 | 9.33 | 9.33 | −0.02 [−0.46, 0.04] | 1×175/225/300 | 66/66/66/66 | 12.56 |
+|  | 100 | 32.66 | 32.69 | 32.85 | 32.85 | −0.17 [−1.72, 0.16] | 1×300, 2×175/300 | 66/71/71/71 | 50.22 |
+|  | 300 | 94.94 | 92.60 | 93.16 | 93.16 | −0.56 [−5.71, 0.39] | 2×175/300 | 66/73/72/72 | 150.67 |
+| **Review at 0.3 H** | | | | | | | | | |
+| GPT-5 | 25 | 11.17 | 11.17 | 11.23 | 11.23 | −0.06 [−0.31, 0.10] | 1×70/85/none | 60/60/59/59 | 12.56 |
+|  | 100 | 43.44 | 43.44 | 43.54 | 43.54 | −0.09 [−1.22, 0.38] | 1×85/none | 60/60/60/60 | 50.22 |
+|  | 300 | 129.51 | 129.51 | 129.79 | 129.79 | −0.28 [−3.62, 1.11] | 1×85/none | 60/60/60/60 | 150.67 |
+| GPT-5.2 | 25 | 10.03 | 10.03 | 9.93 | 9.93 | 0.10 [−0.28, 0.26] | 1×90/95 | 67/67/66/66 | 11.96 |
+|  | 100 | 37.93 | 37.93 | 37.60 | 37.60 | 0.34 [−0.77, 0.93] | 1×90/95 | 67/67/66/66 | 47.84 |
+|  | 300 | 112.34 | 112.34 | 111.37 | 111.37 | 0.96 [−2.61, 2.75] | 1×90/95 | 67/67/66/66 | 143.53 |
+| Sonnet 4 | 25 | 11.10 | 11.10 | 11.13 | 11.13 | −0.03 [−0.82, 0.04] | 1×150/175/275 | 69/69/68/68 | 12.58 |
+|  | 100 | 40.56 | 40.56 | 40.65 | 40.65 | −0.09 [−2.29, 0.06] | 1×175/200/275 | 69/69/69/69 | 50.31 |
+|  | 300 | 119.12 | 119.12 | 119.23 | 119.23 | −0.11 [−8.16, 0.16] | 1×200/275 | 69/69/69/69 | 150.93 |
+| Sonnet 4.5 | 25 | 12.06 | 12.06 | 12.08 | 12.08 | −0.03 [−0.79, 0.14] | 1×150/175 | 64/64/63/63 | 12.56 |
+|  | 100 | 42.70 | 42.70 | 42.87 | 42.87 | −0.17 [−0.81, 0.27] | 1×150/175/225 | 64/64/63/63 | 50.22 |
+|  | 300 | 124.43 | 124.43 | 124.95 | 124.95 | −0.52 [−2.44, 0.67] | 1×150/175/225 | 64/64/63/63 | 150.67 |
+| Gemini 3 Pro | 25 | 11.29 | 11.29 | 11.33 | 11.33 | −0.04 [−0.64, 0.03] | 1×200/275/400 | 61/61/61/61 | 12.29 |
+|  | 100 | 42.08 | 42.08 | 42.18 | 42.18 | −0.09 [−1.73, 0.07] | 1×200/400 | 61/61/61/61 | 49.17 |
+|  | 300 | 124.20 | 124.20 | 124.49 | 124.49 | −0.29 [−4.44, 0.25] | 1×200/400 | 61/61/61/61 | 147.51 |
+| Kimi K2 | 25 | 11.90 | 11.90 | 12.08 | 12.08 | −0.17 [−0.99, 0.65] | 1×80/150 | 58/58/53/53 | 12.62 |
+|  | 100 | 44.51 | 44.51 | 45.64 | 45.64 | −1.13 [−3.80, 1.19] | 1×80/150 | 58/58/53/53 | 50.48 |
+|  | 300 | 131.47 | 131.47 | 135.14 | 135.14 | −3.67 [−11.40, 2.82] | 1×80/150 | 58/58/53/53 | 151.43 |
+| Qwen3 Coder† | 25 | 11.82 | 11.82 | 11.86 | 11.86 | −0.04 [−0.63, 0.46] | 1×80/90/175 | 66/66/58/58 | 12.56 |
+|  | 100 | 42.71 | 42.71 | 42.90 | 42.90 | −0.20 [−2.52, 0.66] | 1×150/175 | 66/66/66/66 | 50.22 |
+|  | 300 | 125.08 | 125.08 | 124.92 | 124.92 | 0.15 [−8.37, 1.15] | 1×175 | 66/66/66/66 | 150.67 |
+
+:::
+
+::: nowrap
+
+Table: **Table A11. Every crossing of the cap's marginal value.** For each configuration and regime, each rate at which the margin changes sign over the sweep, in dollars an hour and in multiples of the median attempt cost, with the sign on either side and whether the bootstrap interval is clear of zero below it, above it, on both sides or on neither. Under review at 0.5 the margin does not change sign. † Imputed price.
+
+| regime | configuration | crossing | $/h | x median attempt | below, above | interval clear of zero |
+|-------------------|--------------|---------|-------|--------|-------------|---------|
+| automated verifier | GPT-5 | 1 of 3 | 1.74 | 2.54 | saves, costs | below |
+|  |  | 2 of 3 | 5.08 | 7.39 | costs, zero | neither |
+|  |  | 3 of 3 | 6.48 | 9.44 | zero, costs | neither |
+|  | GPT-5.2 | 1 of 4 | 3.36 | 2.89 | saves, costs | below |
+|  |  | 2 of 4 | 4.46 | 3.83 | costs, saves | neither |
+|  |  | 3 of 4 | 6.49 | 5.58 | saves, costs | neither |
+|  |  | 4 of 4 | 71.68 | 61.66 | costs, saves | neither |
+|  | Sonnet 4 | 1 of 1 | 4.51 | 2.18 | saves, costs | below |
+|  | Sonnet 4.5 | 1 of 3 | 7.08 | 2.14 | saves, costs | below |
+|  |  | 2 of 3 | 39.84 | 12.04 | costs, saves | neither |
+|  |  | 3 of 3 | 81.29 | 24.58 | saves, costs | neither |
+|  | Gemini 3 Pro | 1 of 1 | 3.90 | 2.35 | saves, costs | below |
+|  | Kimi K2 | 1 of 1 | 5.30 | 3.83 | saves, costs | below |
+|  | Qwen3 Coder† | 1 of 1 | 5.91 | 2.73 | saves, costs | below |
+| review at 0.1 H | GPT-5 | 1 of 3 | 2.18 | 3.18 | saves, costs | below |
+|  |  | 2 of 3 | 88.02 | 128.21 | costs, saves | neither |
+|  |  | 3 of 3 | 154.58 | 225.17 | saves, costs | neither |
+|  | GPT-5.2 | 1 of 3 | 6.73 | 5.79 | saves, costs | below |
+|  |  | 2 of 3 | 8.76 | 7.53 | costs, saves | neither |
+|  |  | 3 of 3 | 50.18 | 43.16 | saves, costs | neither |
+|  | Sonnet 4 | 1 of 3 | 5.54 | 2.68 | saves, costs | below |
+|  |  | 2 of 3 | 364.36 | 176.41 | costs, saves | neither |
+|  |  | 3 of 3 | 473.87 | 229.43 | saves, costs | neither |
+|  | Sonnet 4.5 | 1 of 2 | 8.87 | 2.68 | saves, costs | below |
+|  |  | 2 of 2 | 75.41 | 22.80 | costs, saves | neither |
+|  | Gemini 3 Pro | 1 of 1 | 4.88 | 2.95 | saves, costs | below |
+|  | Kimi K2 | 1 of 2 | 8.16 | 5.90 | saves, costs | below |
+|  |  | 2 of 2 | 155.49 | 112.43 | costs, saves | neither |
+|  | Qwen3 Coder† | 1 of 3 | 7.40 | 3.42 | saves, costs | below |
+|  |  | 2 of 3 | 21.17 | 9.80 | costs, saves | neither |
+|  |  | 3 of 3 | 21.98 | 10.17 | saves, costs | neither |
+| review at 0.3 H | GPT-5 | 1 of 1 | 4.71 | 6.86 | saves, costs | below |
+|  | Sonnet 4 | 1 of 1 | 10.29 | 4.98 | saves, costs | below |
+|  | Sonnet 4.5 | 1 of 1 | 18.11 | 5.47 | saves, costs | below |
+|  | Gemini 3 Pro | 1 of 1 | 10.16 | 6.13 | saves, costs | below |
+|  | Kimi K2 | 1 of 1 | 14.88 | 10.76 | saves, costs | below |
+|  | Qwen3 Coder† | 1 of 2 | 22.82 | 10.56 | saves, costs | below |
+|  |  | 2 of 2 | 190.34 | 88.08 | costs, saves | neither |
+
+:::
 
 # Data, Code and Preregistration
 
-The trajectories are those released with Bai et al. (2026) on Hugging Face (`loong0814/openhands_trajectories`). The release records no license, so the tables derived from it are not redistributed; the repository instead ships the code that acquires each archive, checks it against the checksum Hugging Face records and rebuilds the tables locally. The code, the results files, the exhibits and the sources of this manuscript are at github.com/james-e-murphy/restart-economics, where `results/README.md` names the command that writes each file every number here comes from. The code is under the MIT license and the plan and manuscript under CC BY 4.0. The analysis plan, the data audit and the repository at the `plan-frozen` tag are registered at osf.io/pdmw9.
+`loong0814/openhands_trajectories`, the Hugging Face release accompanying Bai et al. (2026), holds the trajectories. The release records no license, so the tables derived from it are not redistributed; the repository instead ships the code that acquires each archive, checks it against the checksum Hugging Face records and rebuilds the tables locally. The code, the results files, the exhibits and the sources of this manuscript are at github.com/james-e-murphy/restart-economics, where `results/README.md` names the command that writes each file every number here comes from. The code is under the MIT license and the plan and manuscript under CC BY 4.0. The analysis plan, the data audit and the repository at the `plan-frozen` tag are registered at osf.io/pdmw9. The code, results and manuscript sources this version was built from are at the `v0.1` tag.
 
 # References
 
@@ -813,6 +948,14 @@ Wang, Xingyao, Yangyi Chen, Lifan Yuan, Yizhe Zhang, Yunzhu Li, Hao Peng, and He
 Wang, Xingyao, Boxuan Li, Yufan Song, Frank F. Xu, Xiangru Tang, Mingchen Zhuge, Jiayi Pan, et al. 2025. "OpenHands: An Open Platform for AI Software Developers as Generalist Agents." *The Thirteenth International Conference on Learning Representations* (ICLR 2025). arXiv:2407.16741.
 
 Whitfill, Parker, Cheryl Wu, Joel Becker, and Nate Rush. 2026. "Many SWE-bench-Passing PRs Would Not Be Merged into Main." METR Note, March 10, 2026.
+
+# Declarations
+
+**Funding.** This work received no external funding.
+
+**Competing interests.** The author declares no competing interests.
+
+**Acknowledgements.** The paper rests on the trajectories that Bai et al. (2026) released; the author thanks them for making the logs public.
 
 # Declaration of generative AI and AI-assisted technologies in the writing process
 

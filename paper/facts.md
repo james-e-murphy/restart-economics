@@ -42,6 +42,53 @@ Written by `paper/facts.py` from `results/`. Do not edit by hand.
 | Qwen3 Coder† | 100 | 27.64 | 23.55 | 4.09 | 14.8 | 4  |
 | Qwen3 Coder† | 300 | 79.88 | 64.1 | 15.78 | 19.8 | 4  |
 
+## Retry's interval, automated verifier, dollar axis
+
+| configuration | distinct from zero at $/h | interval straddles zero at $/h | costs distinctly at $/h | at $100: saving [95%] |
+|---|---|---|---|---|
+| GPT-5 | 25, 50, 75, 100, 150, 200, 300 | 5, 10 |  | 5.67 [3.42, 8.80] |
+| GPT-5.2 | 50, 75, 100, 150, 200, 300 | 5, 10, 25 |  | 1.01 [0.45, 2.16] |
+| Sonnet 4 | 50, 75, 100, 150, 200, 300 | 5, 10, 25 |  | 3.71 [2.13, 5.42] |
+| Sonnet 4.5 | 50, 75, 100, 150, 200, 300 | 5, 10, 25 |  | 3.83 [1.99, 5.73] |
+| Gemini 3 Pro | 50, 75, 100, 150, 200, 300 | 5, 10, 25 |  | 3.64 [1.95, 5.44] |
+| Kimi K2 | 50, 75, 100, 150, 200, 300 | 5, 10, 25 |  | 4.19 [2.44, 5.91] |
+| Qwen3 Coder† | 50, 75, 100, 150, 200, 300 | 5, 10, 25 |  | 4.09 [2.26, 5.88] |
+
+From the same bootstrap and the same task resamples as the cap's margin.
+
+## The share of tasks each step resolves without the outside option
+
+| regime | $/h | i | ii | iii | iiib | iv | iv_transfer |
+|---|---|---|---|---|---|---|---|
+| automated | 25 | 58.0% to 68.8% (median 64.1%) | 64.8% to 74.1% (median 69.5%) | 64.5% to 74.0% (median 69.4%) | 64.5% to 74.0% (median 69.4%) | 64.8% to 74.1% (median 69.5%) | 64.8% to 74.1% (median 69.5%) |
+| automated | 100 | 58.0% to 68.8% (median 64.1%) | 68.9% to 77.7% (median 71.6%) | 68.4% to 77.7% (median 71.2%) | 68.4% to 77.5% (median 71.5%) | 68.9% to 77.7% (median 71.6%) | 68.9% to 77.7% (median 71.6%) |
+| automated | 300 | 58.0% to 68.8% (median 64.1%) | 68.9% to 77.7% (median 71.6%) | 68.4% to 77.7% (median 71.2%) | 68.4% to 77.7% (median 71.5%) | 68.9% to 77.7% (median 71.6%) | 68.9% to 77.7% (median 71.6%) |
+| human 0.1 | 25 | 58.0% to 68.8% (median 64.1%) | 58.0% to 68.8% (median 64.1%) | 57.6% to 68.6% (median 64.0%) | 57.6% to 68.6% (median 64.0%) | 57.9% to 68.8% (median 64.1%) | 58.0% to 68.8% (median 64.1%) |
+| human 0.1 | 100 | 58.0% to 68.8% (median 64.1%) | 62.0% to 71.1% (median 67.1%) | 60.8% to 70.9% (median 67.1%) | 60.8% to 70.9% (median 66.8%) | 62.0% to 71.1% (median 67.1%) | 62.0% to 71.1% (median 67.1%) |
+| human 0.1 | 300 | 58.0% to 68.8% (median 64.1%) | 63.0% to 72.9% (median 67.4%) | 63.0% to 72.4% (median 67.2%) | 62.9% to 72.4% (median 67.2%) | 63.0% to 72.9% (median 67.4%) | 63.0% to 72.9% (median 67.4%) |
+| human 0.3 | 25 | 58.0% to 68.8% (median 64.1%) | 58.0% to 68.8% (median 64.1%) | 53.3% to 68.3% (median 60.7%) | 53.3% to 68.3% (median 60.7%) | 50.2% to 68.7% (median 64.0%) | 57.9% to 68.6% (median 63.8%) |
+| human 0.3 | 100 | 58.0% to 68.8% (median 64.1%) | 58.0% to 68.8% (median 64.1%) | 53.3% to 68.6% (median 63.3%) | 53.3% to 68.6% (median 63.3%) | 57.9% to 68.8% (median 64.1%) | 58.0% to 68.8% (median 64.1%) |
+| human 0.3 | 300 | 58.0% to 68.8% (median 64.1%) | 58.0% to 68.8% (median 64.1%) | 53.3% to 68.6% (median 63.3%) | 53.3% to 68.6% (median 63.3%) | 58.0% to 68.8% (median 64.1%) | 58.0% to 68.8% (median 64.1%) |
+| human 0.5 | 25 | 58.0% to 68.8% (median 64.1%) | 58.0% to 68.8% (median 64.1%) | 0.0% to 48.0% (median 0.0%) | 0.0% to 48.0% (median 0.0%) | 1.7% to 58.1% (median 41.3%) | 3.1% to 66.4% (median 30.2%) |
+| human 0.5 | 100 | 58.0% to 68.8% (median 64.1%) | 58.0% to 68.8% (median 64.1%) | 6.6% to 51.3% (median 19.8%) | 6.6% to 51.3% (median 19.8%) | 17.4% to 68.6% (median 59.6%) | 57.6% to 67.4% (median 60.1%) |
+| human 0.5 | 300 | 58.0% to 68.8% (median 64.1%) | 58.0% to 68.8% (median 64.1%) | 11.8% to 52.6% (median 26.6%) | 11.8% to 52.6% (median 26.6%) | 22.2% to 68.7% (median 61.0%) | 58.0% to 68.3% (median 62.1%) |
+
+Ranges across configurations (median in parentheses), in percent; cross-fitted like the values (PLAN.md Section 3).
+
+## Task counts by attempt budget
+
+| configuration | tasks with at least 1, 2, 3, 4 usable draws |
+|---|---|
+| GPT-5 | 500, 500, 499, 496 |
+| GPT-5.2 | 499, 499, 488, 405 |
+| Sonnet 4 | 500, 500, 500, 498 |
+| Sonnet 4.5 | 500, 500, 500, 500 |
+| Gemini 3 Pro | 499, 498, 486, 410 |
+| Kimi K2 | 500, 498, 494, 412 |
+| Qwen3 Coder† | 500, 500, 500, 500 |
+
+A policy of K attempts is estimated on the tasks with at least K usable draws under the all-tasks sensitivity; the primary uses four.
+
 ## The best constant cap chosen with hindsight on all tasks, automated
 
 | $/h | in-sample cap margin, $ | as % of step ii |
@@ -385,6 +432,19 @@ added is the common horizon minus the primary, own tasks.
 | Qwen lowest price | 275 | 22.035 | 20.108 | 1.927 |
 | METR minutes | 275 | 36.193 | 30.718 | 5.475 |
 | common tasks | 275 | 21.97 | 19.944 | 2.025 |
+
+## Common 100-call horizon: share of successes it removes
+
+| configuration | successes removed, % |
+|---|---|
+| GPT-5.2 | 1.4 |
+| Qwen3 Coder† | 6.7 |
+| Sonnet 4 | 9.9 |
+| Kimi K2 | 14.0 |
+| Gemini 3 Pro | 16.0 |
+| Sonnet 4.5 | 20.9 |
+
+running x resolve_if_running at cutoff 100 (tail_composition.csv) over the resolve rate (diagnostics.csv); GPT-5's own cap is 100, so it is not listed.
 
 ## Two-stage bootstrap
 

@@ -69,6 +69,48 @@ def sections(results: str):
                          "saving %": f"{100 * x.retry_value / x.value_i:.1f}",
                          "K chosen": mk._choice(x.choice_ii).replace("attempts, none", "")})
     out.append(("Retry, automated verifier", _md(pd.DataFrame(rows)), ""))
+    if "retry_value_low" in rate:
+        # the interval on the value of retry, at every rate on the dollar axis: the claims that
+        # retrying pays from $50 an hour up are read here, against the interval, not the point
+        rows = []
+        for k in order:
+            here = rate[(rate.config == k) & (rate.regime_name == "automated")].sort_values("rate")
+            clear = here[here.retry_value_low > 0]
+            rows.append({"configuration": mk.label_of(k),
+                         "distinct from zero at $/h": ", ".join(f"{r:g}" for r in clear.rate),
+                         "interval straddles zero at $/h": ", ".join(
+                             f"{r:g}" for r in here[~(here.retry_value_low > 0)
+                                                    & ~(here.retry_value_high < 0)].rate),
+                         "costs distinctly at $/h": ", ".join(
+                             f"{r:g}" for r in here[here.retry_value_high < 0].rate),
+                         "at $100: saving [95%]": mk._interval(
+                             here[here.rate == 100.0].iloc[0].retry_value,
+                             here[here.rate == 100.0].iloc[0].retry_value_low,
+                             here[here.rate == 100.0].iloc[0].retry_value_high)})
+        out.append(("Retry's interval, automated verifier, dollar axis", _md(pd.DataFrame(rows)),
+                    "From the same bootstrap and the same task resamples as the cap's margin."))
+    if "share_i" in rate:
+        rows = []
+        for regime in ("automated", "human 0.1", "human 0.3", "human 0.5"):
+            for r in RATES:
+                x = rate[(rate.regime_name == regime) & (rate.rate == r)]
+                row = {"regime": regime, "$/h": int(r)}
+                for col in ("share_i", "share_ii", "share_iii", "share_iiib", "share_iv",
+                            "share_iv_transfer"):
+                    if col in x:
+                        row[col.replace("share_", "")] = _range(100 * pd.to_numeric(x[col]), 1, "%")
+                rows.append(row)
+        out.append(("The share of tasks each step resolves without the outside option",
+                    _md(pd.DataFrame(rows)),
+                    "Ranges across configurations (median in parentheses), in percent; "
+                    "cross-fitted like the values (PLAN.md Section 3)."))
+    if "tasks_with_draws" in rate:
+        rows = [{"configuration": mk.label_of(k),
+                 "tasks with at least 1, 2, 3, 4 usable draws":
+                     str(first.loc[k, "tasks_with_draws"]).replace("|", ", ")} for k in order]
+        out.append(("Task counts by attempt budget", _md(pd.DataFrame(rows)),
+                    "A policy of K attempts is estimated on the tasks with at least K usable "
+                    "draws under the all-tasks sensitivity; the primary uses four."))
     rows = []
     for r in RATES:
         x = rate[(rate.regime_name == "automated") & (rate.rate == r)]
@@ -235,6 +277,19 @@ def sections(results: str):
         out.append(("Switching at $100, automated, under each sensitivity",
                     _md(x[["variant", "tasks", "value_best_single", "value_cascade",
                            "switch_margin"]].round(3)), ""))
+    tail, diag = _read(results, "tail_composition"), _read(results, "diagnostics")
+    if tail is not None and diag is not None:
+        # the successes a 100-call horizon removes: attempts still running at 100 calls that
+        # would have resolved, as a share of all resolving attempts, for the 500-call configurations
+        x = tail[tail.cutoff == 100].set_index("config")
+        dg = diag.set_index("config")
+        share = 100 * x.running * x.resolve_if_running / dg.loc[x.index, "resolve_rate"]
+        rows = [{"configuration": mk.label_of(k), "successes removed, %": round(float(v), 1)}
+                for k, v in share.sort_values().items()]
+        out.append(("Common 100-call horizon: share of successes it removes",
+                    _md(pd.DataFrame(rows)),
+                    "running x resolve_if_running at cutoff 100 (tail_composition.csv) over the "
+                    "resolve rate (diagnostics.csv); GPT-5's own cap is 100, so it is not listed."))
     if two is not None:
         cap = two[(two.margin == "cap")]
         w1 = cap.one_stage_high - cap.one_stage_low

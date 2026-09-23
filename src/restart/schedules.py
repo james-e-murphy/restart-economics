@@ -191,7 +191,7 @@ def family(pool: ev.Pool, outside: np.ndarray, verify: np.ndarray, phi: float = 
 
     def fit_on(train: np.ndarray):
         starts = start(train) if start is not None else {}
-        rows, used, labels = [], [], []
+        rows, used, labels, shares = [], [], [], []
         for k in ks:
             sched, _ = search(pool, tab, charge, survive, outside, train, k,
                               starts.get(k), passes)
@@ -202,7 +202,8 @@ def family(pool: ev.Pool, outside: np.ndarray, verify: np.ndarray, phi: float = 
             rows.append(got.per_task)
             used.append(got.used)
             labels.append(label(pool.config, cutoffs))
-        return np.vstack(rows), np.vstack(used), tuple(labels)
+            shares.append(got.resolved)
+        return np.vstack(rows), np.vstack(used), tuple(labels), np.vstack(shares)
 
     return inf.Family(values=np.zeros((len(ks), pool.n_tasks)),
                       used=np.ones((len(ks), pool.n_tasks), bool),

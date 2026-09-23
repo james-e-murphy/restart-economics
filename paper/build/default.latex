@@ -465,6 +465,7 @@ $endif$
 $endif$
 \author{$for(author)$$author$$sep$ \and $endfor$}
 \date{$date$}
+$if(version)$\newcommand{\paperversion}{$version$}$endif$
 $if(beamer)$
 $if(institute)$
 \institute{$for(institute)$$institute$$sep$ \and $endfor$}

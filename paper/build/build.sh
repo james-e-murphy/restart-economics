@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Build the Restart Economics PDF from the manuscript's parts and the results.
 #   usage: bash paper/build/build.sh [results-dir]     (default: results/)
-# Writes paper/Restart_Economics_Manuscript_v0_1_2026_09_21.md and paper/build/restart-economics.pdf.
+# Writes paper/Restart_Economics_Manuscript_<version>_<date>.md, named from the version and date in
+# meta.yaml (the one place the stamp is set), and paper/build/restart-economics.pdf.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 RESULTS="$(cd "${1:-$ROOT/results}" && pwd)"
@@ -54,6 +55,21 @@ check("no unrendered blocks", "{{" not in body)
 check("stands alone", "Beyond Average Cost" not in body)
 check("'resolved' is kept for tasks", not re.search(
     r"\bresolved (as a (cost|saving)|for (one|two|three|four|five|six|all)|in \w+ cells|only|at \$)", body))
+# every exhibit referred to has a caption, and the captions are numbered without gaps
+captions = set(re.findall(r"\*\*((?:Table|Figure) [A-Z]?\d+)\.", body))
+own = re.sub(r"\d{4}[a-z]?, (?:Table|Figure) [A-Z]?\d+", "", body)   # not another paper's table
+referred = set(re.findall(r"\b((?:Table|Figure) [A-Z]?\d+)\b", re.sub(r"\*\*[^*]+\*\*", "", own)))
+for plural in re.findall(r"\b(Tables|Figures) ((?:[A-Z]?\d+(?:, | and )?)+)", body):
+    for n in re.findall(r"[A-Z]?\d+", plural[1]):
+        referred.add(f"{plural[0][:-1]} {n}")
+dangling = sorted(referred - captions)
+check("every table and figure referred to has a caption" + (f": {dangling}" if dangling else ""),
+      not dangling)
+def gapless(kind, prefix):
+    nums = sorted(int(m) for m in re.findall(rf"\*\*{kind} {prefix}(\d+)\.", body))
+    return nums == list(range(1, len(nums) + 1))
+check("tables and figures are numbered without gaps",
+      all(gapless(k, p) for k in ("Table", "Figure") for p in ("", "A")))
 pending = len(re.findall(r"^> Pending", body, re.M))
 print(f"  note  {pending} exhibit(s) pending their results files")
 sys.exit(1 if bad else 0)

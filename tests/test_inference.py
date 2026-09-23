@@ -186,3 +186,50 @@ def test_a_component_that_is_not_finite_is_dropped_for_that_component_only():
                              replicates=20, seed=2)
     assert got[0]["replicates"] == 20 and got[0]["dropped"] == 0
     assert got[1]["replicates"] + got[1]["dropped"] == 20 and got[1]["dropped"] > 0
+
+
+# ----------------------------------------------------------------------------- the resolved share
+
+def test_the_chosen_policy_s_resolved_share_is_read_off_beside_its_value():
+    """PLAN.md Section 3: the share of tasks resolved without the outside option is reported
+    beside the value, for the policy each fold chose, on the tasks it was scored on."""
+    n = 100
+    values = np.vstack([np.full(n, 2.0), np.full(n, 1.0)])
+    shares = np.vstack([np.full(n, 0.9), np.full(n, 0.6)])   # the cheaper one resolves fewer
+    fam = inf.Family(values=values, used=np.ones((2, n), bool), labels=("dear", "cheap"),
+                     shares=shares)
+    got = inf.cross_fit(fam, inf.folds(n))
+    assert got.choices == ("cheap",) * 5
+    assert got.share == pytest.approx(0.6)
+    # a resample carries the shares with the values
+    idx = np.arange(n)[::-1]
+    assert inf.cross_fit(inf.resampled(fam, idx), inf.folds(n)).share == pytest.approx(0.6)
+    # a family that did not score the share reports none rather than a number
+    plain = inf.Family(values=values, used=np.ones((2, n), bool), labels=("dear", "cheap"))
+    assert np.isnan(inf.cross_fit(plain, inf.folds(n)).share)
+
+
+def test_a_fitted_family_may_return_its_shares_after_its_labels():
+    n = 60
+    truth = np.linspace(1.0, 5.0, n)
+
+    def fit(train):
+        level = truth[train].mean() + 1.0
+        return (np.vstack([np.full(n, level), truth]), np.ones((2, n), bool),
+                ("fitted", "truth"), np.vstack([np.full(n, 0.5), np.full(n, 0.8)]))
+
+    fam = inf.Family(values=np.zeros((2, n)), used=np.ones((2, n), bool),
+                     labels=("fitted", "truth"), fit=fit)
+    got = inf.cross_fit(fam, inf.folds(n))
+    assert got.choices == ("truth",) * 5 and got.share == pytest.approx(0.8)
+    # and on a resample the shares are read in the resample's order
+    idx = np.arange(n)[::-1]
+    assert inf.cross_fit(inf.resampled(fam, idx), inf.folds(n)).share == pytest.approx(0.8)
+    # a fit that returns no labels but shares in the fourth place keeps the family's labels
+    def fit2(train):
+        return (np.vstack([np.full(n, 9.0), truth]), np.ones((2, n), bool), None,
+                np.vstack([np.full(n, 0.5), np.full(n, 0.7)]))
+    fam2 = inf.Family(values=np.zeros((2, n)), used=np.ones((2, n), bool),
+                      labels=("a", "b"), fit=fit2)
+    got2 = inf.cross_fit(fam2, inf.folds(n))
+    assert got2.choices == ("b",) * 5 and got2.share == pytest.approx(0.7)

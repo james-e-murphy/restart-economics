@@ -9,7 +9,8 @@ The parts in paper/parts/ are the source. A block
     }}
 
 becomes that exhibit's table from exhibits/make.py, under its caption; {{figure NAME ...}} becomes
-the figure; and {{ladder ...}} becomes Table 3, set from table1_ladder.csv in two panels. When an
+the figure; and {{ladder ...}} becomes Table 5, set from table1_ladder.csv in two panels
+(or, with a name, the same layout from that exhibit). When an
 exhibit has not been written yet, because its results file does not exist, the block becomes a
 note saying so, and the build reports it. Negative numbers in the exhibits are set with a minus
 sign rather than a hyphen. Nothing here computes a number.
@@ -23,7 +24,20 @@ import os
 import re
 
 HERE = os.path.dirname(os.path.abspath(__file__))
-NAME = "Restart_Economics_Manuscript_v0_1_2026_09_21.md"
+
+
+def _stamp() -> str:
+    """The manuscript file name from the version and date in build/meta.yaml, the one place the
+    stamp is set: v0.1 and 21 September 2026 give Restart_Economics_Manuscript_v0_1_2026_09_21.md."""
+    import datetime
+    meta = open(os.path.join(HERE, "build", "meta.yaml")).read()
+    version = re.search(r'^version:\s*"?v?([\d.]+)"?', meta, re.M).group(1)
+    date = re.search(r'^date:\s*"?([^"\n]+)"?', meta, re.M).group(1).strip()
+    day = datetime.datetime.strptime(date, "%d %B %Y")
+    return f"Restart_Economics_Manuscript_v{version.replace('.', '_')}_{day:%Y_%m_%d}.md"
+
+
+NAME = _stamp()
 BLOCK = re.compile(r"\{\{(table|figure|ladder|transfer)( [A-Za-z0-9_]+)?\n(.*?)\n\}\}", re.S)
 ORDER = ("gpt-5_4runs", "gpt_5.2_4runs", "claude-sonnet-4_4runs", "claude-sonnet-4.5_4runs",
          "gemini-3-pro-preview_4runs", "kimi-k2_4runs", "qwen3-coder-480b-a35b-instruct-4runs")
@@ -31,6 +45,10 @@ LABEL = {"gpt-5_4runs": "GPT-5", "gpt_5.2_4runs": "GPT-5.2", "claude-sonnet-4_4r
          "claude-sonnet-4.5_4runs": "Sonnet 4.5", "gemini-3-pro-preview_4runs": "Gemini 3 Pro",
          "kimi-k2_4runs": "Kimi K2", "qwen3-coder-480b-a35b-instruct-4runs": "Qwen3 Coder\u2020"}
 MINUS = re.compile(r"(?<![\w.])-(?=\d)")
+# exhibits whose cells must not wrap: set at natural column widths in a smaller face
+NOWRAP = {"tableA11_crossings"}
+# exhibits set in the smaller face at proportional widths, for one too wide for the body face
+SMALL = {"tableA4_comparators"}
 
 
 def minus(s: str) -> str:
@@ -68,28 +86,32 @@ def choices(s: str) -> str:
     for item in (x.strip() for x in s.split(",") if x.strip()):
         k, _, cut = item.partition("x@")
         groups.setdefault(k, []).append(cut)
-    return ", ".join(f"{k}×{'/'.join(v)}" for k, v in groups.items())
+    # cutoffs in numeric order, none last
+    key = lambda c: (c == "none", int(c) if c.isdigit() else 0)
+    return ", ".join(f"{k}×{'/'.join(sorted(v, key=key))}" for k, v in sorted(
+        groups.items(), key=lambda kv: int(kv[0]) if kv[0].isdigit() else 0))
 
 
 def ladder(path: str) -> str:
-    """Table 3: steps i to iii-b with the cap's saving and the folds' choices, in two panels,
+    """Table 5: steps i to iii-b with the cap's saving, the folds' choices and the share each
+    step resolves without the outside option, in two panels,
     set so that no cell wraps (a nowrap div, which blocks.lua sets at natural widths)."""
     rows = list(csv.DictReader(open(path)))
     head = ("| Configuration | $/h | i | ii | iii | iii-b | Cap's saving [95%] | Step iii chose "
-            "| Escalate all\\* |\n|:---|---:|---:|---:|---:|---:|---:|:---|---:|")
+            "| Resolves % | Escalate all\\* |\n|:---|---:|---:|---:|---:|---:|---:|:---|:---|---:|")
     out, regime, config = [head], None, None
     for r in rows:
         if r["regime"] != regime:
             regime = r["regime"]
             label = regime[0].upper() + regime[1:]
-            out.append(f"| **{label}** | | | | | | | | |")
+            out.append(f"| **{label}** | | | | | | | | | |")
             config = None
         name = r["configuration"] if r["configuration"] != config else ""
         config = r["configuration"]
         chose = choices(r["iii chose"])
         saving = r["cap's saving [95%]"]
         out.append(f"| {name} | {r['$/h']} | {r['i']} | {r['ii']} | {r['iii']} | {r['iii-b']} "
-                   f"| {saving} | {chose} | {r['escalate all*']} |")
+                   f"| {saving} | {chose} | {r.get('resolves %', '')} | {r['escalate all*']} |")
     return minus("\n".join(out))
 
 
@@ -116,7 +138,7 @@ def widths(text: str) -> str:
             n = len(head)
             w = [max([max((len(x) for x in h.split()), default=1)] +
                      [len(r[k]) for r in body if k < len(r)]) for k, h in enumerate(head)]
-            w = [min(max(x, 4), 36) for x in w]
+            w = [min(max(x + 1, 5), 36) for x in w]   # a little air in every column
             rule = _cells(lines[i + 1])
             lines[i + 1] = "|" + "|".join(
                 (":" if c.startswith(":") else "") + "-" * x + (":" if c.endswith(":") else "")
@@ -137,7 +159,7 @@ def _band(v, lo, hi) -> str:
 
 
 def transfer(path: str) -> str:
-    """Table 5, from results/ladder.csv: the primary transfer with its intervals at the three
+    """Table 6, from results/ladder.csv: the primary transfer with its intervals at the three
     fitted rates, the within-configuration rule's margin at $100, and how far the transferred rule
     sits from retrying without a cap."""
     rows = [r for r in csv.DictReader(open(path))
@@ -167,9 +189,10 @@ def render(text: str, exhibits: str, missing: list, results: str = "") -> str:
     def one(m):
         kind, name, caption = m.group(1), (m.group(2) or "").strip(), m.group(3).strip()
         if kind == "ladder":
-            path = os.path.join(exhibits, "table1_ladder.csv")
+            stem = name or "table1_ladder"
+            path = os.path.join(exhibits, f"{stem}.csv")
             if not os.path.exists(path):
-                missing.append("table1_ladder")
+                missing.append(stem)
                 return f"> Pending: {caption}"
             return f"::: nowrap\n\nTable: {caption}\n\n{ladder(path)}\n\n:::"
         if kind == "transfer":
@@ -184,6 +207,10 @@ def render(text: str, exhibits: str, missing: list, results: str = "") -> str:
                 missing.append(name)
                 return (f"> Pending the final appendix run, which writes this table from the "
                         f"results. {caption}")
+            if name in NOWRAP:
+                return f"::: nowrap\n\nTable: {caption}\n\n{exhibit_table(path)}\n\n:::"
+            if name in SMALL:
+                return f"::: small\n\nTable: {caption}\n\n{exhibit_table(path)}\n\n:::"
             return f"Table: {caption}\n\n{exhibit_table(path)}"
         path = os.path.join(exhibits, f"{name}.pdf")
         label = re.match(r"\*\*(Figure [A-Z]?\d+)\.", caption)
@@ -203,6 +230,8 @@ def main(argv=None):
     a = ap.parse_args(argv)
     parts = sorted(glob.glob(os.path.join(HERE, "parts", "*.md")))
     text = "\n\n".join(open(p).read().strip("\n") for p in parts) + "\n"
+    # a dagger is never left at the end of a line, apart from the note it introduces
+    text = text.replace("\u2020 ", "\u2020\u00a0")
     missing: list = []
     text = widths(render(text, a.exhibits, missing, a.results))
     left = re.findall(r"\{\{\w+", text)

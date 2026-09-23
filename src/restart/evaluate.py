@@ -282,11 +282,21 @@ class Result:
     per_task: np.ndarray        # [task] dollars; nan where the task cannot fill the policy
     used: np.ndarray            # [task] bool
     orderings: np.ndarray       # [task] how many orderings the average ran over
+    resolved: Optional[np.ndarray] = None   # [task] the chance the policy resolves the task
+                                            # itself, without the outside option; nan if unfilled
 
     @property
     def value(self) -> float:
         """Expected cost per incoming task, over the tasks that can fill the policy."""
         return float(self.per_task[self.used].mean()) if self.used.any() else float("nan")
+
+    @property
+    def share(self) -> float:
+        """The share of tasks the policy resolves without the outside option (PLAN.md Section 3:
+        the agent's own contribution, reported beside the value), over the tasks scored."""
+        if self.resolved is None or not self.used.any():
+            return float("nan")
+        return float(self.resolved[self.used].mean())
 
     @property
     def n_tasks(self) -> int:
@@ -456,14 +466,17 @@ def value(pools: Dict[str, Pool], policy: Policy, outside: np.ndarray, verify: n
     orderings is the same whatever decided the stop.
     """
     tasks = _aligned(pools, policy.configs)
-    cost, valid = replay(pools, policy, outside, verify, phi, arrays)
+    cost, valid, escalated = _replay(pools, policy, outside, verify, phi, arrays)
     counted = valid.sum(axis=0)
     total = np.where(valid, cost, 0.0).sum(axis=0)
+    sent = np.where(valid, escalated, False).sum(axis=0)
     used = counted > 0
     if mask is not None:
         used &= np.asarray(mask, bool)
     per_task = np.where(counted > 0, total / np.maximum(counted, 1), np.nan)
-    return Result(policy=policy, tasks=tasks, per_task=per_task, used=used, orderings=counted)
+    resolved = np.where(counted > 0, 1.0 - sent / np.maximum(counted, 1), np.nan)
+    return Result(policy=policy, tasks=tasks, per_task=per_task, used=used, orderings=counted,
+                  resolved=resolved)
 
 
 def replay(pools: Dict[str, Pool], policy: Policy, outside: np.ndarray, verify: np.ndarray,
@@ -472,6 +485,15 @@ def replay(pools: Dict[str, Pool], policy: Policy, outside: np.ndarray, verify: 
     """[combination, task]: what the policy costs under every combination of draws, and whether
     that combination is usable on that task. ``value`` is its mean over the usable combinations;
     the appendix reads its quantiles."""
+    cost, valid, _ = _replay(pools, policy, outside, verify, phi, arrays)
+    return cost, valid
+
+
+def _replay(pools: Dict[str, Pool], policy: Policy, outside: np.ndarray, verify: np.ndarray,
+            phi: float = 0.0,
+            arrays: Optional[Sequence[Tuple[np.ndarray, np.ndarray, np.ndarray]]] = None):
+    """``replay`` with a third array: whether the combination ends at the outside option, which
+    is the complement of the policy resolving the task itself."""
     tasks = _aligned(pools, policy.configs)
     n_t = len(tasks)
     outside = np.asarray(outside, float)
@@ -517,7 +539,7 @@ def replay(pools: Dict[str, Pool], policy: Policy, outside: np.ndarray, verify: 
                            + phi * outside * resolves[:, d].T)
         running &= ~resolves[:, d].T
     cost += running * outside
-    return cost, valid
+    return cost, valid, running
 
 
 def stopped_slot(pool: Pool, stop: np.ndarray) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
