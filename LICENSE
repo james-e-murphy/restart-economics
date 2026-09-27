@@ -20,5 +20,7 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
-This license covers the code in src/ and tests/. PLAN.md, AUDIT.md,
-audit_record.md and the manuscript are under CC BY 4.0; see LICENSE-NOTE.md.
+This license covers the code in src/ and tests/. PLAN.md, AUDIT.md and
+audit_record.md are under CC BY 4.0, the license they were registered under on
+OSF. The manuscript and its sources in paper/ are copyright 2026 James E. Murphy,
+all rights reserved. See LICENSE-NOTE.md.

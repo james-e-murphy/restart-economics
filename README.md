@@ -43,7 +43,8 @@ argument, and every prespecified comparison.
                          one command listed in results/README.md
     exhibits/            make.py, which regenerates every figure and table from results/
     paper/               the manuscript's parts, its assembly and facts sheet, and the build
-    LICENSE              MIT, for src/ and tests/; the written work is CC BY 4.0
+    LICENSE              MIT, for src/ and tests/; PLAN.md, AUDIT.md and audit_record.md are
+                         CC BY 4.0; the manuscript is all rights reserved
 
 ## Working rules
 
