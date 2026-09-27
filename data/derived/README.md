@@ -27,5 +27,5 @@ on every call, and where they differ the difference is located (`restart.pricing
                                text. The input to the replicate-divergence diagnostic
     audit_<config>.json        the census AUDIT.md asks for, written by the same pass
 
-Whether these tables may be published depends on the upstream release's license; see
-LICENSE-NOTE.md. Until that is settled the directory holds this note only.
+The upstream release states no license, so these tables are not published. The directory
+holds this note only, and the tables are rebuilt locally.

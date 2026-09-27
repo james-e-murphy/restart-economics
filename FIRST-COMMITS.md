@@ -26,6 +26,6 @@ not an edit to the plan.
 ## What never enters the repository
 
 The raw `.tar.gz` archives, the derived tables under `data/derived/<archive>/` (the release records
-no license; see LICENSE-NOTE.md), extraction intermediates, and anything containing trajectory
+no license), extraction intermediates, and anything containing trajectory
 text. `.gitignore` covers these paths; check the dry run before the first commit anyway, since a
 large file committed once stays in the history for good.

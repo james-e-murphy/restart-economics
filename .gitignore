@@ -4,7 +4,7 @@ archives/*.zip
 archives/*.manifest.txt
 archives/.partial/
 
-# Derived tables stay local: the upstream release records no license (LICENSE-NOTE.md)
+# Derived tables stay local: the upstream release records no license
 data/derived/*/
 
 # Extraction intermediates

@@ -55,7 +55,9 @@ argument, and every prespecified comparison.
 2. **Raw archives are never committed.** They are large, third-party, and under their own license.
    The repository holds `archives/SHA256SUMS`. The derived tables are rebuilt from the archives by
    `restart.acquire`, and every table records the checksum of the archive it came from. The release
-   records no license, so the tables are not committed either (LICENSE-NOTE.md).
+   records no license, so the tables are not committed either. The SWE-bench Verified task
+   metadata, including the time-to-fix annotations used for the outside option, carries its own
+   terms.
 3. **The evaluator is verified before it is trusted.** The synthetic dry run and the hand-walked edge
    cases in `tests/` run in CI. Against real data, the extraction is reconciled with what Bai et al.
    state in numbers and with an earlier extraction of the GPT-5 archive, and every price schedule is
