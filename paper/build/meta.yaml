@@ -6,7 +6,7 @@ subject: "Expected cost per resolved task of retry, cutoff and restart policies 
 keywords: [AI agents, unit economics, optimal stopping, retry policies, cost per resolved task, SWE-bench, preregistration]
 # the version and date are set here only: the title page, the PDF and the manuscript file name read them
 version: "v0.1"
-date: "21 September 2026"
+date: "27 September 2026"
 lang: en-US
 papersize: letter
 fontsize: 11pt
