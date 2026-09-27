@@ -133,8 +133,7 @@ local function float_table(tbl, mode)
 end
 
 
--- A fenced ::: box ::: div is set as a framed callout, used for the stylized
--- example in 5.8. Previously the manuscript described a box that was never drawn.
+-- A fenced ::: box ::: div is set as a framed callout.
 function Div(el)
   -- A ::: nowrap ::: div sets its tables at their natural column widths, so that no cell
   -- wraps, with a narrower column gap; assemble.py uses it for the ladder table.

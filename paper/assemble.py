@@ -26,13 +26,20 @@ import re
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 
-def _stamp() -> str:
-    """The manuscript file name from the version and date in build/meta.yaml, the one place the
-    stamp is set: v0.1 and 21 September 2026 give Restart_Economics_Manuscript_v0_1_2026_09_21.md."""
-    import datetime
+def _meta():
+    """The version and date from build/meta.yaml, the one place the stamp is set: ('0.1',
+    '28 September 2026'). The title page, the manuscript's front matter and its file name read them."""
     meta = open(os.path.join(HERE, "build", "meta.yaml")).read()
     version = re.search(r'^version:\s*"?v?([\d.]+)"?', meta, re.M).group(1)
     date = re.search(r'^date:\s*"?([^"\n]+)"?', meta, re.M).group(1).strip()
+    return version, date
+
+
+def _stamp() -> str:
+    """The manuscript file name: v0.1 and 28 September 2026 give
+    Restart_Economics_Manuscript_v0_1_2026_09_28.md."""
+    import datetime
+    version, date = _meta()
     day = datetime.datetime.strptime(date, "%d %B %Y")
     return f"Restart_Economics_Manuscript_v{version.replace('.', '_')}_{day:%Y_%m_%d}.md"
 
@@ -230,6 +237,8 @@ def main(argv=None):
     a = ap.parse_args(argv)
     parts = sorted(glob.glob(os.path.join(HERE, "parts", "*.md")))
     text = "\n\n".join(open(p).read().strip("\n") for p in parts) + "\n"
+    version, date = _meta()
+    text = text.replace("{{version}}", version).replace("{{date}}", date)
     # a dagger is never left at the end of a line, apart from the note it introduces
     text = text.replace("\u2020 ", "\u2020\u00a0")
     missing: list = []

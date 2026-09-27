@@ -16,7 +16,7 @@ cd "$ROOT/paper/build"
 # 2. the manuscript: parts, tables and figures assembled into one markdown file
 "$PY" "$ROOT/paper/assemble.py" --exhibits figures --results "$RESULTS"
 
-# 3. body: strip the internal front matter above the abstract
+# 3. body: strip the front matter above the abstract; the title page is set from meta.yaml
 "$PY" - <<'PY'
 import glob
 src = glob.glob("../Restart_Economics_Manuscript_*.md")

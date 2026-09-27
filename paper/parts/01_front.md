@@ -1,8 +1,8 @@
 # Restart Economics for AI Agents
 ## Cutoffs, Retries, and Cost per Resolved Task
 
-**Working paper, version 0.1**
-**September 21, 2026**
+**Working paper, version {{version}}**
+**{{date}}**
 
 *Empirical working paper prepared for circulation and comment. The analysis plan was frozen and registered on OSF before any policy result was computed. Prices are list prices on each run's first day and should be read as a dated snapshot.*
 

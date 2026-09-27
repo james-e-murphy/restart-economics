@@ -97,7 +97,7 @@ at a date through an endpoint under a price schedule. AUDIT.md establishes what 
 
 ## Preregistration
 
-The frozen plan is registered on OSF Registries, under embargo until the paper is posted:
+The frozen plan is registered on OSF Registries:
 [osf.io/pdmw9](https://osf.io/pdmw9/), registered 20 September 2026, Secondary Data Preregistration
 template. It carries PLAN.md, AUDIT.md, `audit_record.md` and this repository at the `plan-frozen`
 tag, commit `d270cb8`, whose archive has SHA-256
@@ -109,5 +109,5 @@ record what was known about the data before the freeze, and what was not.
 The audit is complete and PLAN.md Section 10 records what it found, including the state rule's class
 and φ. The plan is frozen at the `plan-frozen` tag and registered. The primary results, the
 cascade, the registered sensitivities, the appendix and the exhibits are computed from it by the
-commands above. The manuscript is drafted, version 0.1, in `paper/`; its appendix tables fill
-in from their results files as the build finds them.
+commands above. Version 0.1 of the paper, 28 September 2026, is built from the `v0.1` tag and posted
+at [jamesemurphy.com/ai-economics/restart-economics](https://jamesemurphy.com/ai-economics/restart-economics/).
