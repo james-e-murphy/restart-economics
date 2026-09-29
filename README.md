@@ -43,8 +43,7 @@ argument, and every prespecified comparison.
                          one command listed in results/README.md
     exhibits/            make.py, which regenerates every figure and table from results/
     paper/               the manuscript's parts, its assembly and facts sheet, and the build
-    LICENSE              MIT, for src/ and tests/; PLAN.md, AUDIT.md and audit_record.md are
-                         CC BY 4.0; the manuscript is all rights reserved
+    LICENSE              the MIT license, for src/ and tests/; see License below for the rest
 
 ## Working rules
 
@@ -111,3 +110,9 @@ and φ. The plan is frozen at the `plan-frozen` tag and registered. The primary 
 cascade, the registered sensitivities, the appendix and the exhibits are computed from it by the
 commands above. Version 0.1 of the paper, 28 September 2026, is built from the `v0.1` tag and posted
 at [jamesemurphy.com/ai-economics/restart-economics](https://jamesemurphy.com/ai-economics/restart-economics/).
+
+## License
+
+The code in `src/` and `tests/` is under the MIT license, in `LICENSE`. PLAN.md, AUDIT.md and
+`audit_record.md` are under CC BY 4.0, the license they were registered under on OSF. The manuscript
+and its sources in `paper/` are copyright 2026 James E. Murphy, all rights reserved.
